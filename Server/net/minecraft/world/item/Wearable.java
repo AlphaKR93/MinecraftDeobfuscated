@@ -1,0 +1,13 @@
+/*
+ * Decompiled with CFR 0.1.0 (FabricMC a830a72d).
+ * 
+ * Could not load the following classes:
+ *  java.lang.Object
+ */
+package net.minecraft.world.item;
+
+import net.minecraft.world.item.Vanishable;
+
+public interface Wearable
+extends Vanishable {
+}
