@@ -8,6 +8,7 @@
  *  java.lang.Override
  *  java.util.List
  *  java.util.Optional
+ *  java.util.function.Consumer
  *  java.util.function.Predicate
  *  org.slf4j.Logger
  */
@@ -16,6 +17,7 @@ package net.minecraft.core.dispenser;
 import com.mojang.logging.LogUtils;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -232,16 +234,16 @@ public interface DispenseItemBehavior {
         DispenserBlock.registerBehavior(Items.ARMOR_STAND, new DefaultDispenseItemBehavior(){
 
             @Override
-            public ItemStack execute(BlockSource $$0, ItemStack $$1) {
+            public ItemStack execute(BlockSource $$0, ItemStack $$12) {
                 Direction $$2 = $$0.getBlockState().getValue(DispenserBlock.FACING);
                 Vec3i $$3 = $$0.getPos().relative($$2);
                 ServerLevel $$4 = $$0.getLevel();
-                ArmorStand $$5 = new ArmorStand($$4, (double)$$3.getX() + 0.5, $$3.getY(), (double)$$3.getZ() + 0.5);
-                EntityType.updateCustomEntityTag($$4, null, $$5, $$1.getTag());
-                $$5.setYRot($$2.toYRot());
-                $$4.addFreshEntity($$5);
-                $$1.shrink(1);
-                return $$1;
+                Consumer $$5 = EntityType.appendDefaultStackConfig($$1 -> $$1.setYRot($$2.toYRot()), $$4, $$12, null);
+                ArmorStand $$6 = EntityType.ARMOR_STAND.spawn($$4, $$12.getTag(), $$5, (BlockPos)$$3, MobSpawnType.DISPENSER, false, false);
+                if ($$6 != null) {
+                    $$12.shrink(1);
+                }
+                return $$12;
             }
         });
         DispenserBlock.registerBehavior(Items.SADDLE, new OptionalDispenseItemBehavior(){

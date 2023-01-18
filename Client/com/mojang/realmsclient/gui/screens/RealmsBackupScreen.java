@@ -263,11 +263,6 @@ extends RealmsScreen {
         }
 
         @Override
-        public boolean isFocused() {
-            return RealmsBackupScreen.this.getFocused() == this;
-        }
-
-        @Override
         public int getMaxPosition() {
             return this.getItemCount() * 36;
         }
@@ -374,7 +369,6 @@ extends RealmsScreen {
         private void drawRestore(PoseStack $$0, int $$1, int $$2, int $$3, int $$4) {
             boolean $$5 = $$3 >= $$1 && $$3 <= $$1 + 12 && $$4 >= $$2 && $$4 <= $$2 + 14 && $$4 < RealmsBackupScreen.this.height - 15 && $$4 > 32;
             RenderSystem.setShaderTexture(0, RESTORE_ICON_LOCATION);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             $$0.pushPose();
             $$0.scale(0.5f, 0.5f, 0.5f);
             float $$6 = $$5 ? 28.0f : 0.0f;
@@ -388,7 +382,6 @@ extends RealmsScreen {
         private void drawInfo(PoseStack $$0, int $$1, int $$2, int $$3, int $$4) {
             boolean $$5 = $$3 >= $$1 && $$3 <= $$1 + 8 && $$4 >= $$2 && $$4 <= $$2 + 8 && $$4 < RealmsBackupScreen.this.height - 15 && $$4 > 32;
             RenderSystem.setShaderTexture(0, PLUS_ICON_LOCATION);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             $$0.pushPose();
             $$0.scale(0.5f, 0.5f, 0.5f);
             float $$6 = $$5 ? 15.0f : 0.0f;

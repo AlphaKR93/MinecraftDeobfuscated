@@ -3,6 +3,8 @@
  * 
  * Could not load the following classes:
  *  com.mojang.serialization.Codec
+ *  java.lang.Comparable
+ *  java.lang.Integer
  *  java.lang.Object
  *  java.lang.Override
  */
@@ -38,7 +40,7 @@ extends Feature<CountConfiguration> {
             int $$8 = $$2.nextInt(8) - $$2.nextInt(8);
             int $$9 = $$3.getHeight(Heightmap.Types.OCEAN_FLOOR, $$4.getX() + $$7, $$4.getZ() + $$8);
             BlockPos $$10 = new BlockPos($$4.getX() + $$7, $$9, $$4.getZ() + $$8);
-            BlockState $$11 = (BlockState)Blocks.SEA_PICKLE.defaultBlockState().setValue(SeaPickleBlock.PICKLES, $$2.nextInt(4) + 1);
+            BlockState $$11 = (BlockState)((Object)Blocks.SEA_PICKLE.defaultBlockState().setValue(SeaPickleBlock.PICKLES, (Comparable)Integer.valueOf((int)($$2.nextInt(4) + 1))));
             if (!$$3.getBlockState($$10).is(Blocks.WATER) || !$$11.canSurvive($$3, $$10)) continue;
             $$3.setBlock($$10, $$11, 2);
             ++$$1;

@@ -41,7 +41,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.visitors.CollectFields;
 import net.minecraft.nbt.visitors.FieldSelector;
@@ -142,7 +141,7 @@ public class StructureCheck {
         }
         ChunkStorage.injectDatafixingContext($$7, this.dimension, this.chunkGenerator.getTypeNameForDataFixer());
         try {
-            CompoundTag $$9 = NbtUtils.update(this.fixerUpper, DataFixTypes.CHUNK, $$7, $$8);
+            CompoundTag $$9 = DataFixTypes.CHUNK.updateToCurrentVersion(this.fixerUpper, $$7, $$8);
         }
         catch (Exception $$10) {
             LOGGER.warn("Failed to partially datafix chunk {}", (Object)$$0, (Object)$$10);

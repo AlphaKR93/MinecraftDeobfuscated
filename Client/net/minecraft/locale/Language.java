@@ -78,8 +78,8 @@ public abstract class Language {
             }
 
             @Override
-            public String getOrDefault(String $$0) {
-                return (String)this.val$storage.getOrDefault((Object)$$0, (Object)$$0);
+            public String getOrDefault(String $$0, String $$1) {
+                return (String)this.val$storage.getOrDefault((Object)$$0, (Object)$$1);
             }
 
             @Override
@@ -115,7 +115,11 @@ public abstract class Language {
         instance = $$0;
     }
 
-    public abstract String getOrDefault(String var1);
+    public String getOrDefault(String $$0) {
+        return this.getOrDefault($$0, $$0);
+    }
+
+    public abstract String getOrDefault(String var1, String var2);
 
     public abstract boolean has(String var1);
 

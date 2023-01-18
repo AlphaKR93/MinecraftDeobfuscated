@@ -4,7 +4,6 @@
  * Could not load the following classes:
  *  com.google.gson.JsonElement
  *  com.google.gson.JsonObject
- *  com.mojang.bridge.game.PackType
  *  java.lang.Object
  *  java.lang.Override
  *  java.lang.String
@@ -17,7 +16,6 @@ package net.minecraft.data.metadata;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.bridge.game.PackType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -28,6 +26,7 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.FeatureFlagsMetadataSection;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.MetadataSectionType;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.world.flag.FeatureFlagSet;
@@ -59,7 +58,7 @@ implements DataProvider {
     }
 
     public static PackMetadataGenerator forFeaturePack(PackOutput $$0, Component $$1) {
-        return new PackMetadataGenerator($$0).add(PackMetadataSection.TYPE, new PackMetadataSection($$1, DetectedVersion.BUILT_IN.getPackVersion(PackType.DATA)));
+        return new PackMetadataGenerator($$0).add(PackMetadataSection.TYPE, new PackMetadataSection($$1, DetectedVersion.BUILT_IN.getPackVersion(PackType.SERVER_DATA)));
     }
 
     public static PackMetadataGenerator forFeaturePack(PackOutput $$0, Component $$1, FeatureFlagSet $$2) {

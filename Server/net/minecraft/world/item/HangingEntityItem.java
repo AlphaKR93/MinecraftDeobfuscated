@@ -5,7 +5,6 @@
  *  java.lang.Object
  *  java.lang.Override
  *  java.util.Optional
- *  net.minecraft.world.item.ItemStack
  */
 package net.minecraft.world.item;
 

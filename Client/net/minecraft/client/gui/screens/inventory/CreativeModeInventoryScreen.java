@@ -540,7 +540,7 @@ extends EffectRenderingInventoryScreen<ItemPickerMenu> {
         if (selectedTab.getType() == CreativeModeTab.Type.SEARCH) {
             this.searchBox.setVisible(true);
             this.searchBox.setCanLoseFocus(false);
-            this.searchBox.setFocus(true);
+            this.searchBox.setFocused(true);
             if ($$1 != $$0) {
                 this.searchBox.setValue("");
             }
@@ -548,7 +548,7 @@ extends EffectRenderingInventoryScreen<ItemPickerMenu> {
         } else {
             this.searchBox.setVisible(false);
             this.searchBox.setCanLoseFocus(true);
-            this.searchBox.setFocus(false);
+            this.searchBox.setFocused(false);
             this.searchBox.setValue("");
         }
         this.scrollOffs = 0.0f;
@@ -606,7 +606,6 @@ extends EffectRenderingInventoryScreen<ItemPickerMenu> {
         if (this.destroyItemSlot != null && selectedTab.getType() == CreativeModeTab.Type.INVENTORY && this.isHovering(this.destroyItemSlot.x, this.destroyItemSlot.y, 16, 16, $$1, $$2)) {
             this.renderTooltip($$0, TRASH_SLOT_TOOLTIP, $$1, $$2);
         }
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         this.renderTooltip($$0, $$1, $$2);
     }
 
@@ -637,7 +636,6 @@ extends EffectRenderingInventoryScreen<ItemPickerMenu> {
 
     @Override
     protected void renderBg(PoseStack $$0, float $$1, int $$2, int $$3) {
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         for (CreativeModeTab $$4 : CreativeModeTabs.tabs()) {
             RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
             RenderSystem.setShaderTexture(0, CREATIVE_TABS_LOCATION);
@@ -648,7 +646,6 @@ extends EffectRenderingInventoryScreen<ItemPickerMenu> {
         RenderSystem.setShaderTexture(0, new ResourceLocation(GUI_CREATIVE_TAB_PREFIX + selectedTab.getBackgroundSuffix()));
         this.blit($$0, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         this.searchBox.render($$0, $$2, $$3, $$1);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         int $$5 = this.leftPos + 175;
         int $$6 = this.topPos + 18;
         int $$7 = $$6 + 112;

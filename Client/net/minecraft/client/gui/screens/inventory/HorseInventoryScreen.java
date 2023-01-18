@@ -39,7 +39,6 @@ extends AbstractContainerScreen<HorseInventoryMenu> {
     protected void renderBg(PoseStack $$0, float $$1, int $$2, int $$3) {
         AbstractChestedHorse $$6;
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, HORSE_INVENTORY_LOCATION);
         int $$4 = (this.width - this.imageWidth) / 2;
         int $$5 = (this.height - this.imageHeight) / 2;

@@ -140,7 +140,7 @@ public class MapDecoration {
         }
 
         public static Type byIcon(byte $$0) {
-            return Type.values()[Mth.clamp((int)$$0, 0, Type.values().length - 1)];
+            return Type.values()[Mth.clamp($$0, 0, Type.values().length - 1)];
         }
 
         public boolean shouldTrackCount() {

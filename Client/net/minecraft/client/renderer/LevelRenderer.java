@@ -364,7 +364,6 @@ AutoCloseable {
         int $$13 = -1;
         float $$14 = (float)this.ticks + $$1;
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getParticleShader));
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         BlockPos.MutableBlockPos $$15 = new BlockPos.MutableBlockPos();
         for (int $$16 = $$9 - $$12; $$16 <= $$9 + $$12; ++$$16) {
             for (int $$17 = $$7 - $$12; $$17 <= $$7 + $$12; ++$$17) {
@@ -374,7 +373,7 @@ AutoCloseable {
                 double $$20 = (double)this.rainSizeZ[$$18] * 0.5;
                 $$15.set((double)$$17, $$3, (double)$$16);
                 Biome $$21 = (Biome)$$6.getBiome($$15).value();
-                if ($$21.getPrecipitation() == Biome.Precipitation.NONE) continue;
+                if (!$$21.hasPrecipitation()) continue;
                 int $$22 = $$6.getHeight(Heightmap.Types.MOTION_BLOCKING, $$17, $$16);
                 int $$23 = $$8 - $$12;
                 int $$24 = $$8 + $$12;
@@ -390,7 +389,8 @@ AutoCloseable {
                 if ($$23 == $$24) continue;
                 RandomSource $$26 = RandomSource.create($$17 * $$17 * 3121 + $$17 * 45238971 ^ $$16 * $$16 * 418711 + $$16 * 13761);
                 $$15.set($$17, $$23, $$16);
-                if ($$21.warmEnoughToRain($$15)) {
+                Biome.Precipitation $$27 = $$21.getPrecipitationAt($$15);
+                if ($$27 == Biome.Precipitation.RAIN) {
                     if ($$13 != 0) {
                         if ($$13 >= 0) {
                             $$10.end();
@@ -399,20 +399,21 @@ AutoCloseable {
                         RenderSystem.setShaderTexture(0, RAIN_LOCATION);
                         $$11.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
                     }
-                    int $$27 = this.ticks + $$17 * $$17 * 3121 + $$17 * 45238971 + $$16 * $$16 * 418711 + $$16 * 13761 & 0x1F;
-                    float $$28 = -((float)$$27 + $$1) / 32.0f * (3.0f + $$26.nextFloat());
-                    double $$29 = (double)$$17 + 0.5 - $$2;
-                    double $$30 = (double)$$16 + 0.5 - $$4;
-                    float $$31 = (float)Math.sqrt((double)($$29 * $$29 + $$30 * $$30)) / (float)$$12;
-                    float $$32 = ((1.0f - $$31 * $$31) * 0.5f + 0.5f) * $$5;
+                    int $$28 = this.ticks + $$17 * $$17 * 3121 + $$17 * 45238971 + $$16 * $$16 * 418711 + $$16 * 13761 & 0x1F;
+                    float $$29 = -((float)$$28 + $$1) / 32.0f * (3.0f + $$26.nextFloat());
+                    double $$30 = (double)$$17 + 0.5 - $$2;
+                    double $$31 = (double)$$16 + 0.5 - $$4;
+                    float $$32 = (float)Math.sqrt((double)($$30 * $$30 + $$31 * $$31)) / (float)$$12;
+                    float $$33 = ((1.0f - $$32 * $$32) * 0.5f + 0.5f) * $$5;
                     $$15.set($$17, $$25, $$16);
-                    int $$33 = LevelRenderer.getLightColor($$6, $$15);
-                    $$11.vertex((double)$$17 - $$2 - $$19 + 0.5, (double)$$24 - $$3, (double)$$16 - $$4 - $$20 + 0.5).uv(0.0f, (float)$$23 * 0.25f + $$28).color(1.0f, 1.0f, 1.0f, $$32).uv2($$33).endVertex();
-                    $$11.vertex((double)$$17 - $$2 + $$19 + 0.5, (double)$$24 - $$3, (double)$$16 - $$4 + $$20 + 0.5).uv(1.0f, (float)$$23 * 0.25f + $$28).color(1.0f, 1.0f, 1.0f, $$32).uv2($$33).endVertex();
-                    $$11.vertex((double)$$17 - $$2 + $$19 + 0.5, (double)$$23 - $$3, (double)$$16 - $$4 + $$20 + 0.5).uv(1.0f, (float)$$24 * 0.25f + $$28).color(1.0f, 1.0f, 1.0f, $$32).uv2($$33).endVertex();
-                    $$11.vertex((double)$$17 - $$2 - $$19 + 0.5, (double)$$23 - $$3, (double)$$16 - $$4 - $$20 + 0.5).uv(0.0f, (float)$$24 * 0.25f + $$28).color(1.0f, 1.0f, 1.0f, $$32).uv2($$33).endVertex();
+                    int $$34 = LevelRenderer.getLightColor($$6, $$15);
+                    $$11.vertex((double)$$17 - $$2 - $$19 + 0.5, (double)$$24 - $$3, (double)$$16 - $$4 - $$20 + 0.5).uv(0.0f, (float)$$23 * 0.25f + $$29).color(1.0f, 1.0f, 1.0f, $$33).uv2($$34).endVertex();
+                    $$11.vertex((double)$$17 - $$2 + $$19 + 0.5, (double)$$24 - $$3, (double)$$16 - $$4 + $$20 + 0.5).uv(1.0f, (float)$$23 * 0.25f + $$29).color(1.0f, 1.0f, 1.0f, $$33).uv2($$34).endVertex();
+                    $$11.vertex((double)$$17 - $$2 + $$19 + 0.5, (double)$$23 - $$3, (double)$$16 - $$4 + $$20 + 0.5).uv(1.0f, (float)$$24 * 0.25f + $$29).color(1.0f, 1.0f, 1.0f, $$33).uv2($$34).endVertex();
+                    $$11.vertex((double)$$17 - $$2 - $$19 + 0.5, (double)$$23 - $$3, (double)$$16 - $$4 - $$20 + 0.5).uv(0.0f, (float)$$24 * 0.25f + $$29).color(1.0f, 1.0f, 1.0f, $$33).uv2($$34).endVertex();
                     continue;
                 }
+                if ($$27 != Biome.Precipitation.SNOW) continue;
                 if ($$13 != 1) {
                     if ($$13 >= 0) {
                         $$10.end();
@@ -421,23 +422,23 @@ AutoCloseable {
                     RenderSystem.setShaderTexture(0, SNOW_LOCATION);
                     $$11.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
                 }
-                float $$34 = -((float)(this.ticks & 0x1FF) + $$1) / 512.0f;
-                float $$35 = (float)($$26.nextDouble() + (double)$$14 * 0.01 * (double)((float)$$26.nextGaussian()));
-                float $$36 = (float)($$26.nextDouble() + (double)($$14 * (float)$$26.nextGaussian()) * 0.001);
-                double $$37 = (double)$$17 + 0.5 - $$2;
-                double $$38 = (double)$$16 + 0.5 - $$4;
-                float $$39 = (float)Math.sqrt((double)($$37 * $$37 + $$38 * $$38)) / (float)$$12;
-                float $$40 = ((1.0f - $$39 * $$39) * 0.3f + 0.5f) * $$5;
+                float $$35 = -((float)(this.ticks & 0x1FF) + $$1) / 512.0f;
+                float $$36 = (float)($$26.nextDouble() + (double)$$14 * 0.01 * (double)((float)$$26.nextGaussian()));
+                float $$37 = (float)($$26.nextDouble() + (double)($$14 * (float)$$26.nextGaussian()) * 0.001);
+                double $$38 = (double)$$17 + 0.5 - $$2;
+                double $$39 = (double)$$16 + 0.5 - $$4;
+                float $$40 = (float)Math.sqrt((double)($$38 * $$38 + $$39 * $$39)) / (float)$$12;
+                float $$41 = ((1.0f - $$40 * $$40) * 0.3f + 0.5f) * $$5;
                 $$15.set($$17, $$25, $$16);
-                int $$41 = LevelRenderer.getLightColor($$6, $$15);
-                int $$42 = $$41 >> 16 & 0xFFFF;
-                int $$43 = $$41 & 0xFFFF;
-                int $$44 = ($$42 * 3 + 240) / 4;
+                int $$42 = LevelRenderer.getLightColor($$6, $$15);
+                int $$43 = $$42 >> 16 & 0xFFFF;
+                int $$44 = $$42 & 0xFFFF;
                 int $$45 = ($$43 * 3 + 240) / 4;
-                $$11.vertex((double)$$17 - $$2 - $$19 + 0.5, (double)$$24 - $$3, (double)$$16 - $$4 - $$20 + 0.5).uv(0.0f + $$35, (float)$$23 * 0.25f + $$34 + $$36).color(1.0f, 1.0f, 1.0f, $$40).uv2($$45, $$44).endVertex();
-                $$11.vertex((double)$$17 - $$2 + $$19 + 0.5, (double)$$24 - $$3, (double)$$16 - $$4 + $$20 + 0.5).uv(1.0f + $$35, (float)$$23 * 0.25f + $$34 + $$36).color(1.0f, 1.0f, 1.0f, $$40).uv2($$45, $$44).endVertex();
-                $$11.vertex((double)$$17 - $$2 + $$19 + 0.5, (double)$$23 - $$3, (double)$$16 - $$4 + $$20 + 0.5).uv(1.0f + $$35, (float)$$24 * 0.25f + $$34 + $$36).color(1.0f, 1.0f, 1.0f, $$40).uv2($$45, $$44).endVertex();
-                $$11.vertex((double)$$17 - $$2 - $$19 + 0.5, (double)$$23 - $$3, (double)$$16 - $$4 - $$20 + 0.5).uv(0.0f + $$35, (float)$$24 * 0.25f + $$34 + $$36).color(1.0f, 1.0f, 1.0f, $$40).uv2($$45, $$44).endVertex();
+                int $$46 = ($$44 * 3 + 240) / 4;
+                $$11.vertex((double)$$17 - $$2 - $$19 + 0.5, (double)$$24 - $$3, (double)$$16 - $$4 - $$20 + 0.5).uv(0.0f + $$36, (float)$$23 * 0.25f + $$35 + $$37).color(1.0f, 1.0f, 1.0f, $$41).uv2($$46, $$45).endVertex();
+                $$11.vertex((double)$$17 - $$2 + $$19 + 0.5, (double)$$24 - $$3, (double)$$16 - $$4 + $$20 + 0.5).uv(1.0f + $$36, (float)$$23 * 0.25f + $$35 + $$37).color(1.0f, 1.0f, 1.0f, $$41).uv2($$46, $$45).endVertex();
+                $$11.vertex((double)$$17 - $$2 + $$19 + 0.5, (double)$$23 - $$3, (double)$$16 - $$4 + $$20 + 0.5).uv(1.0f + $$36, (float)$$24 * 0.25f + $$35 + $$37).color(1.0f, 1.0f, 1.0f, $$41).uv2($$46, $$45).endVertex();
+                $$11.vertex((double)$$17 - $$2 - $$19 + 0.5, (double)$$23 - $$3, (double)$$16 - $$4 - $$20 + 0.5).uv(0.0f + $$36, (float)$$24 * 0.25f + $$35 + $$37).color(1.0f, 1.0f, 1.0f, $$41).uv2($$46, $$45).endVertex();
             }
         }
         if ($$13 >= 0) {
@@ -459,11 +460,11 @@ AutoCloseable {
         Vec3i $$5 = null;
         int $$6 = (int)(100.0f * $$1 * $$1) / (this.minecraft.options.particles().get() == ParticleStatus.DECREASED ? 2 : 1);
         for (int $$7 = 0; $$7 < $$6; ++$$7) {
+            Biome $$11;
+            int $$9;
             int $$8 = $$2.nextInt(21) - 10;
-            int $$9 = $$2.nextInt(21) - 10;
-            BlockPos $$10 = $$3.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, $$4.offset($$8, 0, $$9));
-            Biome $$11 = $$3.getBiome($$10).value();
-            if ($$10.getY() <= $$3.getMinBuildHeight() || $$10.getY() > $$4.getY() + 10 || $$10.getY() < $$4.getY() - 10 || $$11.getPrecipitation() != Biome.Precipitation.RAIN || !$$11.warmEnoughToRain($$10)) continue;
+            BlockPos $$10 = $$3.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, $$4.offset($$8, 0, $$9 = $$2.nextInt(21) - 10));
+            if ($$10.getY() <= $$3.getMinBuildHeight() || $$10.getY() > $$4.getY() + 10 || $$10.getY() < $$4.getY() - 10 || ($$11 = $$3.getBiome($$10).value()).getPrecipitationAt($$10) != Biome.Precipitation.RAIN) continue;
             $$5 = $$10.below();
             if (this.minecraft.options.particles().get() == ParticleStatus.MINIMAL) break;
             double $$12 = $$2.nextDouble();
@@ -1421,7 +1422,6 @@ AutoCloseable {
             RenderSystem.disableCull();
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-            RenderSystem.disableTexture();
             for (RenderChunkInfo $$6 : this.renderChunksInFrustum) {
                 ChunkRenderDispatcher.RenderChunk $$7 = $$6.chunk;
                 BlockPos $$8 = $$7.getOrigin();
@@ -1500,11 +1500,9 @@ AutoCloseable {
             RenderSystem.depthMask(true);
             RenderSystem.disableBlend();
             RenderSystem.enableCull();
-            RenderSystem.enableTexture();
         }
         if (this.capturedFrustum != null) {
             RenderSystem.disableCull();
-            RenderSystem.disableTexture();
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.lineWidth(5.0f);
@@ -1525,7 +1523,6 @@ AutoCloseable {
             RenderSystem.depthMask(false);
             RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getRendertypeLinesShader));
             $$2.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR_NORMAL);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             this.addFrustumVertex($$2, 0);
             this.addFrustumVertex($$2, 1);
             this.addFrustumVertex($$2, 1);
@@ -1556,7 +1553,6 @@ AutoCloseable {
             RenderSystem.depthMask(true);
             RenderSystem.disableBlend();
             RenderSystem.enableCull();
-            RenderSystem.enableTexture();
             RenderSystem.lineWidth(1.0f);
         }
     }
@@ -1640,7 +1636,6 @@ AutoCloseable {
             $$0.popPose();
         }
         RenderSystem.depthMask(true);
-        RenderSystem.enableTexture();
         RenderSystem.disableBlend();
     }
 
@@ -1660,7 +1655,6 @@ AutoCloseable {
         if (this.minecraft.level.effects().skyType() != DimensionSpecialEffects.SkyType.NORMAL) {
             return;
         }
-        RenderSystem.disableTexture();
         Vec3 $$7 = this.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), $$2);
         float $$8 = (float)$$7.x;
         float $$9 = (float)$$7.y;
@@ -1678,7 +1672,6 @@ AutoCloseable {
         float[] $$13 = this.level.effects().getSunriseColor(this.level.getTimeOfDay($$2), $$2);
         if ($$13 != null) {
             RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionColorShader));
-            RenderSystem.disableTexture();
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             $$0.pushPose();
             $$0.mulPose(Axis.XP.rotationDegrees(90.0f));
@@ -1701,7 +1694,6 @@ AutoCloseable {
             BufferUploader.drawWithShader($$11.end());
             $$0.popPose();
         }
-        RenderSystem.enableTexture();
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         $$0.pushPose();
         float $$24 = 1.0f - this.level.getRainLevel($$2);
@@ -1733,7 +1725,6 @@ AutoCloseable {
         $$11.vertex($$25, $$26, -100.0f, -$$26).uv($$30, $$31).endVertex();
         $$11.vertex($$25, -$$26, -100.0f, -$$26).uv($$32, $$31).endVertex();
         BufferUploader.drawWithShader($$11.end());
-        RenderSystem.disableTexture();
         float $$34 = this.level.getStarBrightness($$2) * $$24;
         if ($$34 > 0.0f) {
             RenderSystem.setShaderColor($$34, $$34, $$34, $$34);
@@ -1746,7 +1737,6 @@ AutoCloseable {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.disableBlend();
         $$0.popPose();
-        RenderSystem.disableTexture();
         RenderSystem.setShaderColor(0.0f, 0.0f, 0.0f, 1.0f);
         double $$35 = this.minecraft.player.getEyePosition((float)$$2).y - this.level.getLevelData().getHorizonHeight(this.level);
         if ($$35 < 0.0) {
@@ -1757,12 +1747,7 @@ AutoCloseable {
             VertexBuffer.unbind();
             $$0.popPose();
         }
-        if (this.level.effects().hasGround()) {
-            RenderSystem.setShaderColor($$8 * 0.2f + 0.04f, $$9 * 0.2f + 0.04f, $$10 * 0.6f + 0.1f, 1.0f);
-        } else {
-            RenderSystem.setShaderColor($$8, $$9, $$10, 1.0f);
-        }
-        RenderSystem.enableTexture();
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.depthMask(true);
     }
 
@@ -1842,7 +1827,6 @@ AutoCloseable {
             VertexBuffer.unbind();
         }
         $$0.popPose();
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.enableCull();
         RenderSystem.disableBlend();
     }
@@ -2073,6 +2057,7 @@ AutoCloseable {
         RenderSystem.disableBlend();
         $$8.popPose();
         RenderSystem.applyModelViewMatrix();
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.depthMask(true);
     }
 

@@ -384,11 +384,6 @@ extends RealmsScreen {
             RealmsSelectWorldTemplateScreen.this.renderBackground($$0);
         }
 
-        @Override
-        public boolean isFocused() {
-            return RealmsSelectWorldTemplateScreen.this.getFocused() == this;
-        }
-
         public boolean isEmpty() {
             return this.getItemCount() == 0;
         }
@@ -428,10 +423,8 @@ extends RealmsScreen {
 
         private void drawImage(PoseStack $$0, int $$1, int $$2, int $$3, int $$4, WorldTemplate $$5) {
             RealmsTextureManager.bindWorldTemplate($$5.id, $$5.image);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             GuiComponent.blit($$0, $$1 + 1, $$2 + 1, 0.0f, 0.0f, 38, 38, 38, 38);
             RenderSystem.setShaderTexture(0, SLOT_FRAME_LOCATION);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             GuiComponent.blit($$0, $$1, $$2, 0.0f, 0.0f, 40, 40, 40, 40);
         }
 
@@ -456,13 +449,11 @@ extends RealmsScreen {
             }
             if (!$$11) {
                 RenderSystem.setShaderTexture(0, LINK_ICON);
-                RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
                 float $$12 = $$9 ? 15.0f : 0.0f;
                 GuiComponent.blit($$0, $$1 + $$8, $$2, $$12, 0.0f, 15, 15, 30, 15);
             }
             if (!"".equals((Object)$$6)) {
                 RenderSystem.setShaderTexture(0, TRAILER_ICON);
-                RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
                 int $$13 = $$1 + $$8 + ($$11 ? 0 : 17);
                 float $$14 = $$10 ? 15.0f : 0.0f;
                 GuiComponent.blit($$0, $$13, $$2, $$14, 0.0f, 15, 15, 30, 15);

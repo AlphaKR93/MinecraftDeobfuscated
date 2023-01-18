@@ -39,9 +39,9 @@ extends OptionsSubScreen {
         this.addRenderableWidget(this.options.forceUnicodeFont().createButton(this.options, this.width / 2 - 155, this.height - 38, 150));
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, $$0 -> {
             LanguageSelectionList.Entry $$1 = (LanguageSelectionList.Entry)this.packSelectionList.getSelected();
-            if ($$1 != null && !$$1.language.getCode().equals((Object)this.languageManager.getSelected().getCode())) {
-                this.languageManager.setSelected($$1.language);
-                this.options.languageCode = $$1.language.getCode();
+            if ($$1 != null && !$$1.code.equals((Object)this.languageManager.getSelected())) {
+                this.languageManager.setSelected($$1.code);
+                this.options.languageCode = $$1.code;
                 this.minecraft.reloadResourcePacks();
                 this.options.save();
             }
@@ -62,12 +62,14 @@ extends OptionsSubScreen {
     extends ObjectSelectionList<Entry> {
         public LanguageSelectionList(Minecraft $$0) {
             super($$0, LanguageSelectScreen.this.width, LanguageSelectScreen.this.height, 32, LanguageSelectScreen.this.height - 65 + 4, 18);
-            for (LanguageInfo $$1 : LanguageSelectScreen.this.languageManager.getLanguages()) {
-                Entry $$2 = new Entry($$1);
-                this.addEntry($$2);
-                if (!LanguageSelectScreen.this.languageManager.getSelected().getCode().equals((Object)$$1.getCode())) continue;
-                this.setSelected($$2);
-            }
+            String $$12 = LanguageSelectScreen.this.languageManager.getSelected();
+            LanguageSelectScreen.this.languageManager.getLanguages().forEach(($$1, $$2) -> {
+                Entry $$3 = new Entry((String)$$1, (LanguageInfo)((Object)$$2));
+                this.addEntry($$3);
+                if ($$12.equals($$1)) {
+                    this.setSelected($$3);
+                }
+            });
             if (this.getSelected() != null) {
                 this.centerScrollOn((Entry)this.getSelected());
             }
@@ -88,23 +90,19 @@ extends OptionsSubScreen {
             LanguageSelectScreen.this.renderBackground($$0);
         }
 
-        @Override
-        protected boolean isFocused() {
-            return LanguageSelectScreen.this.getFocused() == this;
-        }
-
         public class Entry
         extends ObjectSelectionList.Entry<Entry> {
-            final LanguageInfo language;
+            final String code;
+            private final Component language;
 
-            public Entry(LanguageInfo $$1) {
-                this.language = $$1;
+            public Entry(String $$1, LanguageInfo $$2) {
+                this.code = $$1;
+                this.language = $$2.toComponent();
             }
 
             @Override
             public void render(PoseStack $$0, int $$1, int $$2, int $$3, int $$4, int $$5, int $$6, int $$7, boolean $$8, float $$9) {
-                String $$10 = this.language.toString();
-                LanguageSelectScreen.this.font.drawShadow($$0, $$10, LanguageSelectionList.this.width / 2 - LanguageSelectScreen.this.font.width($$10) / 2, $$2 + 1, 0xFFFFFF, true);
+                LanguageSelectScreen.this.font.drawShadow($$0, this.language, (float)(LanguageSelectionList.this.width / 2 - LanguageSelectScreen.this.font.width(this.language) / 2), (float)($$2 + 1), 0xFFFFFF);
             }
 
             @Override

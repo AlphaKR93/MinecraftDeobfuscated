@@ -82,7 +82,7 @@ extends Behavior<Villager> {
     }
 
     @Override
-    protected void stop(ServerLevel $$0, Villager $$1, long $$2) {
+    protected void tick(ServerLevel $$0, Villager $$1, long $$2) {
         this.setCurrentCropAsTarget($$1);
         $$1.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.BONE_MEAL));
         this.nextWorkCycleTime = $$2;
@@ -98,13 +98,13 @@ extends Behavior<Villager> {
     }
 
     @Override
-    protected void start(ServerLevel $$0, Villager $$1, long $$2) {
+    protected void tick(ServerLevel $$0, Villager $$1, long $$2) {
         $$1.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         this.lastBonemealingSession = $$1.tickCount;
     }
 
     @Override
-    protected void start(ServerLevel $$0, Villager $$1, long $$2) {
+    protected void tick(ServerLevel $$0, Villager $$1, long $$2) {
         BlockPos $$3 = (BlockPos)this.cropPos.get();
         if ($$2 < this.nextWorkCycleTime || !$$3.closerToCenterThan($$1.position(), 1.0)) {
             return;

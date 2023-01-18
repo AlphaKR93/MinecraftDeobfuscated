@@ -82,6 +82,7 @@ import net.minecraft.client.DebugQueryHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.MapRenderer;
+import net.minecraft.client.gui.components.LogoRenderer;
 import net.minecraft.client.gui.components.toasts.RecipeToast;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.screens.ConfirmScreen;
@@ -171,6 +172,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundBlockEventPacket;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
+import net.minecraft.network.protocol.game.ClientboundBundlePacket;
 import net.minecraft.network.protocol.game.ClientboundChangeDifficultyPacket;
 import net.minecraft.network.protocol.game.ClientboundClearTitlesPacket;
 import net.minecraft.network.protocol.game.ClientboundCommandSuggestionsPacket;
@@ -190,6 +192,7 @@ import net.minecraft.network.protocol.game.ClientboundExplodePacket;
 import net.minecraft.network.protocol.game.ClientboundForgetLevelChunkPacket;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.network.protocol.game.ClientboundHorseScreenOpenPacket;
+import net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket;
 import net.minecraft.network.protocol.game.ClientboundInitializeBorderPacket;
 import net.minecraft.network.protocol.game.ClientboundKeepAlivePacket;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkPacketData;
@@ -305,6 +308,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -470,12 +474,12 @@ ClientGamePacketListener {
         this.minecraft.options.setServerRenderDistance($$02.chunkRadius());
         this.minecraft.options.broadcastOptions();
         this.connection.send(new ServerboundCustomPayloadPacket(ServerboundCustomPayloadPacket.BRAND, new FriendlyByteBuf(Unpooled.buffer()).writeUtf(ClientBrandRetriever.getClientModName())));
+        this.chatSession = null;
         this.lastSeenMessages = new LastSeenMessagesTracker(20);
         this.messageSignatureCache = MessageSignatureCache.createDefault();
         if (this.connection.isEncrypted()) {
             this.minecraft.getProfileKeyPairManager().prepareKeyPair().thenAcceptAsync($$0 -> $$0.ifPresent(this::setKeyPair), (Executor)this.minecraft);
         }
-        this.minecraft.getGame().onStartGameSession();
         this.telemetryManager.onPlayerInfoReceived($$02.gameType(), $$02.hardcore());
     }
 
@@ -646,9 +650,9 @@ ClientGamePacketListener {
             ((Player)$$1).removeVehicle();
         }
         Vec3 $$2 = $$1.getDeltaMovement();
-        boolean $$3 = $$0.getRelativeArguments().contains((Object)ClientboundPlayerPositionPacket.RelativeArgument.X);
-        boolean $$4 = $$0.getRelativeArguments().contains((Object)ClientboundPlayerPositionPacket.RelativeArgument.Y);
-        boolean $$5 = $$0.getRelativeArguments().contains((Object)ClientboundPlayerPositionPacket.RelativeArgument.Z);
+        boolean $$3 = $$0.getRelativeArguments().contains((Object)RelativeMovement.X);
+        boolean $$4 = $$0.getRelativeArguments().contains((Object)RelativeMovement.Y);
+        boolean $$5 = $$0.getRelativeArguments().contains((Object)RelativeMovement.Z);
         if ($$3) {
             double $$6 = $$2.x();
             double $$7 = $$1.getX() + $$0.getX();
@@ -683,14 +687,14 @@ ClientGamePacketListener {
         $$1.setDeltaMovement($$8, $$12, $$16);
         float $$18 = $$0.getYRot();
         float $$19 = $$0.getXRot();
-        if ($$0.getRelativeArguments().contains((Object)ClientboundPlayerPositionPacket.RelativeArgument.X_ROT)) {
+        if ($$0.getRelativeArguments().contains((Object)RelativeMovement.X_ROT)) {
             $$1.setXRot($$1.getXRot() + $$19);
             $$1.xRotO += $$19;
         } else {
             $$1.setXRot($$19);
             $$1.xRotO = $$19;
         }
-        if ($$0.getRelativeArguments().contains((Object)ClientboundPlayerPositionPacket.RelativeArgument.Y_ROT)) {
+        if ($$0.getRelativeArguments().contains((Object)RelativeMovement.Y_ROT)) {
             $$1.setYRot($$1.getYRot() + $$18);
             $$1.yRotO += $$18;
         } else {
@@ -897,8 +901,6 @@ ClientGamePacketListener {
         } else if ($$0.getAction() == 3) {
             LivingEntity $$3 = (LivingEntity)$$1;
             $$3.swing(InteractionHand.OFF_HAND);
-        } else if ($$0.getAction() == 1) {
-            $$1.animateHurt();
         } else if ($$0.getAction() == 2) {
             Player $$4 = (Player)$$1;
             $$4.stopSleepInBed(false, false);
@@ -907,6 +909,16 @@ ClientGamePacketListener {
         } else if ($$0.getAction() == 5) {
             this.minecraft.particleEngine.createTrackingEmitter($$1, ParticleTypes.ENCHANTED_HIT);
         }
+    }
+
+    @Override
+    public void handleHurtAnimation(ClientboundHurtAnimationPacket $$0) {
+        PacketUtils.ensureRunningOnSameThread($$0, this, this.minecraft);
+        Entity $$1 = this.level.getEntity($$0.id());
+        if ($$1 == null) {
+            return;
+        }
+        $$1.animateHurt($$0.yaw());
     }
 
     @Override
@@ -1217,7 +1229,7 @@ ClientGamePacketListener {
                 this.minecraft.player.connection.send(new ServerboundClientCommandPacket(ServerboundClientCommandPacket.Action.PERFORM_RESPAWN));
                 this.minecraft.setScreen(new ReceivingLevelScreen());
             } else if ($$4 == 1) {
-                this.minecraft.setScreen(new WinScreen(true, () -> this.minecraft.player.connection.send(new ServerboundClientCommandPacket(ServerboundClientCommandPacket.Action.PERFORM_RESPAWN))));
+                this.minecraft.setScreen(new WinScreen(true, new LogoRenderer(false), () -> this.minecraft.player.connection.send(new ServerboundClientCommandPacket(ServerboundClientCommandPacket.Action.PERFORM_RESPAWN))));
             }
         } else if ($$2 == ClientboundGameEventPacket.DEMO_EVENT) {
             Options $$5 = this.minecraft.options;
@@ -2233,6 +2245,14 @@ ClientGamePacketListener {
         this.level.handleBlockChangedAck($$0.sequence());
     }
 
+    @Override
+    public void handleBundlePacket(ClientboundBundlePacket $$0) {
+        PacketUtils.ensureRunningOnSameThread($$0, this, this.minecraft);
+        for (Packet $$1 : $$0.subPackets()) {
+            $$1.handle(this);
+        }
+    }
+
     private void readSectionList(int $$0, int $$1, LevelLightEngine $$2, LightLayer $$3, BitSet $$4, BitSet $$5, Iterator<byte[]> $$6, boolean $$7) {
         for (int $$8 = 0; $$8 < $$2.getLightSectionCount(); ++$$8) {
             int $$9 = $$2.getMinLightSection() + $$8;
@@ -2244,9 +2264,13 @@ ClientGamePacketListener {
         }
     }
 
-    @Override
     public Connection getConnection() {
         return this.connection;
+    }
+
+    @Override
+    public boolean isAcceptingMessages() {
+        return this.connection.isConnected();
     }
 
     public Collection<PlayerInfo> getListedOnlinePlayers() {

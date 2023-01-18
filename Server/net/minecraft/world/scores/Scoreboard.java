@@ -17,6 +17,7 @@
  *  java.util.Map
  *  java.util.function.Consumer
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.player.Player
  *  org.slf4j.Logger
  */
 package net.minecraft.world.scores;

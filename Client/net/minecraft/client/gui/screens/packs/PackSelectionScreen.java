@@ -62,8 +62,10 @@ import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -165,10 +167,28 @@ extends Screen {
         this.doneButton.active = !this.selectedPackList.children().isEmpty();
     }
 
-    private void updateList(TransferableSelectionList $$0, Stream<PackSelectionModel.Entry> $$12) {
+    private void updateList(TransferableSelectionList $$0, Stream<PackSelectionModel.Entry> $$1) {
         $$0.children().clear();
+        TransferableSelectionList.PackEntry $$22 = (TransferableSelectionList.PackEntry)$$0.getSelected();
+        String $$3 = $$22 == null ? "" : $$22.getPackId();
         $$0.setSelected(null);
-        $$12.forEach($$1 -> $$0.children().add((Object)new TransferableSelectionList.PackEntry(this.minecraft, $$0, this, (PackSelectionModel.Entry)$$1)));
+        $$1.forEach($$2 -> {
+            TransferableSelectionList.PackEntry $$3 = new TransferableSelectionList.PackEntry(this.minecraft, $$0, (PackSelectionModel.Entry)$$2);
+            $$0.children().add((Object)$$3);
+            if ($$2.getId().equals((Object)$$3)) {
+                $$0.setSelected($$3);
+            }
+        });
+    }
+
+    public void updateFocus(PackSelectionModel.Entry $$0, TransferableSelectionList $$1) {
+        TransferableSelectionList $$2 = this.selectedPackList == $$1 ? this.availablePackList : this.selectedPackList;
+        this.changeFocus(ComponentPath.path($$2.getFirstElement(), new ContainerEventHandler[]{$$2, this}));
+    }
+
+    public void clearSelected() {
+        this.selectedPackList.setSelected(null);
+        this.availablePackList.setSelected(null);
     }
 
     private void reload() {
@@ -180,7 +200,7 @@ extends Screen {
 
     @Override
     public void render(PoseStack $$0, int $$1, int $$2, float $$3) {
-        this.renderDirtBackground(0);
+        this.renderDirtBackground($$0);
         this.availablePackList.render($$0, $$1, $$2, $$3);
         this.selectedPackList.render($$0, $$1, $$2, $$3);
         PackSelectionScreen.drawCenteredString($$0, this.font, this.title, this.width / 2, 8, 0xFFFFFF);

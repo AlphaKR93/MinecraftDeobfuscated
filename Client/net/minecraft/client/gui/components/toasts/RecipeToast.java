@@ -48,11 +48,10 @@ implements Toast {
         }
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
         RenderSystem.setShaderTexture(0, TEXTURE);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         $$1.blit($$0, 0, 0, 0, 32, this.width(), this.height());
         $$1.getMinecraft().font.draw($$0, TITLE_TEXT, 30.0f, 7.0f, -11534256);
         $$1.getMinecraft().font.draw($$0, DESCRIPTION_TEXT, 30.0f, 18.0f, -16777216);
-        Recipe $$3 = (Recipe)this.recipes.get((int)($$2 / Math.max((long)1L, (long)(5000L / (long)this.recipes.size())) % (long)this.recipes.size()));
+        Recipe $$3 = (Recipe)this.recipes.get((int)((double)$$2 / Math.max((double)1.0, (double)(5000.0 * $$1.getNotificationDisplayTimeMultiplier() / (double)this.recipes.size())) % (double)this.recipes.size()));
         ItemStack $$4 = $$3.getToastSymbol();
         PoseStack $$5 = RenderSystem.getModelViewStack();
         $$5.pushPose();
@@ -62,7 +61,7 @@ implements Toast {
         $$5.popPose();
         RenderSystem.applyModelViewMatrix();
         $$1.getMinecraft().getItemRenderer().renderAndDecorateFakeItem($$3.getResultItem(), 8, 8);
-        return $$2 - this.lastChanged >= 5000L ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
+        return (double)($$2 - this.lastChanged) >= 5000.0 * $$1.getNotificationDisplayTimeMultiplier() ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
     }
 
     private void addItem(Recipe<?> $$0) {

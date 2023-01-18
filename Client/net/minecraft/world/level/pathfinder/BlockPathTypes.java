@@ -22,8 +22,6 @@ public enum BlockPathTypes {
     UNPASSABLE_RAIL(-1.0f),
     DANGER_FIRE(8.0f),
     DAMAGE_FIRE(16.0f),
-    DANGER_CACTUS(8.0f),
-    DAMAGE_CACTUS(-1.0f),
     DANGER_OTHER(8.0f),
     DAMAGE_OTHER(-1.0f),
     DOOR_OPEN(0.0f),

@@ -102,9 +102,9 @@ public class ViewArea {
 
     @Nullable
     protected ChunkRenderDispatcher.RenderChunk getRenderChunkAt(BlockPos $$0) {
-        int $$1 = Mth.intFloorDiv($$0.getX(), 16);
-        int $$2 = Mth.intFloorDiv($$0.getY() - this.level.getMinBuildHeight(), 16);
-        int $$3 = Mth.intFloorDiv($$0.getZ(), 16);
+        int $$1 = Mth.floorDiv($$0.getX(), 16);
+        int $$2 = Mth.floorDiv($$0.getY() - this.level.getMinBuildHeight(), 16);
+        int $$3 = Mth.floorDiv($$0.getZ(), 16);
         if ($$2 < 0 || $$2 >= this.chunkGridSizeY) {
             return null;
         }

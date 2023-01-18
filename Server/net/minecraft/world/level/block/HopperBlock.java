@@ -5,7 +5,6 @@
  *  java.lang.Object
  *  java.lang.Override
  *  javax.annotation.Nullable
- *  net.minecraft.core.BlockPos
  */
 package net.minecraft.world.level.block;
 

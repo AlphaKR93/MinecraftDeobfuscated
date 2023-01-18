@@ -59,45 +59,46 @@ implements SoundEventListener {
         Vec3 $$4 = $$2.cross($$3);
         int $$5 = 0;
         int $$6 = 0;
-        Iterator $$7 = this.subtitles.iterator();
-        while ($$7.hasNext()) {
-            Subtitle $$8 = (Subtitle)$$7.next();
-            if ($$8.getTime() + 3000L <= Util.getMillis()) {
-                $$7.remove();
+        double $$7 = this.minecraft.options.notificationDisplayTime().get();
+        Iterator $$8 = this.subtitles.iterator();
+        while ($$8.hasNext()) {
+            Subtitle $$9 = (Subtitle)$$8.next();
+            if ((double)$$9.getTime() + 3000.0 * $$7 <= (double)Util.getMillis()) {
+                $$8.remove();
                 continue;
             }
-            $$6 = Math.max((int)$$6, (int)this.minecraft.font.width($$8.getText()));
+            $$6 = Math.max((int)$$6, (int)this.minecraft.font.width($$9.getText()));
         }
         $$6 += this.minecraft.font.width("<") + this.minecraft.font.width(" ") + this.minecraft.font.width(">") + this.minecraft.font.width(" ");
-        for (Subtitle $$9 : this.subtitles) {
-            int $$10 = 255;
-            Component $$11 = $$9.getText();
-            Vec3 $$12 = $$9.getLocation().subtract($$1).normalize();
-            double $$13 = -$$4.dot($$12);
-            double $$14 = -$$2.dot($$12);
-            boolean $$15 = $$14 > 0.5;
-            int $$16 = $$6 / 2;
+        for (Subtitle $$10 : this.subtitles) {
+            int $$11 = 255;
+            Component $$12 = $$10.getText();
+            Vec3 $$13 = $$10.getLocation().subtract($$1).normalize();
+            double $$14 = -$$4.dot($$13);
+            double $$15 = -$$2.dot($$13);
+            boolean $$16 = $$15 > 0.5;
+            int $$17 = $$6 / 2;
             Objects.requireNonNull((Object)this.minecraft.font);
-            int $$17 = 9;
-            int $$18 = $$17 / 2;
-            float $$19 = 1.0f;
-            int $$20 = this.minecraft.font.width($$11);
-            int $$21 = Mth.floor(Mth.clampedLerp(255.0f, 75.0f, (float)(Util.getMillis() - $$9.getTime()) / 3000.0f));
-            int $$22 = $$21 << 16 | $$21 << 8 | $$21;
+            int $$18 = 9;
+            int $$19 = $$18 / 2;
+            float $$20 = 1.0f;
+            int $$21 = this.minecraft.font.width($$12);
+            int $$22 = Mth.floor(Mth.clampedLerp(255.0f, 75.0f, (float)(Util.getMillis() - $$10.getTime()) / (float)(3000.0 * $$7)));
+            int $$23 = $$22 << 16 | $$22 << 8 | $$22;
             $$0.pushPose();
-            $$0.translate((float)this.minecraft.getWindow().getGuiScaledWidth() - (float)$$16 * 1.0f - 2.0f, (float)(this.minecraft.getWindow().getGuiScaledHeight() - 35) - (float)($$5 * ($$17 + 1)) * 1.0f, 0.0f);
+            $$0.translate((float)this.minecraft.getWindow().getGuiScaledWidth() - (float)$$17 * 1.0f - 2.0f, (float)(this.minecraft.getWindow().getGuiScaledHeight() - 35) - (float)($$5 * ($$18 + 1)) * 1.0f, 0.0f);
             $$0.scale(1.0f, 1.0f, 1.0f);
-            SubtitleOverlay.fill($$0, -$$16 - 1, -$$18 - 1, $$16 + 1, $$18 + 1, this.minecraft.options.getBackgroundColor(0.8f));
+            SubtitleOverlay.fill($$0, -$$17 - 1, -$$19 - 1, $$17 + 1, $$19 + 1, this.minecraft.options.getBackgroundColor(0.8f));
             RenderSystem.enableBlend();
-            int $$23 = $$22 + -16777216;
-            if (!$$15) {
-                if ($$13 > 0.0) {
-                    SubtitleOverlay.drawString($$0, this.minecraft.font, ">", $$16 - this.minecraft.font.width(">"), -$$18, $$23);
-                } else if ($$13 < 0.0) {
-                    SubtitleOverlay.drawString($$0, this.minecraft.font, "<", -$$16, -$$18, $$23);
+            int $$24 = $$23 + -16777216;
+            if (!$$16) {
+                if ($$14 > 0.0) {
+                    SubtitleOverlay.drawString($$0, this.minecraft.font, ">", $$17 - this.minecraft.font.width(">"), -$$19, $$24);
+                } else if ($$14 < 0.0) {
+                    SubtitleOverlay.drawString($$0, this.minecraft.font, "<", -$$17, -$$19, $$24);
                 }
             }
-            SubtitleOverlay.drawString($$0, this.minecraft.font, $$11, -$$20 / 2, -$$18, $$23);
+            SubtitleOverlay.drawString($$0, this.minecraft.font, $$12, -$$21 / 2, -$$19, $$24);
             $$0.popPose();
             ++$$5;
         }

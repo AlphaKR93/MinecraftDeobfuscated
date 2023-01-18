@@ -51,7 +51,6 @@ implements DebugRenderer.SimpleDebugRenderer {
         Camera $$5 = this.minecraft.gameRenderer.getMainCamera();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.disableTexture();
         BlockPos $$6 = new BlockPos($$5.getPosition().x, 0.0, $$5.getPosition().z);
         this.goalSelectors.forEach(($$1, $$2) -> {
             for (int $$3 = 0; $$3 < $$2.size(); ++$$3) {
@@ -65,7 +64,6 @@ implements DebugRenderer.SimpleDebugRenderer {
             }
         });
         RenderSystem.enableDepthTest();
-        RenderSystem.enableTexture();
     }
 
     public static class DebugGoal {

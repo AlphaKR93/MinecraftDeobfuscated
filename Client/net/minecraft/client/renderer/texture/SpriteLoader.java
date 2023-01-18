@@ -149,12 +149,12 @@ public class SpriteLoader {
             return null;
         }
         FrameSize $$10 = $$4.calculateFrameSize($$9.getWidth(), $$9.getHeight());
-        if (!Mth.isDivisionInteger($$9.getWidth(), $$10.width()) || !Mth.isDivisionInteger($$9.getHeight(), $$10.height())) {
-            LOGGER.error("Image {} size {},{} is not multiple of frame size {},{}", new Object[]{$$0, $$9.getWidth(), $$9.getHeight(), $$10.width(), $$10.height()});
-            $$9.close();
-            return null;
+        if (Mth.isMultipleOf($$9.getWidth(), $$10.width()) && Mth.isMultipleOf($$9.getHeight(), $$10.height())) {
+            return new SpriteContents($$0, $$10, (NativeImage)$$9, (AnimationMetadataSection)$$4);
         }
-        return new SpriteContents($$0, $$10, (NativeImage)$$9, (AnimationMetadataSection)$$4);
+        LOGGER.error("Image {} size {},{} is not multiple of frame size {},{}", new Object[]{$$0, $$9.getWidth(), $$9.getHeight(), $$10.width(), $$10.height()});
+        $$9.close();
+        return null;
     }
 
     private Map<ResourceLocation, TextureAtlasSprite> getStitchedSprites(Stitcher<SpriteContents> $$0) {

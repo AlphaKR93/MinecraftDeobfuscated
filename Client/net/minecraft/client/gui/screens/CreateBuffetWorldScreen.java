@@ -78,7 +78,7 @@ extends Screen {
 
     @Override
     public void render(PoseStack $$0, int $$1, int $$2, float $$3) {
-        this.renderDirtBackground(0);
+        this.renderDirtBackground($$0);
         this.list.render($$0, $$1, $$2, $$3);
         CreateBuffetWorldScreen.drawCenteredString($$0, this.font, this.title, this.width / 2, 8, 0xFFFFFF);
         CreateBuffetWorldScreen.drawCenteredString($$0, this.font, BIOME_SELECT_INFO, this.width / 2, 28, 0xA0A0A0);
@@ -91,11 +91,6 @@ extends Screen {
             super(CreateBuffetWorldScreen.this.minecraft, CreateBuffetWorldScreen.this.width, CreateBuffetWorldScreen.this.height, 40, CreateBuffetWorldScreen.this.height - 37, 16);
             Collator $$02 = Collator.getInstance((Locale)Locale.getDefault());
             CreateBuffetWorldScreen.this.biomes.holders().map($$0 -> new Entry((Holder.Reference<Biome>)$$0)).sorted(Comparator.comparing($$0 -> $$0.name.getString(), (Comparator)$$02)).forEach($$1 -> this.addEntry($$1));
-        }
-
-        @Override
-        protected boolean isFocused() {
-            return CreateBuffetWorldScreen.this.getFocused() == this;
         }
 
         @Override

@@ -183,7 +183,6 @@ extends Screen {
     public void render(PoseStack $$0, int $$1, int $$2, float $$3) {
         this.renderBackground($$0);
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, BOOK_LOCATION);
         int $$4 = (this.width - 192) / 2;
         int $$5 = 2;

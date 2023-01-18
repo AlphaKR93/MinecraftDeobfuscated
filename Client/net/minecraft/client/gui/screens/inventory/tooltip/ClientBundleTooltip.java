@@ -92,7 +92,6 @@ implements ClientTooltipComponent {
     }
 
     private void blit(PoseStack $$0, int $$1, int $$2, int $$3, Texture $$4) {
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
         GuiComponent.blit($$0, $$1, $$2, $$3, $$4.x, $$4.y, $$4.w, $$4.h, 128, 128);
     }

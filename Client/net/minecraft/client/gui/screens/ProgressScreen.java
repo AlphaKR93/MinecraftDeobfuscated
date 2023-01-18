@@ -37,6 +37,11 @@ implements ProgressListener {
     }
 
     @Override
+    protected boolean shouldNarrateNavigation() {
+        return false;
+    }
+
+    @Override
     public void progressStartNoAbort(Component $$0) {
         this.progressStart($$0);
     }

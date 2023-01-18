@@ -6,6 +6,7 @@
  *  java.lang.Override
  *  java.lang.String
  *  java.util.Objects
+ *  java.util.function.Consumer
  *  java.util.function.Supplier
  *  javax.annotation.Nullable
  */
@@ -15,6 +16,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.realmsclient.RealmsMainScreen;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.annotation.Nullable;
 import net.minecraft.SharedConstants;
@@ -22,8 +24,8 @@ import net.minecraft.Util;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CenteredStringWidget;
-import net.minecraft.client.gui.components.FrameWidget;
-import net.minecraft.client.gui.components.GridWidget;
+import net.minecraft.client.gui.layouts.FrameLayout;
+import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.GenericDirtMessageScreen;
 import net.minecraft.client.gui.screens.OptionsScreen;
@@ -79,9 +81,9 @@ extends Screen {
     }
 
     private void createPauseMenu() {
-        GridWidget $$02 = new GridWidget();
+        GridLayout $$02 = new GridLayout();
         $$02.defaultCellSetting().padding(4, 4, 4, 0);
-        GridWidget.RowHelper $$1 = $$02.createRowHelper(2);
+        GridLayout.RowHelper $$1 = $$02.createRowHelper(2);
         $$1.addChild(Button.builder(RETURN_TO_GAME, $$0 -> {
             this.minecraft.setScreen(null);
             this.minecraft.mouseHandler.grabMouse();
@@ -101,9 +103,9 @@ extends Screen {
             $$0.active = false;
             this.minecraft.getReportingContext().draftReportHandled(this.minecraft, this, this::onDisconnect, true);
         }).width(204).build(), 2);
-        $$02.pack();
-        FrameWidget.alignInRectangle($$02, 0, 0, this.width, this.height, 0.5f, 0.25f);
-        this.addRenderableWidget($$02);
+        $$02.arrangeElements();
+        FrameLayout.alignInRectangle($$02, 0, 0, this.width, this.height, 0.5f, 0.25f);
+        $$02.visitWidgets((Consumer<AbstractWidget>)((Consumer)this::addRenderableWidget));
     }
 
     private void onDisconnect() {
@@ -138,7 +140,6 @@ extends Screen {
         super.render($$0, $$1, $$2, $$3);
         if (this.showPauseMenu && this.minecraft != null && this.minecraft.getReportingContext().hasDraftReport() && this.disconnectButton != null) {
             RenderSystem.setShaderTexture(0, AbstractWidget.WIDGETS_LOCATION);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             this.blit($$0, this.disconnectButton.getX() + this.disconnectButton.getWidth() - 17, this.disconnectButton.getY() + 3, 182, 24, 15, 15);
         }
     }

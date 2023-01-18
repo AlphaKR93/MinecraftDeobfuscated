@@ -14,6 +14,7 @@
  *  io.netty.channel.ChannelHandlerContext
  *  io.netty.channel.ChannelInitializer
  *  io.netty.channel.ChannelOption
+ *  io.netty.channel.ChannelPipeline
  *  io.netty.channel.DefaultEventLoopGroup
  *  io.netty.channel.EventLoopGroup
  *  io.netty.channel.SimpleChannelInboundHandler
@@ -31,6 +32,7 @@
  *  java.lang.Class
  *  java.lang.ClassCastException
  *  java.lang.Exception
+ *  java.lang.IllegalStateException
  *  java.lang.Object
  *  java.lang.String
  *  java.lang.Throwable
@@ -59,6 +61,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.DefaultEventLoopGroup;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -85,6 +88,8 @@ import net.minecraft.network.CipherEncoder;
 import net.minecraft.network.CompressionDecoder;
 import net.minecraft.network.CompressionEncoder;
 import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.network.PacketBundlePacker;
+import net.minecraft.network.PacketBundleUnpacker;
 import net.minecraft.network.PacketDecoder;
 import net.minecraft.network.PacketEncoder;
 import net.minecraft.network.PacketListener;
@@ -95,6 +100,7 @@ import net.minecraft.network.Varint21FrameDecoder;
 import net.minecraft.network.Varint21LengthFieldPrepender;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.BundlerInfo;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.game.ClientboundDisconnectPacket;
@@ -153,6 +159,7 @@ extends SimpleChannelInboundHandler<Packet<?>> {
 
     public void setProtocol(ConnectionProtocol $$0) {
         this.channel.attr(ATTRIBUTE_PROTOCOL).set((Object)$$0);
+        this.channel.attr(BundlerInfo.BUNDLER_PROVIDER).set((Object)$$0);
         this.channel.config().setAutoRead(true);
         LOGGER.debug("Enabled auto read");
     }
@@ -234,6 +241,9 @@ extends SimpleChannelInboundHandler<Packet<?>> {
         ConnectionProtocol $$3 = this.getCurrentProtocol();
         ++this.sentPackets;
         if ($$3 != $$2) {
+            if ($$2 == null) {
+                throw new IllegalStateException("Encountered packet without set protocol: " + $$0);
+            }
             LOGGER.debug("Disabled auto read");
             this.channel.config().setAutoRead(false);
         }
@@ -266,7 +276,7 @@ extends SimpleChannelInboundHandler<Packet<?>> {
     }
 
     private ConnectionProtocol getCurrentProtocol() {
-        return (ConnectionProtocol)((Object)this.channel.attr(ATTRIBUTE_PROTOCOL).get());
+        return (ConnectionProtocol)this.channel.attr(ATTRIBUTE_PROTOCOL).get();
     }
 
     /*
@@ -353,10 +363,17 @@ extends SimpleChannelInboundHandler<Packet<?>> {
                 catch (ChannelException channelException) {
                     // empty catch block
                 }
-                $$0.pipeline().addLast("timeout", (ChannelHandler)new ReadTimeoutHandler(30)).addLast("splitter", (ChannelHandler)new Varint21FrameDecoder()).addLast("decoder", (ChannelHandler)new PacketDecoder(PacketFlow.CLIENTBOUND)).addLast("prepender", (ChannelHandler)new Varint21LengthFieldPrepender()).addLast("encoder", (ChannelHandler)new PacketEncoder(PacketFlow.SERVERBOUND)).addLast("packet_handler", (ChannelHandler)$$2);
+                ChannelPipeline $$1 = $$0.pipeline().addLast("timeout", (ChannelHandler)new ReadTimeoutHandler(30));
+                Connection.configureSerialization($$1, PacketFlow.CLIENTBOUND);
+                $$1.addLast("packet_handler", (ChannelHandler)$$2);
             }
         })).channel($$5)).connect($$0.getAddress(), $$0.getPort()).syncUninterruptibly();
         return $$2;
+    }
+
+    public static void configureSerialization(ChannelPipeline $$0, PacketFlow $$1) {
+        PacketFlow $$2 = $$1.getOpposite();
+        $$0.addLast("splitter", (ChannelHandler)new Varint21FrameDecoder()).addLast("decoder", (ChannelHandler)new PacketDecoder($$1)).addLast("prepender", (ChannelHandler)new Varint21LengthFieldPrepender()).addLast("encoder", (ChannelHandler)new PacketEncoder($$2)).addLast("unbundler", (ChannelHandler)new PacketBundleUnpacker($$2)).addLast("bundler", (ChannelHandler)new PacketBundlePacker($$1));
     }
 
     public static Connection connectToLocalServer(SocketAddress $$0) {
@@ -364,7 +381,8 @@ extends SimpleChannelInboundHandler<Packet<?>> {
         ((Bootstrap)((Bootstrap)((Bootstrap)new Bootstrap().group((EventLoopGroup)LOCAL_WORKER_GROUP.get())).handler((ChannelHandler)new ChannelInitializer<Channel>(){
 
             protected void initChannel(Channel $$0) {
-                $$0.pipeline().addLast("packet_handler", (ChannelHandler)$$1);
+                ChannelPipeline $$12 = $$0.pipeline();
+                $$12.addLast("packet_handler", (ChannelHandler)$$1);
             }
         })).channel(LocalChannel.class)).connect($$0).syncUninterruptibly();
         return $$1;

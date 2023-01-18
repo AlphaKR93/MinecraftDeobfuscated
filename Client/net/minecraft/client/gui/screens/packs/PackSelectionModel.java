@@ -157,6 +157,11 @@ public class PackSelectionModel {
         }
 
         @Override
+        public String getId() {
+            return this.pack.getId();
+        }
+
+        @Override
         public Component getTitle() {
             return this.pack.getTitle();
         }
@@ -224,6 +229,8 @@ public class PackSelectionModel {
         public ResourceLocation getIconTexture();
 
         public PackCompatibility getCompatibility();
+
+        public String getId();
 
         public Component getTitle();
 

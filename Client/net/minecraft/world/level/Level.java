@@ -25,6 +25,7 @@
  *  java.util.function.Predicate
  *  java.util.function.Supplier
  *  javax.annotation.Nullable
+ *  net.minecraft.world.level.saveddata.maps.MapItemSavedData
  */
 package net.minecraft.world.level;
 
@@ -799,12 +800,7 @@ AutoCloseable {
             return false;
         }
         Biome $$1 = (Biome)this.getBiome($$0).value();
-        return $$1.getPrecipitation() == Biome.Precipitation.RAIN && $$1.warmEnoughToRain($$0);
-    }
-
-    public boolean isHumidAt(BlockPos $$0) {
-        Biome $$1 = (Biome)this.getBiome($$0).value();
-        return $$1.isHumid();
+        return $$1.getPrecipitationAt($$0) == Biome.Precipitation.RAIN;
     }
 
     @Nullable

@@ -73,7 +73,6 @@ extends PathfinderMob {
         this.handleAirSupply($$0);
     }
 
-    @Override
     public boolean isPushedByFluid() {
         return false;
     }

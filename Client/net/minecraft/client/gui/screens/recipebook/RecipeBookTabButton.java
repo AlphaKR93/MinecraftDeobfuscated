@@ -79,7 +79,6 @@ extends StateSwitchingButton {
         if (this.isStateTriggered) {
             $$8 -= 2;
         }
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         this.blit($$0, $$8, this.getY(), $$6, $$7, this.width, this.height);
         RenderSystem.enableDepthTest();
         this.renderIcon($$5.getItemRenderer());

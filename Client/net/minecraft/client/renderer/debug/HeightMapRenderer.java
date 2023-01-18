@@ -46,7 +46,6 @@ implements DebugRenderer.SimpleDebugRenderer {
     public void render(PoseStack $$0, MultiBufferSource $$1, double $$2, double $$3, double $$4) {
         ClientLevel $$5 = this.minecraft.level;
         RenderSystem.disableBlend();
-        RenderSystem.disableTexture();
         RenderSystem.enableDepthTest();
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionColorShader));
         BlockPos $$6 = new BlockPos($$2, 0.0, $$4);
@@ -72,7 +71,6 @@ implements DebugRenderer.SimpleDebugRenderer {
             }
         }
         $$7.end();
-        RenderSystem.enableTexture();
     }
 
     private Vector3f getColor(Heightmap.Types $$0) {

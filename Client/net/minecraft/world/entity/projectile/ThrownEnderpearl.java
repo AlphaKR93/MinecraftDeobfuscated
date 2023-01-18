@@ -57,7 +57,7 @@ extends ThrowableItemProjectile {
             Entity $$2 = this.getOwner();
             if ($$2 instanceof ServerPlayer) {
                 ServerPlayer $$3 = (ServerPlayer)$$2;
-                if ($$3.connection.getConnection().isConnected() && $$3.level == this.level && !$$3.isSleeping()) {
+                if ($$3.connection.isAcceptingMessages() && $$3.level == this.level && !$$3.isSleeping()) {
                     Endermite $$4;
                     if (this.random.nextFloat() < 0.05f && this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING) && ($$4 = EntityType.ENDERMITE.create(this.level)) != null) {
                         $$4.moveTo($$2.getX(), $$2.getY(), $$2.getZ(), $$2.getYRot(), $$2.getXRot());

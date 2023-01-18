@@ -36,7 +36,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.MobSpawnType;
@@ -86,6 +85,7 @@ VariantHolder<MushroomType> {
         return $$1.getBlockState((BlockPos)$$3.below()).is(BlockTags.MOOSHROOMS_SPAWNABLE_ON) && MushroomCow.isBrightEnoughToSpawn($$1, $$3);
     }
 
+    @Override
     public void thunderHit(ServerLevel $$0, LightningBolt $$1) {
         UUID $$2 = $$1.getUUID();
         if (!$$2.equals((Object)this.lastLightningBoltUUID)) {
@@ -129,7 +129,7 @@ VariantHolder<MushroomType> {
         }
         if ($$2.is(Items.SHEARS) && this.readyForShearing()) {
             this.shear(SoundSource.PLAYERS);
-            this.gameEvent(GameEvent.SHEAR, (Entity)((Object)$$0));
+            this.gameEvent(GameEvent.SHEAR, $$0);
             if (!this.level.isClientSide) {
                 $$2.hurtAndBreak(1, $$0, $$1 -> $$1.broadcastBreakEvent($$12));
             }
@@ -164,7 +164,7 @@ VariantHolder<MushroomType> {
     @Override
     public void shear(SoundSource $$0) {
         Cow $$1;
-        this.level.playSound(null, (Entity)((Object)this), SoundEvents.MOOSHROOM_SHEAR, $$0, 1.0f, 1.0f);
+        this.level.playSound(null, this, SoundEvents.MOOSHROOM_SHEAR, $$0, 1.0f, 1.0f);
         if (!this.level.isClientSide() && ($$1 = EntityType.COW.create(this.level)) != null) {
             ((ServerLevel)this.level).sendParticles(ParticleTypes.EXPLOSION, this.getX(), this.getY(0.5), this.getZ(), 1, 0.0, 0.0, 0.0, 0.0);
             this.discard();
@@ -179,7 +179,7 @@ VariantHolder<MushroomType> {
                 $$1.setPersistenceRequired();
             }
             $$1.setInvulnerable(this.isInvulnerable());
-            this.level.addFreshEntity((Entity)((Object)$$1));
+            this.level.addFreshEntity($$1);
             for (int $$2 = 0; $$2 < 5; ++$$2) {
                 this.level.addFreshEntity(new ItemEntity(this.level, this.getX(), this.getY(1.0), this.getZ(), new ItemStack(this.getVariant().blockState.getBlock())));
             }

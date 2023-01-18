@@ -67,7 +67,6 @@ implements DebugRenderer.SimpleDebugRenderer {
         Vec3 $$62 = new Vec3($$22, 0.0, $$42);
         this.trackedGameEvents.removeIf(TrackedGameEvent::isExpired);
         this.trackedListeners.removeIf($$2 -> $$2.isExpired($$5, $$62));
-        RenderSystem.disableTexture();
         RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -118,7 +117,6 @@ implements DebugRenderer.SimpleDebugRenderer {
             DebugRenderer.renderFloatingText($$13.gameEvent.getName(), $$14.x, $$14.y + (double)0.85f, $$14.z, -7564911, 0.0075f);
         }
         RenderSystem.depthMask(true);
-        RenderSystem.enableTexture();
         RenderSystem.disableBlend();
     }
 

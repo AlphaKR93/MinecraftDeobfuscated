@@ -113,7 +113,7 @@ public class CamelAi {
                 Camel $$3 = (Camel)$$1;
                 $$3.standUpPanic();
             }
-            super.stop($$0, $$1, $$2);
+            super.tick($$0, $$1, $$2);
         }
     }
 
@@ -133,7 +133,7 @@ public class CamelAi {
 
         @Override
         protected void start(ServerLevel $$0, Camel $$1, long $$2) {
-            if ($$1.isPoseSitting()) {
+            if ($$1.isCamelSitting()) {
                 $$1.standUp();
             } else if (!$$1.isPanicking()) {
                 $$1.sitDown();

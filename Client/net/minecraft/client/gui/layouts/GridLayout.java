@@ -8,37 +8,36 @@
  *  java.lang.Override
  *  java.util.ArrayList
  *  java.util.List
+ *  java.util.function.Consumer
  */
-package net.minecraft.client.gui.components;
+package net.minecraft.client.gui.layouts;
 
 import com.mojang.math.Divisor;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.components.AbstractContainerWidget;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.LayoutSettings;
-import net.minecraft.network.chat.Component;
+import java.util.function.Consumer;
+import net.minecraft.client.gui.layouts.AbstractLayout;
+import net.minecraft.client.gui.layouts.LayoutElement;
+import net.minecraft.client.gui.layouts.LayoutSettings;
 import net.minecraft.util.Mth;
 
-public class GridWidget
-extends AbstractContainerWidget {
-    private final List<AbstractWidget> children = new ArrayList();
+public class GridLayout
+extends AbstractLayout {
+    private final List<LayoutElement> children = new ArrayList();
     private final List<CellInhabitant> cellInhabitants = new ArrayList();
     private final LayoutSettings defaultCellSettings = LayoutSettings.defaults();
 
-    public GridWidget() {
+    public GridLayout() {
         this(0, 0);
     }
 
-    public GridWidget(int $$0, int $$1) {
-        this($$0, $$1, Component.empty());
+    public GridLayout(int $$0, int $$1) {
+        super($$0, $$1, 0, 0);
     }
 
-    public GridWidget(int $$0, int $$1, Component $$2) {
-        super($$0, $$1, 0, 0, $$2);
-    }
-
-    public void pack() {
+    @Override
+    public void arrangeElements() {
+        super.arrangeElements();
         int $$0 = 0;
         int $$1 = 0;
         for (CellInhabitant $$2 : this.cellInhabitants) {
@@ -83,19 +82,19 @@ extends AbstractContainerWidget {
         this.height = $$11[$$0] + $$4[$$0];
     }
 
-    public <T extends AbstractWidget> T addChild(T $$0, int $$1, int $$2) {
+    public <T extends LayoutElement> T addChild(T $$0, int $$1, int $$2) {
         return this.addChild($$0, $$1, $$2, this.newCellSettings());
     }
 
-    public <T extends AbstractWidget> T addChild(T $$0, int $$1, int $$2, LayoutSettings $$3) {
+    public <T extends LayoutElement> T addChild(T $$0, int $$1, int $$2, LayoutSettings $$3) {
         return this.addChild($$0, $$1, $$2, 1, 1, $$3);
     }
 
-    public <T extends AbstractWidget> T addChild(T $$0, int $$1, int $$2, int $$3, int $$4) {
+    public <T extends LayoutElement> T addChild(T $$0, int $$1, int $$2, int $$3, int $$4) {
         return this.addChild($$0, $$1, $$2, $$3, $$4, this.newCellSettings());
     }
 
-    public <T extends AbstractWidget> T addChild(T $$0, int $$1, int $$2, int $$3, int $$4, LayoutSettings $$5) {
+    public <T extends LayoutElement> T addChild(T $$0, int $$1, int $$2, int $$3, int $$4, LayoutSettings $$5) {
         if ($$3 < 1) {
             throw new IllegalArgumentException("Occupied rows must be at least 1");
         }
@@ -108,8 +107,8 @@ extends AbstractContainerWidget {
     }
 
     @Override
-    protected List<? extends AbstractWidget> getContainedChildren() {
-        return this.children;
+    protected void visitChildren(Consumer<LayoutElement> $$0) {
+        this.children.forEach($$0);
     }
 
     public LayoutSettings newCellSettings() {
@@ -125,13 +124,13 @@ extends AbstractContainerWidget {
     }
 
     static class CellInhabitant
-    extends AbstractContainerWidget.AbstractChildWrapper {
+    extends AbstractLayout.AbstractChildWrapper {
         final int row;
         final int column;
         final int occupiedRows;
         final int occupiedColumns;
 
-        CellInhabitant(AbstractWidget $$0, int $$1, int $$2, int $$3, int $$4, LayoutSettings $$5) {
+        CellInhabitant(LayoutElement $$0, int $$1, int $$2, int $$3, int $$4, LayoutSettings $$5) {
             super($$0, $$5.getExposed());
             this.row = $$1;
             this.column = $$2;
@@ -156,19 +155,19 @@ extends AbstractContainerWidget {
             this.columns = $$1;
         }
 
-        public <T extends AbstractWidget> T addChild(T $$0) {
+        public <T extends LayoutElement> T addChild(T $$0) {
             return this.addChild($$0, 1);
         }
 
-        public <T extends AbstractWidget> T addChild(T $$0, int $$1) {
+        public <T extends LayoutElement> T addChild(T $$0, int $$1) {
             return this.addChild($$0, $$1, this.defaultCellSetting());
         }
 
-        public <T extends AbstractWidget> T addChild(T $$0, LayoutSettings $$1) {
+        public <T extends LayoutElement> T addChild(T $$0, LayoutSettings $$1) {
             return this.addChild($$0, 1, $$1);
         }
 
-        public <T extends AbstractWidget> T addChild(T $$0, int $$1, LayoutSettings $$2) {
+        public <T extends LayoutElement> T addChild(T $$0, int $$1, LayoutSettings $$2) {
             int $$3 = this.index / this.columns;
             int $$4 = this.index % this.columns;
             if ($$4 + $$1 > this.columns) {
@@ -177,15 +176,15 @@ extends AbstractContainerWidget {
                 this.index = Mth.roundToward(this.index, this.columns);
             }
             this.index += $$1;
-            return GridWidget.this.addChild($$0, $$3, $$4, 1, $$1, $$2);
+            return GridLayout.this.addChild($$0, $$3, $$4, 1, $$1, $$2);
         }
 
         public LayoutSettings newCellSettings() {
-            return GridWidget.this.newCellSettings();
+            return GridLayout.this.newCellSettings();
         }
 
         public LayoutSettings defaultCellSetting() {
-            return GridWidget.this.defaultCellSetting();
+            return GridLayout.this.defaultCellSetting();
         }
     }
 }

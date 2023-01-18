@@ -49,7 +49,6 @@ implements DebugRenderer.SimpleDebugRenderer {
     public void render(PoseStack $$0, MultiBufferSource $$1, double $$2, double $$3, double $$4) {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.disableTexture();
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionColorShader));
         Tesselator $$5 = Tesselator.getInstance();
         BufferBuilder $$6 = $$5.getBuilder();
@@ -61,6 +60,5 @@ implements DebugRenderer.SimpleDebugRenderer {
             LevelRenderer.addChainedFilledBoxVertices($$6, (double)((float)$$8.getX() + 0.5f - $$10) - $$2, (double)((float)$$8.getY() + 0.5f - $$10) - $$3, (double)((float)$$8.getZ() + 0.5f - $$10) - $$4, (double)((float)$$8.getX() + 0.5f + $$10) - $$2, (double)((float)$$8.getY() + 0.5f + $$10) - $$3, (double)((float)$$8.getZ() + 0.5f + $$10) - $$4, ((Float)this.reds.get($$7)).floatValue(), ((Float)this.greens.get($$7)).floatValue(), ((Float)this.blues.get($$7)).floatValue(), ((Float)this.alphas.get($$7)).floatValue());
         }
         $$5.end();
-        RenderSystem.enableTexture();
     }
 }

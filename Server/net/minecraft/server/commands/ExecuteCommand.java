@@ -6,6 +6,7 @@
  *  com.mojang.brigadier.Command
  *  com.mojang.brigadier.CommandDispatcher
  *  com.mojang.brigadier.Message
+ *  com.mojang.brigadier.RedirectModifier
  *  com.mojang.brigadier.ResultConsumer
  *  com.mojang.brigadier.arguments.DoubleArgumentType
  *  com.mojang.brigadier.builder.ArgumentBuilder
@@ -26,11 +27,14 @@
  *  java.util.ArrayList
  *  java.util.Collection
  *  java.util.Collections
+ *  java.util.List
+ *  java.util.Optional
  *  java.util.OptionalInt
  *  java.util.function.BiPredicate
  *  java.util.function.BinaryOperator
  *  java.util.function.Function
  *  java.util.function.IntFunction
+ *  java.util.stream.Stream
  */
 package net.minecraft.server.commands;
 
@@ -38,6 +42,7 @@ import com.google.common.collect.Lists;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.Message;
+import com.mojang.brigadier.RedirectModifier;
 import com.mojang.brigadier.ResultConsumer;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -54,11 +59,14 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.IntFunction;
+import java.util.stream.Stream;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -79,6 +87,7 @@ import net.minecraft.commands.arguments.coordinates.RotationArgument;
 import net.minecraft.commands.arguments.coordinates.SwizzleArgument;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.ByteTag;
@@ -95,12 +104,17 @@ import net.minecraft.server.bossevents.CustomBossEvent;
 import net.minecraft.server.commands.BossBarCommands;
 import net.minecraft.server.commands.data.DataAccessor;
 import net.minecraft.server.commands.data.DataCommands;
+import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.PredicateManager;
@@ -126,7 +140,7 @@ public class ExecuteCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> $$02, CommandBuildContext $$1) {
         LiteralCommandNode $$2 = $$02.register((LiteralArgumentBuilder)Commands.literal("execute").requires($$0 -> $$0.hasPermission(2)));
-        $$02.register((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)Commands.literal("execute").requires($$0 -> $$0.hasPermission(2))).then(Commands.literal("run").redirect((CommandNode)$$02.getRoot()))).then(ExecuteCommand.addConditionals((CommandNode<CommandSourceStack>)$$2, Commands.literal("if"), true, $$1))).then(ExecuteCommand.addConditionals((CommandNode<CommandSourceStack>)$$2, Commands.literal("unless"), false, $$1))).then(Commands.literal("as").then(Commands.argument("targets", EntityArgument.entities()).fork((CommandNode)$$2, $$0 -> {
+        $$02.register((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)Commands.literal("execute").requires($$0 -> $$0.hasPermission(2))).then(Commands.literal("run").redirect((CommandNode)$$02.getRoot()))).then(ExecuteCommand.addConditionals((CommandNode<CommandSourceStack>)$$2, Commands.literal("if"), true, $$1))).then(ExecuteCommand.addConditionals((CommandNode<CommandSourceStack>)$$2, Commands.literal("unless"), false, $$1))).then(Commands.literal("as").then(Commands.argument("targets", EntityArgument.entities()).fork((CommandNode)$$2, $$0 -> {
             ArrayList $$1 = Lists.newArrayList();
             for (Entity $$2 : EntityArgument.getOptionalEntities((CommandContext<CommandSourceStack>)$$0, "targets")) {
                 $$1.add((Object)((CommandSourceStack)$$0.getSource()).withEntity($$2));
@@ -157,7 +171,7 @@ public class ExecuteCommand {
                 $$1.add((Object)((CommandSourceStack)$$0.getSource()).facing($$3, $$2));
             }
             return $$1;
-        }))))).then(Commands.argument("pos", Vec3Argument.vec3()).redirect((CommandNode)$$2, $$0 -> ((CommandSourceStack)$$0.getSource()).facing(Vec3Argument.getVec3((CommandContext<CommandSourceStack>)$$0, "pos")))))).then(Commands.literal("align").then(Commands.argument("axes", SwizzleArgument.swizzle()).redirect((CommandNode)$$2, $$0 -> ((CommandSourceStack)$$0.getSource()).withPosition(((CommandSourceStack)$$0.getSource()).getPosition().align(SwizzleArgument.getSwizzle((CommandContext<CommandSourceStack>)$$0, "axes"))))))).then(Commands.literal("anchored").then(Commands.argument("anchor", EntityAnchorArgument.anchor()).redirect((CommandNode)$$2, $$0 -> ((CommandSourceStack)$$0.getSource()).withAnchor(EntityAnchorArgument.getAnchor((CommandContext<CommandSourceStack>)$$0, "anchor")))))).then(Commands.literal("in").then(Commands.argument("dimension", DimensionArgument.dimension()).redirect((CommandNode)$$2, $$0 -> ((CommandSourceStack)$$0.getSource()).withLevel(DimensionArgument.getDimension((CommandContext<CommandSourceStack>)$$0, "dimension"))))));
+        }))))).then(Commands.argument("pos", Vec3Argument.vec3()).redirect((CommandNode)$$2, $$0 -> ((CommandSourceStack)$$0.getSource()).facing(Vec3Argument.getVec3((CommandContext<CommandSourceStack>)$$0, "pos")))))).then(Commands.literal("align").then(Commands.argument("axes", SwizzleArgument.swizzle()).redirect((CommandNode)$$2, $$0 -> ((CommandSourceStack)$$0.getSource()).withPosition(((CommandSourceStack)$$0.getSource()).getPosition().align(SwizzleArgument.getSwizzle((CommandContext<CommandSourceStack>)$$0, "axes"))))))).then(Commands.literal("anchored").then(Commands.argument("anchor", EntityAnchorArgument.anchor()).redirect((CommandNode)$$2, $$0 -> ((CommandSourceStack)$$0.getSource()).withAnchor(EntityAnchorArgument.getAnchor((CommandContext<CommandSourceStack>)$$0, "anchor")))))).then(Commands.literal("in").then(Commands.argument("dimension", DimensionArgument.dimension()).redirect((CommandNode)$$2, $$0 -> ((CommandSourceStack)$$0.getSource()).withLevel(DimensionArgument.getDimension((CommandContext<CommandSourceStack>)$$0, "dimension")))))).then(ExecuteCommand.createRelationOperations((CommandNode<CommandSourceStack>)$$2, Commands.literal("on"))));
     }
 
     private static ArgumentBuilder<CommandSourceStack, ?> wrapStores(LiteralCommandNode<CommandSourceStack> $$0, LiteralArgumentBuilder<CommandSourceStack> $$12, boolean $$2) {
@@ -206,8 +220,18 @@ public class ExecuteCommand {
         }), CALLBACK_CHAINER);
     }
 
+    private static boolean isChunkLoaded(ServerLevel $$0, BlockPos $$1) {
+        int $$2 = SectionPos.blockToSectionCoord($$1.getX());
+        int $$3 = SectionPos.blockToSectionCoord($$1.getZ());
+        LevelChunk $$4 = $$0.getChunkSource().getChunkNow($$2, $$3);
+        if ($$4 != null) {
+            return $$4.getFullStatus() == ChunkHolder.FullChunkStatus.ENTITY_TICKING;
+        }
+        return false;
+    }
+
     private static ArgumentBuilder<CommandSourceStack, ?> addConditionals(CommandNode<CommandSourceStack> $$03, LiteralArgumentBuilder<CommandSourceStack> $$12, boolean $$2, CommandBuildContext $$32) {
-        ((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)$$12.then(Commands.literal("block").then(Commands.argument("pos", BlockPosArgument.blockPos()).then(ExecuteCommand.addConditional($$03, Commands.argument("block", BlockPredicateArgument.blockPredicate($$32)), $$2, $$0 -> BlockPredicateArgument.getBlockPredicate((CommandContext<CommandSourceStack>)$$0, "block").test((Object)new BlockInWorld(((CommandSourceStack)$$0.getSource()).getLevel(), BlockPosArgument.getLoadedBlockPos((CommandContext<CommandSourceStack>)$$0, "pos"), true))))))).then(Commands.literal("biome").then(Commands.argument("pos", BlockPosArgument.blockPos()).then(ExecuteCommand.addConditional($$03, Commands.argument("biome", ResourceOrTagArgument.resourceOrTag($$32, Registries.BIOME)), $$2, $$0 -> ResourceOrTagArgument.getResourceOrTag((CommandContext<CommandSourceStack>)$$0, "biome", Registries.BIOME).test(((CommandSourceStack)$$0.getSource()).getLevel().getBiome(BlockPosArgument.getLoadedBlockPos((CommandContext<CommandSourceStack>)$$0, "pos")))))))).then(Commands.literal("score").then(Commands.argument("target", ScoreHolderArgument.scoreHolder()).suggests(ScoreHolderArgument.SUGGEST_SCORE_HOLDERS).then(((RequiredArgumentBuilder)((RequiredArgumentBuilder)((RequiredArgumentBuilder)((RequiredArgumentBuilder)((RequiredArgumentBuilder)Commands.argument("targetObjective", ObjectiveArgument.objective()).then(Commands.literal("=").then(Commands.argument("source", ScoreHolderArgument.scoreHolder()).suggests(ScoreHolderArgument.SUGGEST_SCORE_HOLDERS).then(ExecuteCommand.addConditional($$03, Commands.argument("sourceObjective", ObjectiveArgument.objective()), $$2, $$0 -> ExecuteCommand.checkScore((CommandContext<CommandSourceStack>)$$0, (BiPredicate<Integer, Integer>)((BiPredicate)Integer::equals))))))).then(Commands.literal("<").then(Commands.argument("source", ScoreHolderArgument.scoreHolder()).suggests(ScoreHolderArgument.SUGGEST_SCORE_HOLDERS).then(ExecuteCommand.addConditional($$03, Commands.argument("sourceObjective", ObjectiveArgument.objective()), $$2, $$02 -> ExecuteCommand.checkScore((CommandContext<CommandSourceStack>)$$02, (BiPredicate<Integer, Integer>)((BiPredicate)($$0, $$1) -> $$0 < $$1))))))).then(Commands.literal("<=").then(Commands.argument("source", ScoreHolderArgument.scoreHolder()).suggests(ScoreHolderArgument.SUGGEST_SCORE_HOLDERS).then(ExecuteCommand.addConditional($$03, Commands.argument("sourceObjective", ObjectiveArgument.objective()), $$2, $$02 -> ExecuteCommand.checkScore((CommandContext<CommandSourceStack>)$$02, (BiPredicate<Integer, Integer>)((BiPredicate)($$0, $$1) -> $$0 <= $$1))))))).then(Commands.literal(">").then(Commands.argument("source", ScoreHolderArgument.scoreHolder()).suggests(ScoreHolderArgument.SUGGEST_SCORE_HOLDERS).then(ExecuteCommand.addConditional($$03, Commands.argument("sourceObjective", ObjectiveArgument.objective()), $$2, $$02 -> ExecuteCommand.checkScore((CommandContext<CommandSourceStack>)$$02, (BiPredicate<Integer, Integer>)((BiPredicate)($$0, $$1) -> $$0 > $$1))))))).then(Commands.literal(">=").then(Commands.argument("source", ScoreHolderArgument.scoreHolder()).suggests(ScoreHolderArgument.SUGGEST_SCORE_HOLDERS).then(ExecuteCommand.addConditional($$03, Commands.argument("sourceObjective", ObjectiveArgument.objective()), $$2, $$02 -> ExecuteCommand.checkScore((CommandContext<CommandSourceStack>)$$02, (BiPredicate<Integer, Integer>)((BiPredicate)($$0, $$1) -> $$0 >= $$1))))))).then(Commands.literal("matches").then(ExecuteCommand.addConditional($$03, Commands.argument("range", RangeArgument.intRange()), $$2, $$0 -> ExecuteCommand.checkScore((CommandContext<CommandSourceStack>)$$0, RangeArgument.Ints.getRange((CommandContext<CommandSourceStack>)$$0, "range"))))))))).then(Commands.literal("blocks").then(Commands.argument("start", BlockPosArgument.blockPos()).then(Commands.argument("end", BlockPosArgument.blockPos()).then(((RequiredArgumentBuilder)Commands.argument("destination", BlockPosArgument.blockPos()).then(ExecuteCommand.addIfBlocksConditional($$03, Commands.literal("all"), $$2, false))).then(ExecuteCommand.addIfBlocksConditional($$03, Commands.literal("masked"), $$2, true))))))).then(Commands.literal("entity").then(((RequiredArgumentBuilder)Commands.argument("entities", EntityArgument.entities()).fork($$03, $$1 -> ExecuteCommand.expect((CommandContext<CommandSourceStack>)$$1, $$2, !EntityArgument.getOptionalEntities((CommandContext<CommandSourceStack>)$$1, "entities").isEmpty()))).executes(ExecuteCommand.createNumericConditionalHandler($$2, $$0 -> EntityArgument.getOptionalEntities((CommandContext<CommandSourceStack>)$$0, "entities").size()))))).then(Commands.literal("predicate").then(ExecuteCommand.addConditional($$03, Commands.argument("predicate", ResourceLocationArgument.id()).suggests(SUGGEST_PREDICATE), $$2, $$0 -> ExecuteCommand.checkCustomPredicate((CommandSourceStack)$$0.getSource(), ResourceLocationArgument.getPredicate((CommandContext<CommandSourceStack>)$$0, "predicate")))));
+        ((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)$$12.then(Commands.literal("block").then(Commands.argument("pos", BlockPosArgument.blockPos()).then(ExecuteCommand.addConditional($$03, Commands.argument("block", BlockPredicateArgument.blockPredicate($$32)), $$2, $$0 -> BlockPredicateArgument.getBlockPredicate((CommandContext<CommandSourceStack>)$$0, "block").test((Object)new BlockInWorld(((CommandSourceStack)$$0.getSource()).getLevel(), BlockPosArgument.getLoadedBlockPos((CommandContext<CommandSourceStack>)$$0, "pos"), true))))))).then(Commands.literal("biome").then(Commands.argument("pos", BlockPosArgument.blockPos()).then(ExecuteCommand.addConditional($$03, Commands.argument("biome", ResourceOrTagArgument.resourceOrTag($$32, Registries.BIOME)), $$2, $$0 -> ResourceOrTagArgument.getResourceOrTag((CommandContext<CommandSourceStack>)$$0, "biome", Registries.BIOME).test(((CommandSourceStack)$$0.getSource()).getLevel().getBiome(BlockPosArgument.getLoadedBlockPos((CommandContext<CommandSourceStack>)$$0, "pos")))))))).then(Commands.literal("loaded").then(Commands.argument("pos", BlockPosArgument.blockPos()).fork($$03, $$1 -> ExecuteCommand.expect((CommandContext<CommandSourceStack>)$$1, $$2, ExecuteCommand.isChunkLoaded(((CommandSourceStack)$$1.getSource()).getLevel(), BlockPosArgument.getBlockPos((CommandContext<CommandSourceStack>)$$1, "pos"))))))).then(Commands.literal("dimension").then(ExecuteCommand.addConditional($$03, Commands.argument("dimension", DimensionArgument.dimension()), $$2, $$0 -> DimensionArgument.getDimension((CommandContext<CommandSourceStack>)$$0, "dimension") == ((CommandSourceStack)$$0.getSource()).getLevel())))).then(Commands.literal("score").then(Commands.argument("target", ScoreHolderArgument.scoreHolder()).suggests(ScoreHolderArgument.SUGGEST_SCORE_HOLDERS).then(((RequiredArgumentBuilder)((RequiredArgumentBuilder)((RequiredArgumentBuilder)((RequiredArgumentBuilder)((RequiredArgumentBuilder)Commands.argument("targetObjective", ObjectiveArgument.objective()).then(Commands.literal("=").then(Commands.argument("source", ScoreHolderArgument.scoreHolder()).suggests(ScoreHolderArgument.SUGGEST_SCORE_HOLDERS).then(ExecuteCommand.addConditional($$03, Commands.argument("sourceObjective", ObjectiveArgument.objective()), $$2, $$0 -> ExecuteCommand.checkScore((CommandContext<CommandSourceStack>)$$0, (BiPredicate<Integer, Integer>)((BiPredicate)Integer::equals))))))).then(Commands.literal("<").then(Commands.argument("source", ScoreHolderArgument.scoreHolder()).suggests(ScoreHolderArgument.SUGGEST_SCORE_HOLDERS).then(ExecuteCommand.addConditional($$03, Commands.argument("sourceObjective", ObjectiveArgument.objective()), $$2, $$02 -> ExecuteCommand.checkScore((CommandContext<CommandSourceStack>)$$02, (BiPredicate<Integer, Integer>)((BiPredicate)($$0, $$1) -> $$0 < $$1))))))).then(Commands.literal("<=").then(Commands.argument("source", ScoreHolderArgument.scoreHolder()).suggests(ScoreHolderArgument.SUGGEST_SCORE_HOLDERS).then(ExecuteCommand.addConditional($$03, Commands.argument("sourceObjective", ObjectiveArgument.objective()), $$2, $$02 -> ExecuteCommand.checkScore((CommandContext<CommandSourceStack>)$$02, (BiPredicate<Integer, Integer>)((BiPredicate)($$0, $$1) -> $$0 <= $$1))))))).then(Commands.literal(">").then(Commands.argument("source", ScoreHolderArgument.scoreHolder()).suggests(ScoreHolderArgument.SUGGEST_SCORE_HOLDERS).then(ExecuteCommand.addConditional($$03, Commands.argument("sourceObjective", ObjectiveArgument.objective()), $$2, $$02 -> ExecuteCommand.checkScore((CommandContext<CommandSourceStack>)$$02, (BiPredicate<Integer, Integer>)((BiPredicate)($$0, $$1) -> $$0 > $$1))))))).then(Commands.literal(">=").then(Commands.argument("source", ScoreHolderArgument.scoreHolder()).suggests(ScoreHolderArgument.SUGGEST_SCORE_HOLDERS).then(ExecuteCommand.addConditional($$03, Commands.argument("sourceObjective", ObjectiveArgument.objective()), $$2, $$02 -> ExecuteCommand.checkScore((CommandContext<CommandSourceStack>)$$02, (BiPredicate<Integer, Integer>)((BiPredicate)($$0, $$1) -> $$0 >= $$1))))))).then(Commands.literal("matches").then(ExecuteCommand.addConditional($$03, Commands.argument("range", RangeArgument.intRange()), $$2, $$0 -> ExecuteCommand.checkScore((CommandContext<CommandSourceStack>)$$0, RangeArgument.Ints.getRange((CommandContext<CommandSourceStack>)$$0, "range"))))))))).then(Commands.literal("blocks").then(Commands.argument("start", BlockPosArgument.blockPos()).then(Commands.argument("end", BlockPosArgument.blockPos()).then(((RequiredArgumentBuilder)Commands.argument("destination", BlockPosArgument.blockPos()).then(ExecuteCommand.addIfBlocksConditional($$03, Commands.literal("all"), $$2, false))).then(ExecuteCommand.addIfBlocksConditional($$03, Commands.literal("masked"), $$2, true))))))).then(Commands.literal("entity").then(((RequiredArgumentBuilder)Commands.argument("entities", EntityArgument.entities()).fork($$03, $$1 -> ExecuteCommand.expect((CommandContext<CommandSourceStack>)$$1, $$2, !EntityArgument.getOptionalEntities((CommandContext<CommandSourceStack>)$$1, "entities").isEmpty()))).executes(ExecuteCommand.createNumericConditionalHandler($$2, $$0 -> EntityArgument.getOptionalEntities((CommandContext<CommandSourceStack>)$$0, "entities").size()))))).then(Commands.literal("predicate").then(ExecuteCommand.addConditional($$03, Commands.argument("predicate", ResourceLocationArgument.id()).suggests(SUGGEST_PREDICATE), $$2, $$0 -> ExecuteCommand.checkCustomPredicate((CommandSourceStack)$$0.getSource(), ResourceLocationArgument.getPredicate((CommandContext<CommandSourceStack>)$$0, "predicate")))));
         for (DataCommands.DataProvider $$4 : DataCommands.SOURCE_PROVIDERS) {
             $$12.then($$4.wrap((ArgumentBuilder<CommandSourceStack, ?>)Commands.literal("data"), (Function<ArgumentBuilder<CommandSourceStack, ?>, ArgumentBuilder<CommandSourceStack, ?>>)((Function)$$3 -> $$3.then(((RequiredArgumentBuilder)Commands.argument("path", NbtPathArgument.nbtPath()).fork($$03, $$2 -> ExecuteCommand.expect((CommandContext<CommandSourceStack>)$$2, $$2, ExecuteCommand.checkMatchingData($$4.access((CommandContext<CommandSourceStack>)$$2), NbtPathArgument.getPath((CommandContext<CommandSourceStack>)$$2, "path")) > 0))).executes(ExecuteCommand.createNumericConditionalHandler($$2, $$1 -> ExecuteCommand.checkMatchingData($$4.access((CommandContext<CommandSourceStack>)$$1), NbtPathArgument.getPath((CommandContext<CommandSourceStack>)$$1, "path"))))))));
         }
@@ -351,6 +375,68 @@ public class ExecuteCommand {
             }
         }
         return OptionalInt.of((int)$$9);
+    }
+
+    private static RedirectModifier<CommandSourceStack> expandOneToOneEntityRelation(Function<Entity, Optional<Entity>> $$0) {
+        return $$12 -> {
+            CommandSourceStack $$2 = (CommandSourceStack)$$12.getSource();
+            Entity $$3 = $$2.getEntity();
+            if ($$3 == null) {
+                return List.of();
+            }
+            return (Collection)((Optional)$$0.apply((Object)$$3)).filter($$0 -> !$$0.isRemoved()).map($$1 -> List.of((Object)$$2.withEntity((Entity)$$1))).orElse((Object)List.of());
+        };
+    }
+
+    private static RedirectModifier<CommandSourceStack> expandOneToManyEntityRelation(Function<Entity, Stream<Entity>> $$0) {
+        return $$1 -> {
+            CommandSourceStack $$2 = (CommandSourceStack)$$1.getSource();
+            Entity $$3 = $$2.getEntity();
+            if ($$3 == null) {
+                return List.of();
+            }
+            return ((Stream)$$0.apply((Object)$$3)).filter($$0 -> !$$0.isRemoved()).map($$2::withEntity).toList();
+        };
+    }
+
+    private static LiteralArgumentBuilder<CommandSourceStack> createRelationOperations(CommandNode<CommandSourceStack> $$02, LiteralArgumentBuilder<CommandSourceStack> $$1) {
+        return (LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)$$1.then(Commands.literal("owner").fork($$02, ExecuteCommand.expandOneToOneEntityRelation((Function<Entity, Optional<Entity>>)((Function)$$0 -> {
+            Optional optional;
+            if ($$0 instanceof TamableAnimal) {
+                TamableAnimal $$1 = (TamableAnimal)$$0;
+                optional = Optional.ofNullable((Object)$$1.getOwner());
+            } else {
+                optional = Optional.empty();
+            }
+            return optional;
+        }))))).then(Commands.literal("leasher").fork($$02, ExecuteCommand.expandOneToOneEntityRelation((Function<Entity, Optional<Entity>>)((Function)$$0 -> {
+            Optional optional;
+            if ($$0 instanceof Mob) {
+                Mob $$1 = (Mob)$$0;
+                optional = Optional.ofNullable((Object)$$1.getLeashHolder());
+            } else {
+                optional = Optional.empty();
+            }
+            return optional;
+        }))))).then(Commands.literal("target").fork($$02, ExecuteCommand.expandOneToOneEntityRelation((Function<Entity, Optional<Entity>>)((Function)$$0 -> {
+            Optional optional;
+            if ($$0 instanceof Mob) {
+                Mob $$1 = (Mob)$$0;
+                optional = Optional.ofNullable((Object)$$1.getTarget());
+            } else {
+                optional = Optional.empty();
+            }
+            return optional;
+        }))))).then(Commands.literal("attacker").fork($$02, ExecuteCommand.expandOneToOneEntityRelation((Function<Entity, Optional<Entity>>)((Function)$$0 -> {
+            Optional optional;
+            if ($$0 instanceof LivingEntity) {
+                LivingEntity $$1 = (LivingEntity)$$0;
+                optional = Optional.ofNullable((Object)$$1.getLastHurtByMob());
+            } else {
+                optional = Optional.empty();
+            }
+            return optional;
+        }))))).then(Commands.literal("vehicle").fork($$02, ExecuteCommand.expandOneToOneEntityRelation((Function<Entity, Optional<Entity>>)((Function)$$0 -> Optional.ofNullable((Object)$$0.getVehicle())))))).then(Commands.literal("controller").fork($$02, ExecuteCommand.expandOneToOneEntityRelation((Function<Entity, Optional<Entity>>)((Function)$$0 -> Optional.ofNullable((Object)$$0.getControllingPassenger())))))).then(Commands.literal("passengers").fork($$02, ExecuteCommand.expandOneToManyEntityRelation((Function<Entity, Stream<Entity>>)((Function)$$0 -> $$0.getPassengers().stream()))));
     }
 
     @FunctionalInterface

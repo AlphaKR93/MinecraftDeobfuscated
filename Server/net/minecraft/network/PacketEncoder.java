@@ -9,7 +9,6 @@
  *  java.io.IOException
  *  java.lang.Exception
  *  java.lang.IllegalArgumentException
- *  java.lang.Integer
  *  java.lang.Object
  *  java.lang.RuntimeException
  *  java.lang.Throwable
@@ -41,15 +40,15 @@ extends MessageToByteEncoder<Packet<?>> {
     }
 
     protected void encode(ChannelHandlerContext $$0, Packet<?> $$1, ByteBuf $$2) throws Exception {
-        ConnectionProtocol $$3 = (ConnectionProtocol)((Object)$$0.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get());
+        ConnectionProtocol $$3 = (ConnectionProtocol)$$0.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get();
         if ($$3 == null) {
             throw new RuntimeException("ConnectionProtocol unknown: " + $$1);
         }
-        Integer $$4 = $$3.getPacketId(this.flow, $$1);
+        int $$4 = $$3.getPacketId(this.flow, $$1);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(Connection.PACKET_SENT_MARKER, "OUT: [{}:{}] {}", new Object[]{$$0.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get(), $$4, $$1.getClass().getName()});
         }
-        if ($$4 == null) {
+        if ($$4 == -1) {
             throw new IOException("Can't serialize unregistered packet");
         }
         FriendlyByteBuf $$5 = new FriendlyByteBuf($$2);
@@ -61,7 +60,7 @@ extends MessageToByteEncoder<Packet<?>> {
             if ($$7 > 0x800000) {
                 throw new IllegalArgumentException("Packet too big (is " + $$7 + ", should be less than 8388608): " + $$1);
             }
-            int $$8 = ((ConnectionProtocol)((Object)$$0.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get())).getId();
+            int $$8 = ((ConnectionProtocol)$$0.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get()).getId();
             JvmProfiler.INSTANCE.onPacketSent($$8, $$4, $$0.channel().remoteAddress(), $$7);
         }
         catch (Throwable $$9) {

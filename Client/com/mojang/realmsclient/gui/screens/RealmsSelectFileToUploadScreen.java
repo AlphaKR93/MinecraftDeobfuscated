@@ -14,6 +14,7 @@
  *  java.text.SimpleDateFormat
  *  java.util.Date
  *  java.util.List
+ *  java.util.function.UnaryOperator
  *  java.util.stream.Collectors
  *  javax.annotation.Nullable
  *  org.slf4j.Logger
@@ -30,13 +31,14 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.realms.RealmsLabel;
 import net.minecraft.realms.RealmsObjectSelectionList;
 import net.minecraft.realms.RealmsScreen;
@@ -48,7 +50,7 @@ public class RealmsSelectFileToUploadScreen
 extends RealmsScreen {
     private static final Logger LOGGER = LogUtils.getLogger();
     static final Component WORLD_TEXT = Component.translatable("selectWorld.world");
-    static final Component HARDCORE_TEXT = Component.translatable("mco.upload.hardcore").withStyle(ChatFormatting.DARK_RED);
+    static final Component HARDCORE_TEXT = Component.translatable("mco.upload.hardcore").withStyle((UnaryOperator<Style>)((UnaryOperator)$$0 -> $$0.withColor(-65536)));
     static final Component CHEATS_TEXT = Component.translatable("selectWorld.cheats");
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat();
     private final RealmsResetWorldScreen lastScreen;
@@ -147,11 +149,6 @@ extends RealmsScreen {
         @Override
         public int getMaxPosition() {
             return RealmsSelectFileToUploadScreen.this.levelList.size() * 36;
-        }
-
-        @Override
-        public boolean isFocused() {
-            return RealmsSelectFileToUploadScreen.this.getFocused() == this;
         }
 
         @Override

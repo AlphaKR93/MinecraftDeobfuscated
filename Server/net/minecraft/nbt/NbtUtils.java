@@ -10,10 +10,7 @@
  *  com.mojang.authlib.GameProfile
  *  com.mojang.authlib.properties.Property
  *  com.mojang.brigadier.exceptions.CommandSyntaxException
- *  com.mojang.datafixers.DataFixer
  *  com.mojang.logging.LogUtils
- *  com.mojang.serialization.Dynamic
- *  com.mojang.serialization.DynamicOps
  *  it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
  *  java.lang.CharSequence
  *  java.lang.Comparable
@@ -48,10 +45,7 @@ import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.datafixers.DataFixer;
 import com.mojang.logging.LogUtils;
-import com.mojang.serialization.Dynamic;
-import com.mojang.serialization.DynamicOps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,7 +70,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntArrayTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.LongArrayTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.SnbtPrinterTagVisitor;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
@@ -87,7 +80,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringUtil;
-import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -490,14 +482,6 @@ public final class NbtUtils {
         return $$1;
     }
 
-    public static CompoundTag update(DataFixer $$0, DataFixTypes $$1, CompoundTag $$2, int $$3) {
-        return NbtUtils.update($$0, $$1, $$2, $$3, SharedConstants.getCurrentVersion().getWorldVersion());
-    }
-
-    public static CompoundTag update(DataFixer $$0, DataFixTypes $$1, CompoundTag $$2, int $$3, int $$4) {
-        return (CompoundTag)$$0.update($$1.getType(), new Dynamic((DynamicOps)NbtOps.INSTANCE, (Object)$$2), $$3, $$4).getValue();
-    }
-
     public static Component toPrettyComponent(Tag $$0) {
         return new TextComponentTagVisitor("", 0).visit($$0);
     }
@@ -612,5 +596,19 @@ public final class NbtUtils {
         }
         $$1.putString("Name", $$6);
         return $$1;
+    }
+
+    public static CompoundTag addCurrentDataVersion(CompoundTag $$0) {
+        int $$1 = SharedConstants.getCurrentVersion().getDataVersion().getVersion();
+        return NbtUtils.addDataVersion($$0, $$1);
+    }
+
+    public static CompoundTag addDataVersion(CompoundTag $$0, int $$1) {
+        $$0.putInt("DataVersion", $$1);
+        return $$0;
+    }
+
+    public static int getDataVersion(CompoundTag $$0, int $$1) {
+        return $$0.contains("DataVersion", 99) ? $$0.getInt("DataVersion") : $$1;
     }
 }

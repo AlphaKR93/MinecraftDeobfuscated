@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import net.minecraft.client.InputType;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -56,6 +57,7 @@ public class MouseHandler {
         if ($$0 != this.minecraft.getWindow().getWindow()) {
             return;
         }
+        this.minecraft.setLastInputType(InputType.MOUSE);
         boolean bl = $$4 = $$2 == 1;
         if (Minecraft.ON_OSX && $$1 == 0) {
             if ($$4) {

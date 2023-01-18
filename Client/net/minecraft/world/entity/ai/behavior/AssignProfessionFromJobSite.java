@@ -11,6 +11,7 @@ package net.minecraft.world.entity.ai.behavior;
 import com.mojang.datafixers.kinds.Applicative;
 import java.util.Optional;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.Position;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.ai.behavior.BehaviorControl;
@@ -23,7 +24,7 @@ public class AssignProfessionFromJobSite {
     public static BehaviorControl<Villager> create() {
         return BehaviorBuilder.create($$0 -> $$0.group($$0.present(MemoryModuleType.POTENTIAL_JOB_SITE), $$0.registered(MemoryModuleType.JOB_SITE)).apply((Applicative)$$0, ($$1, $$2) -> ($$3, $$4, $$5) -> {
             GlobalPos $$6 = (GlobalPos)$$0.get($$1);
-            if (!$$6.pos().closerToCenterThan($$4.position(), 2.0) && !$$4.assignProfessionWhenSpawned()) {
+            if (!$$6.pos().closerToCenterThan((Position)$$4.position(), 2.0) && !$$4.assignProfessionWhenSpawned()) {
                 return false;
             }
             $$1.erase();

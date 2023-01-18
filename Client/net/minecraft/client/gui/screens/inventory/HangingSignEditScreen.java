@@ -40,7 +40,6 @@ extends AbstractSignEditScreen {
     protected void renderSignBackground(PoseStack $$0, MultiBufferSource.BufferSource $$1, BlockState $$2) {
         $$0.translate(0.0f, -13.0f, 0.0f);
         RenderSystem.setShaderTexture(0, this.texture);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         $$0.scale(4.0f, 4.0f, 1.0f);
         HangingSignEditScreen.blit($$0, -8, -8, 0.0f, 0.0f, 16, 16, 16, 16);
     }

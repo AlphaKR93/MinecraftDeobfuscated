@@ -13,36 +13,30 @@
  *  java.util.function.BiFunction
  *  java.util.function.Consumer
  *  java.util.function.Predicate
- *  java.util.function.Supplier
  *  javax.annotation.Nullable
  */
 package net.minecraft.client.gui.components;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import javax.annotation.Nullable;
 import net.minecraft.SharedConstants;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -365,7 +359,7 @@ implements Renderable {
         }
         boolean bl = $$3 = $$0 >= (double)this.getX() && $$0 < (double)(this.getX() + this.width) && $$1 >= (double)this.getY() && $$1 < (double)(this.getY() + this.height);
         if (this.canLoseFocus) {
-            this.setFocus($$3);
+            this.setFocused($$3);
         }
         if (this.isFocused() && $$3 && $$2 == 0) {
             int $$4 = Mth.floor($$0) - this.getX();
@@ -377,10 +371,6 @@ implements Renderable {
             return true;
         }
         return false;
-    }
-
-    public void setFocus(boolean $$0) {
-        this.setFocused($$0);
     }
 
     @Override
@@ -437,43 +427,31 @@ implements Renderable {
         if ($$7 != $$6) {
             int $$17 = $$11 + this.font.width($$8.substring(0, $$7));
             Objects.requireNonNull((Object)this.font);
-            this.renderHighlight($$16, $$12 - 1, $$17 - 1, $$12 + 1 + 9);
+            this.renderHighlight($$0, $$16, $$12 - 1, $$17 - 1, $$12 + 1 + 9);
         }
     }
 
-    private void renderHighlight(int $$0, int $$1, int $$2, int $$3) {
-        if ($$0 < $$2) {
-            int $$4 = $$0;
-            $$0 = $$2;
-            $$2 = $$4;
-        }
+    private void renderHighlight(PoseStack $$0, int $$1, int $$2, int $$3, int $$4) {
         if ($$1 < $$3) {
             int $$5 = $$1;
             $$1 = $$3;
             $$3 = $$5;
         }
-        if ($$2 > this.getX() + this.width) {
-            $$2 = this.getX() + this.width;
+        if ($$2 < $$4) {
+            int $$6 = $$2;
+            $$2 = $$4;
+            $$4 = $$6;
         }
-        if ($$0 > this.getX() + this.width) {
-            $$0 = this.getX() + this.width;
+        if ($$3 > this.getX() + this.width) {
+            $$3 = this.getX() + this.width;
         }
-        Tesselator $$6 = Tesselator.getInstance();
-        BufferBuilder $$7 = $$6.getBuilder();
-        RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionShader));
-        RenderSystem.setShaderColor(0.0f, 0.0f, 1.0f, 1.0f);
-        RenderSystem.disableTexture();
+        if ($$1 > this.getX() + this.width) {
+            $$1 = this.getX() + this.width;
+        }
         RenderSystem.enableColorLogicOp();
         RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-        $$7.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-        $$7.vertex($$0, $$3, 0.0).endVertex();
-        $$7.vertex($$2, $$3, 0.0).endVertex();
-        $$7.vertex($$2, $$1, 0.0).endVertex();
-        $$7.vertex($$0, $$1, 0.0).endVertex();
-        $$6.end();
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        EditBox.fill($$0, $$1, $$2, $$3, $$4, -16776961);
         RenderSystem.disableColorLogicOp();
-        RenderSystem.enableTexture();
     }
 
     public void setMaxLength(int $$0) {
@@ -509,11 +487,12 @@ implements Renderable {
     }
 
     @Override
-    public boolean changeFocus(boolean $$0) {
+    @Nullable
+    public ComponentPath nextFocusPath(FocusNavigationEvent $$0) {
         if (!this.visible || !this.isEditable) {
-            return false;
+            return null;
         }
-        return super.changeFocus($$0);
+        return super.nextFocusPath($$0);
     }
 
     @Override
@@ -522,7 +501,11 @@ implements Renderable {
     }
 
     @Override
-    protected void onFocusedChanged(boolean $$0) {
+    public void setFocused(boolean $$0) {
+        if (!this.canLoseFocus && !$$0) {
+            return;
+        }
+        super.setFocused($$0);
         if ($$0) {
             this.frame = 0;
         }

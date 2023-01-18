@@ -113,27 +113,27 @@ extends NodeEvaluator {
 
     @Override
     public BlockPathTypes getBlockPathType(BlockGetter $$0, int $$1, int $$2, int $$3) {
-        return this.getBlockPathType($$0, $$1, $$2, $$3, this.mob, this.entityWidth, this.entityHeight, this.entityDepth, this.canOpenDoors(), this.canPassDoors());
+        return this.getBlockPathType($$0, $$1, $$2, $$3, this.mob);
     }
 
     @Override
-    public BlockPathTypes getBlockPathType(BlockGetter $$0, int $$1, int $$2, int $$3, Mob $$4, int $$5, int $$6, int $$7, boolean $$8, boolean $$9) {
-        BlockPos.MutableBlockPos $$10 = new BlockPos.MutableBlockPos();
-        for (int $$11 = $$1; $$11 < $$1 + $$5; ++$$11) {
-            for (int $$12 = $$2; $$12 < $$2 + $$6; ++$$12) {
-                for (int $$13 = $$3; $$13 < $$3 + $$7; ++$$13) {
-                    FluidState $$14 = $$0.getFluidState($$10.set($$11, $$12, $$13));
-                    BlockState $$15 = $$0.getBlockState($$10.set($$11, $$12, $$13));
-                    if ($$14.isEmpty() && $$15.isPathfindable($$0, (BlockPos)$$10.below(), PathComputationType.WATER) && $$15.isAir()) {
+    public BlockPathTypes getBlockPathType(BlockGetter $$0, int $$1, int $$2, int $$3, Mob $$4) {
+        BlockPos.MutableBlockPos $$5 = new BlockPos.MutableBlockPos();
+        for (int $$6 = $$1; $$6 < $$1 + this.entityWidth; ++$$6) {
+            for (int $$7 = $$2; $$7 < $$2 + this.entityHeight; ++$$7) {
+                for (int $$8 = $$3; $$8 < $$3 + this.entityDepth; ++$$8) {
+                    FluidState $$9 = $$0.getFluidState($$5.set($$6, $$7, $$8));
+                    BlockState $$10 = $$0.getBlockState($$5.set($$6, $$7, $$8));
+                    if ($$9.isEmpty() && $$10.isPathfindable($$0, (BlockPos)$$5.below(), PathComputationType.WATER) && $$10.isAir()) {
                         return BlockPathTypes.BREACH;
                     }
-                    if ($$14.is(FluidTags.WATER)) continue;
+                    if ($$9.is(FluidTags.WATER)) continue;
                     return BlockPathTypes.BLOCKED;
                 }
             }
         }
-        BlockState $$16 = $$0.getBlockState($$10);
-        if ($$16.isPathfindable($$0, $$10, PathComputationType.WATER)) {
+        BlockState $$11 = $$0.getBlockState($$5);
+        if ($$11.isPathfindable($$0, $$5, PathComputationType.WATER)) {
             return BlockPathTypes.WATER;
         }
         return BlockPathTypes.BLOCKED;

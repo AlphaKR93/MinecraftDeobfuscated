@@ -90,7 +90,7 @@ extends JumpGoal {
         }
         Vec3 $$2 = this.dolphin.getDeltaMovement();
         if ($$2.y * $$2.y < (double)0.03f && this.dolphin.getXRot() != 0.0f) {
-            this.dolphin.setXRot(Mth.rotlerp(this.dolphin.getXRot(), 0.0f, 0.2f));
+            this.dolphin.setXRot(Mth.rotLerp(0.2f, this.dolphin.getXRot(), 0.0f));
         } else if ($$2.length() > (double)1.0E-5f) {
             double $$3 = $$2.horizontalDistance();
             double $$4 = Math.atan2((double)(-$$2.y), (double)$$3) * 57.2957763671875;

@@ -20,11 +20,12 @@ import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
-import net.minecraft.client.gui.components.FrameWidget;
-import net.minecraft.client.gui.components.GridWidget;
-import net.minecraft.client.gui.components.LinearLayoutWidget;
 import net.minecraft.client.gui.components.LockIconButton;
-import net.minecraft.client.gui.components.SpacerWidget;
+import net.minecraft.client.gui.layouts.FrameLayout;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.layouts.LayoutElement;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.layouts.SpacerElement;
 import net.minecraft.client.gui.screens.AccessibilityOptionsScreen;
 import net.minecraft.client.gui.screens.ChatOptionsScreen;
 import net.minecraft.client.gui.screens.ConfirmScreen;
@@ -70,12 +71,12 @@ extends Screen {
 
     @Override
     protected void init() {
-        GridWidget $$02 = new GridWidget();
+        GridLayout $$02 = new GridLayout();
         $$02.defaultCellSetting().paddingHorizontal(5).paddingBottom(4).alignHorizontallyCenter();
-        GridWidget.RowHelper $$1 = $$02.createRowHelper(2);
+        GridLayout.RowHelper $$1 = $$02.createRowHelper(2);
         $$1.addChild(this.options.fov().createButton(this.minecraft.options, 0, 0, 150));
         $$1.addChild(this.createOnlineButton());
-        $$1.addChild(SpacerWidget.height(26), 2);
+        $$1.addChild(SpacerElement.height(26), 2);
         $$1.addChild(this.openScreenButton(SKIN_CUSTOMIZATION, (Supplier<Screen>)((Supplier)() -> new SkinCustomizationScreen(this, this.options))));
         $$1.addChild(this.openScreenButton(SOUNDS, (Supplier<Screen>)((Supplier)() -> new SoundOptionsScreen(this, this.options))));
         $$1.addChild(this.openScreenButton(VIDEO, (Supplier<Screen>)((Supplier)() -> new VideoSettingsScreen(this, this.options))));
@@ -86,12 +87,12 @@ extends Screen {
         $$1.addChild(this.openScreenButton(ACCESSIBILITY, (Supplier<Screen>)((Supplier)() -> new AccessibilityOptionsScreen(this, this.options))));
         $$1.addChild(this.openScreenButton(TELEMETRY, (Supplier<Screen>)((Supplier)() -> new TelemetryInfoScreen(this, this.options))));
         $$1.addChild(Button.builder(CommonComponents.GUI_DONE, $$0 -> this.minecraft.setScreen(this.lastScreen)).width(200).build(), 2, $$1.newCellSettings().paddingTop(6));
-        $$02.pack();
-        FrameWidget.alignInRectangle($$02, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);
-        this.addRenderableWidget($$02);
+        $$02.arrangeElements();
+        FrameLayout.alignInRectangle($$02, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);
+        $$02.visitWidgets((Consumer<AbstractWidget>)((Consumer)this::addRenderableWidget));
     }
 
-    private AbstractWidget createOnlineButton() {
+    private LayoutElement createOnlineButton() {
         if (this.minecraft.level != null && this.minecraft.hasSingleplayerServer()) {
             this.difficultyButton = OptionsScreen.createDifficultyButton(0, 0, "options.difficulty", this.minecraft);
             if (!this.minecraft.level.getLevelData().isHardcore()) {
@@ -100,10 +101,9 @@ extends Screen {
                 this.lockButton.setLocked(this.minecraft.level.getLevelData().isDifficultyLocked());
                 this.lockButton.active = !this.lockButton.isLocked();
                 this.difficultyButton.active = !this.lockButton.isLocked();
-                LinearLayoutWidget $$02 = new LinearLayoutWidget(150, 0, LinearLayoutWidget.Orientation.HORIZONTAL);
+                LinearLayout $$02 = new LinearLayout(150, 0, LinearLayout.Orientation.HORIZONTAL);
                 $$02.addChild(this.difficultyButton);
                 $$02.addChild(this.lockButton);
-                $$02.pack();
                 return $$02;
             }
             this.difficultyButton.active = false;

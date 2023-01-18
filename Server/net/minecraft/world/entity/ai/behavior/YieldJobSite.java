@@ -33,7 +33,7 @@ public class YieldJobSite {
             if ($$7.isBaby()) {
                 return false;
             }
-            if ($$7.getVillagerData().getProfession() == VillagerProfession.NONE) {
+            if ($$7.getVillagerData().getProfession() != VillagerProfession.NONE) {
                 return false;
             }
             BlockPos $$9 = ((GlobalPos)$$1.get($$2)).pos();

@@ -5,7 +5,7 @@
  *  java.lang.Object
  *  java.lang.Override
  */
-package net.minecraft.client.gui.components;
+package net.minecraft.client.gui.layouts;
 
 public interface LayoutSettings {
     public LayoutSettings padding(int var1);

@@ -276,16 +276,20 @@ implements LevelTickAccess<T> {
         this.toRunThisTick.removeIf($$12);
     }
 
-    public void copyArea(BoundingBox $$0, Vec3i $$12) {
-        ArrayList $$2 = new ArrayList();
-        Predicate $$32 = $$1 -> $$0.isInside($$1.pos());
-        this.alreadyRunThisTick.stream().filter($$32).forEach(arg_0 -> ((List)$$2).add(arg_0));
-        this.toRunThisTick.stream().filter($$32).forEach(arg_0 -> ((List)$$2).add(arg_0));
-        this.forContainersInArea($$0, (arg_0, arg_1) -> LevelTicks.lambda$copyArea$6($$32, (List)$$2, arg_0, arg_1));
-        LongSummaryStatistics $$4 = $$2.stream().mapToLong(ScheduledTick::subTickOrder).summaryStatistics();
-        long $$5 = $$4.getMin();
-        long $$6 = $$4.getMax();
-        $$2.forEach($$3 -> this.schedule(new ScheduledTick($$3.type(), (BlockPos)$$3.pos().offset($$12), $$3.triggerTick(), $$3.priority(), $$3.subTickOrder() - $$5 + $$6 + 1L)));
+    public void copyArea(BoundingBox $$0, Vec3i $$1) {
+        this.copyAreaFrom(this, $$0, $$1);
+    }
+
+    public void copyAreaFrom(LevelTicks<T> $$0, BoundingBox $$12, Vec3i $$2) {
+        ArrayList $$32 = new ArrayList();
+        Predicate $$4 = $$1 -> $$12.isInside($$1.pos());
+        $$0.alreadyRunThisTick.stream().filter($$4).forEach(arg_0 -> ((List)$$32).add(arg_0));
+        $$0.toRunThisTick.stream().filter($$4).forEach(arg_0 -> ((List)$$32).add(arg_0));
+        $$0.forContainersInArea($$12, (arg_0, arg_1) -> LevelTicks.lambda$copyAreaFrom$6($$4, (List)$$32, arg_0, arg_1));
+        LongSummaryStatistics $$5 = $$32.stream().mapToLong(ScheduledTick::subTickOrder).summaryStatistics();
+        long $$6 = $$5.getMin();
+        long $$7 = $$5.getMax();
+        $$32.forEach($$3 -> this.schedule(new ScheduledTick($$3.type(), (BlockPos)$$3.pos().offset($$2), $$3.triggerTick(), $$3.priority(), $$3.subTickOrder() - $$6 + $$7 + 1L)));
     }
 
     @Override
@@ -293,7 +297,7 @@ implements LevelTickAccess<T> {
         return this.allContainers.values().stream().mapToInt(TickAccess::count).sum();
     }
 
-    private static /* synthetic */ void lambda$copyArea$6(Predicate $$0, List $$1, long $$2, LevelChunkTicks $$3) {
+    private static /* synthetic */ void lambda$copyAreaFrom$6(Predicate $$0, List $$1, long $$2, LevelChunkTicks $$3) {
         $$3.getAll().filter($$0).forEach(arg_0 -> ((List)$$1).add(arg_0));
     }
 

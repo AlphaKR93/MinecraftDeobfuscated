@@ -13,7 +13,6 @@ package net.minecraft.client.gui.screens.packs;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import java.util.Objects;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
@@ -24,6 +23,7 @@ import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.packs.PackSelectionModel;
+import net.minecraft.client.gui.screens.packs.PackSelectionScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.locale.Language;
@@ -40,9 +40,9 @@ extends ObjectSelectionList<PackEntry> {
     static final Component INCOMPATIBLE_TITLE = Component.translatable("pack.incompatible");
     static final Component INCOMPATIBLE_CONFIRM_TITLE = Component.translatable("pack.incompatible.confirm.title");
     private final Component title;
-    private final Screen screen;
+    final PackSelectionScreen screen;
 
-    public TransferableSelectionList(Minecraft $$0, Screen $$1, int $$2, int $$3, Component $$4) {
+    public TransferableSelectionList(Minecraft $$0, PackSelectionScreen $$1, int $$2, int $$3, Component $$4) {
         super($$0, $$2, $$3, 32, $$3 - 55 + 4, 36);
         this.screen = $$1;
         this.title = $$4;
@@ -52,9 +52,9 @@ extends ObjectSelectionList<PackEntry> {
     }
 
     @Override
-    protected void renderHeader(PoseStack $$0, int $$1, int $$2, Tesselator $$3) {
-        MutableComponent $$4 = Component.empty().append(this.title).withStyle(ChatFormatting.UNDERLINE, ChatFormatting.BOLD);
-        this.minecraft.font.draw($$0, $$4, (float)($$1 + this.width / 2 - this.minecraft.font.width($$4) / 2), (float)Math.min((int)(this.y0 + 3), (int)$$2), 0xFFFFFF);
+    protected void renderHeader(PoseStack $$0, int $$1, int $$2) {
+        MutableComponent $$3 = Component.empty().append(this.title).withStyle(ChatFormatting.UNDERLINE, ChatFormatting.BOLD);
+        this.minecraft.font.draw($$0, $$3, (float)($$1 + this.width / 2 - this.minecraft.font.width($$3) / 2), (float)Math.min((int)(this.y0 + 3), (int)$$2), 0xFFFFFF);
     }
 
     @Override
@@ -68,8 +68,29 @@ extends ObjectSelectionList<PackEntry> {
     }
 
     @Override
-    protected boolean isFocused() {
-        return this.screen.getFocused() == this;
+    public boolean keyPressed(int $$0, int $$1, int $$2) {
+        if (this.getSelected() != null) {
+            switch ($$0) {
+                case 32: 
+                case 257: {
+                    ((PackEntry)this.getSelected()).keyboardSelection();
+                    return true;
+                }
+            }
+            if (Screen.hasShiftDown()) {
+                switch ($$0) {
+                    case 265: {
+                        ((PackEntry)this.getSelected()).keyboardMoveUp();
+                        return true;
+                    }
+                    case 264: {
+                        ((PackEntry)this.getSelected()).keyboardMoveDown();
+                        return true;
+                    }
+                }
+            }
+        }
+        return super.keyPressed($$0, $$1, $$2);
     }
 
     public static class PackEntry
@@ -85,22 +106,20 @@ extends ObjectSelectionList<PackEntry> {
         private static final String TOO_LONG_NAME_SUFFIX = "...";
         private final TransferableSelectionList parent;
         protected final Minecraft minecraft;
-        protected final Screen screen;
         private final PackSelectionModel.Entry pack;
         private final FormattedCharSequence nameDisplayCache;
         private final MultiLineLabel descriptionDisplayCache;
         private final FormattedCharSequence incompatibleNameDisplayCache;
         private final MultiLineLabel incompatibleDescriptionDisplayCache;
 
-        public PackEntry(Minecraft $$0, TransferableSelectionList $$1, Screen $$2, PackSelectionModel.Entry $$3) {
+        public PackEntry(Minecraft $$0, TransferableSelectionList $$1, PackSelectionModel.Entry $$2) {
             this.minecraft = $$0;
-            this.screen = $$2;
-            this.pack = $$3;
+            this.pack = $$2;
             this.parent = $$1;
-            this.nameDisplayCache = PackEntry.cacheName($$0, $$3.getTitle());
-            this.descriptionDisplayCache = PackEntry.cacheDescription($$0, $$3.getExtendedDescription());
+            this.nameDisplayCache = PackEntry.cacheName($$0, $$2.getTitle());
+            this.descriptionDisplayCache = PackEntry.cacheDescription($$0, $$2.getExtendedDescription());
             this.incompatibleNameDisplayCache = PackEntry.cacheName($$0, INCOMPATIBLE_TITLE);
-            this.incompatibleDescriptionDisplayCache = PackEntry.cacheDescription($$0, $$3.getCompatibility().getDescription());
+            this.incompatibleDescriptionDisplayCache = PackEntry.cacheDescription($$0, $$2.getCompatibility().getDescription());
         }
 
         private static FormattedCharSequence cacheName(Minecraft $$0, Component $$1) {
@@ -125,20 +144,17 @@ extends ObjectSelectionList<PackEntry> {
         public void render(PoseStack $$0, int $$1, int $$2, int $$3, int $$4, int $$5, int $$6, int $$7, boolean $$8, float $$9) {
             PackCompatibility $$10 = this.pack.getCompatibility();
             if (!$$10.isCompatible()) {
-                RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
                 GuiComponent.fill($$0, $$3 - 1, $$2 - 1, $$3 + $$4 - 9, $$2 + $$5 + 1, -8978432);
             }
             RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
             RenderSystem.setShaderTexture(0, this.pack.getIconTexture());
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             GuiComponent.blit($$0, $$3, $$2, 0.0f, 0.0f, 32, 32, 32, 32);
             FormattedCharSequence $$11 = this.nameDisplayCache;
             MultiLineLabel $$12 = this.descriptionDisplayCache;
-            if (this.showHoverOverlay() && (this.minecraft.options.touchscreen().get().booleanValue() || $$8)) {
+            if (this.showHoverOverlay() && (this.minecraft.options.touchscreen().get().booleanValue() || $$8 || this.parent.getSelected() == this && this.parent.isFocused())) {
                 RenderSystem.setShaderTexture(0, ICON_OVERLAY_LOCATION);
                 GuiComponent.fill($$0, $$3, $$2, $$3 + 32, $$2 + 32, -1601138544);
                 RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
-                RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
                 int $$13 = $$6 - $$3;
                 int $$14 = $$7 - $$2;
                 if (!this.pack.getCompatibility().isCompatible()) {
@@ -179,8 +195,34 @@ extends ObjectSelectionList<PackEntry> {
             $$12.renderLeftAligned($$0, $$3 + 32 + 2, $$2 + 12, 10, 0x808080);
         }
 
+        public String getPackId() {
+            return this.pack.getId();
+        }
+
         private boolean showHoverOverlay() {
             return !this.pack.isFixedPosition() || !this.pack.isRequired();
+        }
+
+        public void keyboardSelection() {
+            if (this.pack.canSelect() && this.pack.getCompatibility().isCompatible()) {
+                this.pack.select();
+                this.parent.screen.updateFocus(this.pack, this.parent);
+            } else if (this.pack.canUnselect()) {
+                this.pack.unselect();
+                this.parent.screen.updateFocus(this.pack, this.parent);
+            }
+        }
+
+        public void keyboardMoveUp() {
+            if (this.pack.canMoveUp()) {
+                this.pack.moveUp();
+            }
+        }
+
+        public void keyboardMoveDown() {
+            if (this.pack.canMoveDown()) {
+                this.pack.moveDown();
+            }
         }
 
         @Override
@@ -188,6 +230,7 @@ extends ObjectSelectionList<PackEntry> {
             double $$3 = $$02 - (double)this.parent.getRowLeft();
             double $$4 = $$1 - (double)this.parent.getRowTop(this.parent.children().indexOf((Object)this));
             if (this.showHoverOverlay() && $$3 <= 32.0) {
+                this.parent.screen.clearSelected();
                 if (this.pack.canSelect()) {
                     PackCompatibility $$5 = this.pack.getCompatibility();
                     if ($$5.isCompatible()) {
@@ -195,7 +238,7 @@ extends ObjectSelectionList<PackEntry> {
                     } else {
                         Component $$6 = $$5.getConfirmation();
                         this.minecraft.setScreen(new ConfirmScreen($$0 -> {
-                            this.minecraft.setScreen(this.screen);
+                            this.minecraft.setScreen(this.parent.screen);
                             if ($$0) {
                                 this.pack.select();
                             }

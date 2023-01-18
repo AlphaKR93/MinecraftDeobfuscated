@@ -20,9 +20,9 @@ import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CenteredStringWidget;
-import net.minecraft.client.gui.components.FrameWidget;
-import net.minecraft.client.gui.components.GridWidget;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
+import net.minecraft.client.gui.layouts.FrameLayout;
+import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.telemetry.TelemetryEventWidget;
@@ -55,20 +55,19 @@ extends Screen {
 
     @Override
     protected void init() {
-        FrameWidget $$02 = new FrameWidget(0, 0, this.width, this.height);
+        FrameLayout $$02 = new FrameLayout(0, 0, this.width, this.height);
         $$02.defaultChildLayoutSetting().padding(8);
         $$02.setMinHeight(this.height);
-        GridWidget $$1 = $$02.addChild(new GridWidget(), $$02.newChildLayoutSettings().align(0.5f, 0.0f));
-        $$1.defaultCellSetting().alignHorizontallyCenter().paddingBottom(8);
-        GridWidget.RowHelper $$2 = $$1.createRowHelper(1);
+        GridLayout $$12 = $$02.addChild(new GridLayout(), $$02.newChildLayoutSettings().align(0.5f, 0.0f));
+        $$12.defaultCellSetting().alignHorizontallyCenter().paddingBottom(8);
+        GridLayout.RowHelper $$2 = $$12.createRowHelper(1);
         $$2.addChild(new CenteredStringWidget(this.getTitle(), this.font));
         $$2.addChild(MultiLineTextWidget.createCentered(this.width - 16, this.font, DESCRIPTION));
-        GridWidget $$3 = this.twoButtonContainer(Button.builder(BUTTON_GIVE_FEEDBACK, this::openFeedbackLink).build(), Button.builder(BUTTON_SHOW_DATA, this::openDataFolder).build());
+        GridLayout $$3 = this.twoButtonContainer(Button.builder(BUTTON_GIVE_FEEDBACK, this::openFeedbackLink).build(), Button.builder(BUTTON_SHOW_DATA, this::openDataFolder).build());
         $$2.addChild($$3);
-        GridWidget $$4 = this.twoButtonContainer(this.createTelemetryButton(), Button.builder(CommonComponents.GUI_DONE, this::openLastScreen).build());
+        GridLayout $$4 = this.twoButtonContainer(this.createTelemetryButton(), Button.builder(CommonComponents.GUI_DONE, this::openLastScreen).build());
         $$02.addChild($$4, $$02.newChildLayoutSettings().align(0.5f, 1.0f));
-        $$1.pack();
-        $$02.pack();
+        $$02.arrangeElements();
         this.telemetryEventWidget = new TelemetryEventWidget(0, 0, this.width - 40, $$4.getY() - ($$3.getY() + $$3.getHeight()) - 16, this.minecraft.font);
         this.telemetryEventWidget.setScrollAmount(this.savedScroll);
         this.telemetryEventWidget.setOnScrolledListener($$0 -> {
@@ -76,10 +75,11 @@ extends Screen {
         });
         this.setInitialFocus(this.telemetryEventWidget);
         $$2.addChild(this.telemetryEventWidget);
-        $$1.pack();
-        $$02.pack();
-        FrameWidget.alignInRectangle($$02, 0, 0, this.width, this.height, 0.5f, 0.0f);
-        this.addRenderableWidget($$02);
+        $$02.arrangeElements();
+        FrameLayout.alignInRectangle($$02, 0, 0, this.width, this.height, 0.5f, 0.0f);
+        $$02.visitWidgets((Consumer<AbstractWidget>)((Consumer)$$1 -> {
+            AbstractWidget cfr_ignored_0 = (AbstractWidget)this.addRenderableWidget($$1);
+        }));
     }
 
     private AbstractWidget createTelemetryButton() {
@@ -113,16 +113,15 @@ extends Screen {
 
     @Override
     public void render(PoseStack $$0, int $$1, int $$2, float $$3) {
-        this.renderDirtBackground(0);
+        this.renderDirtBackground($$0);
         super.render($$0, $$1, $$2, $$3);
     }
 
-    private GridWidget twoButtonContainer(AbstractWidget $$0, AbstractWidget $$1) {
-        GridWidget $$2 = new GridWidget();
+    private GridLayout twoButtonContainer(AbstractWidget $$0, AbstractWidget $$1) {
+        GridLayout $$2 = new GridLayout();
         $$2.defaultCellSetting().alignHorizontallyCenter().paddingHorizontal(4);
         $$2.addChild($$0, 0, 0);
         $$2.addChild($$1, 0, 1);
-        $$2.pack();
         return $$2;
     }
 }

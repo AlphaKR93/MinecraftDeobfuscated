@@ -44,14 +44,14 @@ extends ByteToMessageDecoder {
         }
         FriendlyByteBuf $$4 = new FriendlyByteBuf($$1);
         int $$5 = $$4.readVarInt();
-        Packet<?> $$6 = ((ConnectionProtocol)((Object)$$0.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get())).createPacket(this.flow, $$5, $$4);
+        Packet<?> $$6 = ((ConnectionProtocol)$$0.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get()).createPacket(this.flow, $$5, $$4);
         if ($$6 == null) {
             throw new IOException("Bad packet id " + $$5);
         }
-        int $$7 = ((ConnectionProtocol)((Object)$$0.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get())).getId();
+        int $$7 = ((ConnectionProtocol)$$0.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get()).getId();
         JvmProfiler.INSTANCE.onPacketReceived($$7, $$5, $$0.channel().remoteAddress(), $$3);
         if ($$4.readableBytes() > 0) {
-            throw new IOException("Packet " + ((ConnectionProtocol)((Object)$$0.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get())).getId() + "/" + $$5 + " (" + $$6.getClass().getSimpleName() + ") was larger than I expected, found " + $$4.readableBytes() + " bytes extra whilst reading packet " + $$5);
+            throw new IOException("Packet " + ((ConnectionProtocol)$$0.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get()).getId() + "/" + $$5 + " (" + $$6.getClass().getSimpleName() + ") was larger than I expected, found " + $$4.readableBytes() + " bytes extra whilst reading packet " + $$5);
         }
         $$2.add($$6);
         if (LOGGER.isDebugEnabled()) {

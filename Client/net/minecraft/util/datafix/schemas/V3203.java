@@ -16,6 +16,7 @@ import com.mojang.datafixers.types.templates.TypeTemplate;
 import java.util.Map;
 import java.util.function.Supplier;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
+import net.minecraft.util.datafix.schemas.V100;
 
 public class V3203
 extends NamespacedSchema {
@@ -25,7 +26,7 @@ extends NamespacedSchema {
 
     public Map<String, Supplier<TypeTemplate>> registerEntities(Schema $$0) {
         Map $$1 = super.registerEntities($$0);
-        $$0.registerSimple($$1, "minecraft:camel");
+        $$0.register($$1, "minecraft:camel", () -> V100.equipment($$0));
         return $$1;
     }
 }

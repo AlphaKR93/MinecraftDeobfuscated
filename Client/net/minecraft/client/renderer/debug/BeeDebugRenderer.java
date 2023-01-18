@@ -107,11 +107,9 @@ implements DebugRenderer.SimpleDebugRenderer {
     public void render(PoseStack $$0, MultiBufferSource $$1, double $$2, double $$3, double $$4) {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.disableTexture();
         this.clearRemovedHives();
         this.clearRemovedBees();
         this.doRender();
-        RenderSystem.enableTexture();
         RenderSystem.disableBlend();
         if (!this.minecraft.player.isSpectator()) {
             this.updateLastLookedAtUuid();

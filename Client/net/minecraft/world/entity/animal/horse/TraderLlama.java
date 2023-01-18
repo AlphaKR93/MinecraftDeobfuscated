@@ -7,6 +7,7 @@
  *  java.lang.Override
  *  java.util.EnumSet
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world.entity.animal.horse;
 

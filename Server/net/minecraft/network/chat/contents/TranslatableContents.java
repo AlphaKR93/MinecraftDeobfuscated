@@ -13,6 +13,7 @@
  *  java.lang.String
  *  java.util.Arrays
  *  java.util.List
+ *  java.util.Objects
  *  java.util.Optional
  *  java.util.function.Consumer
  *  java.util.regex.Matcher
@@ -25,6 +26,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -43,24 +45,22 @@ import net.minecraft.world.entity.Entity;
 
 public class TranslatableContents
 implements ComponentContents {
-    private static final Object[] NO_ARGS = new Object[0];
+    public static final Object[] NO_ARGS = new Object[0];
     private static final FormattedText TEXT_PERCENT = FormattedText.of("%");
     private static final FormattedText TEXT_NULL = FormattedText.of("null");
     private final String key;
+    @Nullable
+    private final String fallback;
     private final Object[] args;
     @Nullable
     private Language decomposedWith;
     private List<FormattedText> decomposedParts = ImmutableList.of();
     private static final Pattern FORMAT_PATTERN = Pattern.compile((String)"%(?:(\\d+)\\$)?([A-Za-z%]|$)");
 
-    public TranslatableContents(String $$0) {
+    public TranslatableContents(String $$0, @Nullable String $$1, Object[] $$2) {
         this.key = $$0;
-        this.args = NO_ARGS;
-    }
-
-    public TranslatableContents(String $$0, Object ... $$1) {
-        this.key = $$0;
-        this.args = $$1;
+        this.fallback = $$1;
+        this.args = $$2;
     }
 
     private void decompose() {
@@ -69,7 +69,7 @@ implements ComponentContents {
             return;
         }
         this.decomposedWith = $$0;
-        String $$1 = $$0.getOrDefault(this.key);
+        String $$1 = this.fallback != null ? $$0.getOrDefault(this.key, this.fallback) : $$0.getOrDefault(this.key);
         try {
             ImmutableList.Builder $$2 = ImmutableList.builder();
             this.decomposeTemplate($$1, (Consumer<FormattedText>)((Consumer)arg_0 -> ((ImmutableList.Builder)$$2).add(arg_0)));
@@ -122,11 +122,8 @@ implements ComponentContents {
     }
 
     private FormattedText getArgument(int $$0) {
-        if ($$0 < 0) {
+        if ($$0 < 0 || $$0 >= this.args.length) {
             throw new TranslatableFormatException(this, $$0);
-        }
-        if ($$0 >= this.args.length) {
-            return Component.EMPTY;
         }
         Object $$1 = this.args[$$0];
         if ($$1 instanceof Component) {
@@ -164,7 +161,7 @@ implements ComponentContents {
             Object $$5 = this.args[$$4];
             $$3[$$4] = $$5 instanceof Component ? ComponentUtils.updateForEntity($$0, (Component)$$5, $$1, $$2) : $$5;
         }
-        return MutableComponent.create(new TranslatableContents(this.key, $$3));
+        return MutableComponent.create(new TranslatableContents(this.key, this.fallback, $$3));
     }
 
     /*
@@ -177,23 +174,30 @@ implements ComponentContents {
         }
         if (!($$0 instanceof TranslatableContents)) return false;
         TranslatableContents $$1 = (TranslatableContents)$$0;
-        if (!this.key.equals((Object)$$1.key)) return false;
+        if (!Objects.equals((Object)this.key, (Object)$$1.key)) return false;
+        if (!Objects.equals((Object)this.fallback, (Object)$$1.fallback)) return false;
         if (!Arrays.equals((Object[])this.args, (Object[])$$1.args)) return false;
         return true;
     }
 
     public int hashCode() {
-        int $$0 = this.key.hashCode();
+        int $$0 = Objects.hashCode((Object)this.key);
+        $$0 = 31 * $$0 + Objects.hashCode((Object)this.fallback);
         $$0 = 31 * $$0 + Arrays.hashCode((Object[])this.args);
         return $$0;
     }
 
     public String toString() {
-        return "translation{key='" + this.key + "', args=" + Arrays.toString((Object[])this.args) + "}";
+        return "translation{key='" + this.key + "'" + (String)(this.fallback != null ? ", fallback='" + this.fallback + "'" : "") + ", args=" + Arrays.toString((Object[])this.args) + "}";
     }
 
     public String getKey() {
         return this.key;
+    }
+
+    @Nullable
+    public String getFallback() {
+        return this.fallback;
     }
 
     public Object[] getArgs() {

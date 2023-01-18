@@ -9,7 +9,6 @@
  *  java.util.List
  *  java.util.Set
  *  java.util.function.Predicate
- *  net.minecraft.server.level.ServerLevel
  */
 package net.minecraft.world.entity.ai.sensing;
 

@@ -70,7 +70,7 @@ extends Screen {
 
     @Override
     public void render(PoseStack $$0, int $$1, int $$2, float $$3) {
-        this.renderDirtBackground(0);
+        this.renderDirtBackground($$0);
         int n = this.width / 2;
         Objects.requireNonNull((Object)this.font);
         PopupScreen.drawCenteredString($$0, this.font, this.title, n, this.contentTop - 9 * 2, -1);

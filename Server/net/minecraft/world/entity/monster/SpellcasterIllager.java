@@ -10,6 +10,7 @@
  *  java.util.EnumSet
  *  java.util.function.IntFunction
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.entity.monster;
 
@@ -24,6 +25,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -233,7 +235,7 @@ extends AbstractIllager {
         @Override
         public void tick() {
             if (SpellcasterIllager.this.getTarget() != null) {
-                SpellcasterIllager.this.getLookControl().setLookAt(SpellcasterIllager.this.getTarget(), SpellcasterIllager.this.getMaxHeadYRot(), SpellcasterIllager.this.getMaxHeadXRot());
+                SpellcasterIllager.this.getLookControl().setLookAt((Entity)SpellcasterIllager.this.getTarget(), SpellcasterIllager.this.getMaxHeadYRot(), SpellcasterIllager.this.getMaxHeadXRot());
             }
         }
     }

@@ -2,6 +2,7 @@
  * Decompiled with CFR 0.1.0 (FabricMC a830a72d).
  * 
  * Could not load the following classes:
+ *  com.google.common.net.InetAddresses
  *  com.mojang.brigadier.CommandDispatcher
  *  com.mojang.brigadier.Message
  *  com.mojang.brigadier.arguments.StringArgumentType
@@ -10,16 +11,14 @@
  *  com.mojang.brigadier.context.CommandContext
  *  com.mojang.brigadier.exceptions.CommandSyntaxException
  *  com.mojang.brigadier.exceptions.SimpleCommandExceptionType
- *  java.lang.CharSequence
  *  java.lang.Object
  *  java.lang.String
  *  java.util.List
- *  java.util.regex.Matcher
- *  java.util.regex.Pattern
  *  javax.annotation.Nullable
  */
 package net.minecraft.server.commands;
 
+import com.google.common.net.InetAddresses;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.Message;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -29,8 +28,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -42,7 +39,6 @@ import net.minecraft.server.players.IpBanList;
 import net.minecraft.server.players.IpBanListEntry;
 
 public class BanIpCommands {
-    public static final Pattern IP_ADDRESS_PATTERN = Pattern.compile((String)"^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
     private static final SimpleCommandExceptionType ERROR_INVALID_IP = new SimpleCommandExceptionType((Message)Component.translatable("commands.banip.invalid"));
     private static final SimpleCommandExceptionType ERROR_ALREADY_BANNED = new SimpleCommandExceptionType((Message)Component.translatable("commands.banip.failed"));
 
@@ -51,13 +47,12 @@ public class BanIpCommands {
     }
 
     private static int banIpOrName(CommandSourceStack $$0, String $$1, @Nullable Component $$2) throws CommandSyntaxException {
-        Matcher $$3 = IP_ADDRESS_PATTERN.matcher((CharSequence)$$1);
-        if ($$3.matches()) {
+        if (InetAddresses.isInetAddress((String)$$1)) {
             return BanIpCommands.banIp($$0, $$1, $$2);
         }
-        ServerPlayer $$4 = $$0.getServer().getPlayerList().getPlayerByName($$1);
-        if ($$4 != null) {
-            return BanIpCommands.banIp($$0, $$4.getIpAddress(), $$2);
+        ServerPlayer $$3 = $$0.getServer().getPlayerList().getPlayerByName($$1);
+        if ($$3 != null) {
+            return BanIpCommands.banIp($$0, $$3.getIpAddress(), $$2);
         }
         throw ERROR_INVALID_IP.create();
     }

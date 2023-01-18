@@ -20,6 +20,7 @@
  *  java.util.concurrent.CompletableFuture
  *  java.util.function.BiFunction
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.commands.arguments;
 

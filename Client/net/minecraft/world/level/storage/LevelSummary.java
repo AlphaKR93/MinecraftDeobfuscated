@@ -7,18 +7,22 @@
  *  java.lang.Object
  *  java.lang.String
  *  java.nio.file.Path
+ *  java.util.function.UnaryOperator
  *  javax.annotation.Nullable
  *  org.apache.commons.lang3.StringUtils
  */
 package net.minecraft.world.level.storage;
 
 import java.nio.file.Path;
+import java.util.function.UnaryOperator;
 import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.WorldVersion;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.LevelSettings;
@@ -152,7 +156,7 @@ implements Comparable<LevelSummary> {
     }
 
     private Component createInfo() {
-        MutableComponent $$0;
+        MutableComponent $$02;
         if (this.isLocked()) {
             return Component.translatable("selectWorld.locked").withStyle(ChatFormatting.RED);
         }
@@ -162,22 +166,22 @@ implements Comparable<LevelSummary> {
         if (!this.isCompatible()) {
             return Component.translatable("selectWorld.incompatible_series").withStyle(ChatFormatting.RED);
         }
-        MutableComponent mutableComponent = $$0 = this.isHardcore() ? Component.empty().append(Component.translatable("gameMode.hardcore").withStyle(ChatFormatting.DARK_RED)) : Component.translatable("gameMode." + this.getGameMode().getName());
+        MutableComponent mutableComponent = $$02 = this.isHardcore() ? Component.empty().append(Component.translatable("gameMode.hardcore").withStyle((UnaryOperator<Style>)((UnaryOperator)$$0 -> $$0.withColor(-65536)))) : Component.translatable("gameMode." + this.getGameMode().getName());
         if (this.hasCheats()) {
-            $$0.append(", ").append(Component.translatable("selectWorld.cheats"));
+            $$02.append(", ").append(Component.translatable("selectWorld.cheats"));
         }
         if (this.isExperimental()) {
-            $$0.append(", ").append(Component.translatable("selectWorld.experimental").withStyle(ChatFormatting.YELLOW));
+            $$02.append(", ").append(Component.translatable("selectWorld.experimental").withStyle(ChatFormatting.YELLOW));
         }
         MutableComponent $$1 = this.getWorldVersionName();
-        MutableComponent $$2 = Component.literal(", ").append(Component.translatable("selectWorld.version")).append(" ");
+        MutableComponent $$2 = Component.literal(", ").append(Component.translatable("selectWorld.version")).append(CommonComponents.SPACE);
         if (this.markVersionInList()) {
             $$2.append($$1.withStyle(this.askToOpenWorld() ? ChatFormatting.RED : ChatFormatting.ITALIC));
         } else {
             $$2.append($$1);
         }
-        $$0.append($$2);
-        return $$0;
+        $$02.append($$2);
+        return $$02;
     }
 
     public static enum BackupStatus {

@@ -61,7 +61,6 @@ implements BonemealableBlock {
         return $$0.getValue(AGE) < 2;
     }
 
-    @Override
     public void randomTick(BlockState $$0, ServerLevel $$1, BlockPos $$2, RandomSource $$3) {
         int $$4;
         if ($$1.random.nextInt(5) == 0 && ($$4 = $$0.getValue(AGE).intValue()) < 2) {
@@ -69,13 +68,11 @@ implements BonemealableBlock {
         }
     }
 
-    @Override
     public boolean canSurvive(BlockState $$0, LevelReader $$1, BlockPos $$2) {
         BlockState $$3 = $$1.getBlockState((BlockPos)$$2.relative($$0.getValue(FACING)));
         return $$3.is(BlockTags.JUNGLE_LOGS);
     }
 
-    @Override
     public VoxelShape getShape(BlockState $$0, BlockGetter $$1, BlockPos $$2, CollisionContext $$3) {
         int $$4 = $$0.getValue(AGE);
         switch ($$0.getValue(FACING)) {
@@ -106,7 +103,6 @@ implements BonemealableBlock {
         return null;
     }
 
-    @Override
     public BlockState updateShape(BlockState $$0, Direction $$1, BlockState $$2, LevelAccessor $$3, BlockPos $$4, BlockPos $$5) {
         if ($$1 == $$0.getValue(FACING) && !$$0.canSurvive($$3, $$4)) {
             return Blocks.AIR.defaultBlockState();
@@ -134,7 +130,6 @@ implements BonemealableBlock {
         $$0.add(FACING, AGE);
     }
 
-    @Override
     public boolean isPathfindable(BlockState $$0, BlockGetter $$1, BlockPos $$2, PathComputationType $$3) {
         return false;
     }

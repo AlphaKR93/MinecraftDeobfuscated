@@ -103,11 +103,6 @@ GuiEventListener {
         this.lastRecipeClicked = null;
     }
 
-    @Override
-    public boolean changeFocus(boolean $$0) {
-        return false;
-    }
-
     public RecipeCollection getRecipeCollection() {
         return this.collection;
     }
@@ -142,7 +137,6 @@ GuiEventListener {
         }
         this.time += $$3;
         RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, RECIPE_BOOK_LOCATION);
         $$0.pushPose();
         $$0.translate(0.0f, 0.0f, 170.0f);
@@ -193,6 +187,15 @@ GuiEventListener {
 
     public boolean isVisible() {
         return this.isVisible;
+    }
+
+    @Override
+    public void setFocused(boolean $$0) {
+    }
+
+    @Override
+    public boolean isFocused() {
+        return false;
     }
 
     class OverlaySmeltingRecipeButton

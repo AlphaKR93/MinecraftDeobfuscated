@@ -79,6 +79,7 @@ implements SpectatorMenuListener {
         if ($$4.getSelectedSlot() >= 0) {
             this.blit($$0, $$2 - 91 - 1 + $$4.getSelectedSlot() * 20, $$3 - 1, 0, 22, 24, 22);
         }
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         for (int $$5 = 0; $$5 < 9; ++$$5) {
             this.renderSlot($$0, $$5, this.minecraft.getWindow().getGuiScaledWidth() / 2 - 90 + $$5 * 20 + 2, $$3 + 3, $$1, $$4.getItem($$5));
         }
@@ -94,6 +95,7 @@ implements SpectatorMenuListener {
             float $$7 = $$5.isEnabled() ? 1.0f : 0.25f;
             RenderSystem.setShaderColor($$7, $$7, $$7, $$4);
             $$5.renderIcon($$0, $$7, $$6);
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             $$0.popPose();
             if ($$6 > 3 && $$5.isEnabled()) {
                 Component $$8 = this.minecraft.options.keyHotbarSlots[$$1].getTranslatedKeyMessage();

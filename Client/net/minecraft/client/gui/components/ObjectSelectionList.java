@@ -4,37 +4,53 @@
  * Could not load the following classes:
  *  java.lang.Object
  *  java.lang.Override
+ *  javax.annotation.Nullable
  */
 package net.minecraft.client.gui.components;
 
+import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.narration.NarrationSupplier;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
 
 public abstract class ObjectSelectionList<E extends Entry<E>>
 extends AbstractSelectionList<E> {
     private static final Component USAGE_NARRATION = Component.translatable("narration.selection.usage");
-    private boolean inFocus;
 
     public ObjectSelectionList(Minecraft $$0, int $$1, int $$2, int $$3, int $$4, int $$5) {
         super($$0, $$1, $$2, $$3, $$4, $$5);
     }
 
     @Override
-    public boolean changeFocus(boolean $$0) {
-        if (!this.inFocus && this.getItemCount() == 0) {
-            return false;
+    @Nullable
+    public ComponentPath nextFocusPath(FocusNavigationEvent $$0) {
+        if (this.getItemCount() == 0) {
+            return null;
         }
-        boolean bl = this.inFocus = !this.inFocus;
-        if (this.inFocus && this.getSelected() == null && this.getItemCount() > 0) {
-            this.moveSelection(AbstractSelectionList.SelectionDirection.DOWN);
-        } else if (this.inFocus && this.getSelected() != null) {
-            this.refreshSelection();
+        if (this.isFocused() && $$0 instanceof FocusNavigationEvent.ArrowNavigation) {
+            FocusNavigationEvent.ArrowNavigation $$1 = (FocusNavigationEvent.ArrowNavigation)$$0;
+            Entry $$2 = (Entry)this.nextEntry($$1.direction());
+            if ($$2 != null) {
+                return ComponentPath.path(this, ComponentPath.leaf($$2));
+            }
+            return null;
         }
-        return this.inFocus;
+        if (!this.isFocused()) {
+            Entry $$3 = (Entry)this.getSelected();
+            if ($$3 == null) {
+                $$3 = (Entry)this.nextEntry($$0.getVerticalDirectionForInitialFocus());
+            }
+            if ($$3 == null) {
+                return null;
+            }
+            return ComponentPath.path(this, ComponentPath.leaf($$3));
+        }
+        return null;
     }
 
     @Override
@@ -58,11 +74,6 @@ extends AbstractSelectionList<E> {
     public static abstract class Entry<E extends Entry<E>>
     extends AbstractSelectionList.Entry<E>
     implements NarrationSupplier {
-        @Override
-        public boolean changeFocus(boolean $$0) {
-            return false;
-        }
-
         public abstract Component getNarration();
 
         @Override

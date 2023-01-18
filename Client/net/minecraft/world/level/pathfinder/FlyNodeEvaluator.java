@@ -222,30 +222,30 @@ extends WalkNodeEvaluator {
     }
 
     private BlockPathTypes getCachedBlockPathType(int $$0, int $$1, int $$2) {
-        return (BlockPathTypes)((Object)this.pathTypeByPosCache.computeIfAbsent(BlockPos.asLong($$0, $$1, $$2), $$3 -> this.getBlockPathType(this.level, $$0, $$1, $$2, this.mob, this.entityWidth, this.entityHeight, this.entityDepth, this.canOpenDoors(), this.canPassDoors())));
+        return (BlockPathTypes)((Object)this.pathTypeByPosCache.computeIfAbsent(BlockPos.asLong($$0, $$1, $$2), $$3 -> this.getBlockPathType(this.level, $$0, $$1, $$2, this.mob)));
     }
 
     @Override
-    public BlockPathTypes getBlockPathType(BlockGetter $$0, int $$1, int $$2, int $$3, Mob $$4, int $$5, int $$6, int $$7, boolean $$8, boolean $$9) {
-        EnumSet $$10 = EnumSet.noneOf(BlockPathTypes.class);
-        BlockPathTypes $$11 = BlockPathTypes.BLOCKED;
-        BlockPos $$12 = $$4.blockPosition();
-        $$11 = super.getBlockPathTypes($$0, $$1, $$2, $$3, $$5, $$6, $$7, $$8, $$9, (EnumSet<BlockPathTypes>)$$10, $$11, $$12);
-        if ($$10.contains((Object)BlockPathTypes.FENCE)) {
+    public BlockPathTypes getBlockPathType(BlockGetter $$0, int $$1, int $$2, int $$3, Mob $$4) {
+        EnumSet $$5 = EnumSet.noneOf(BlockPathTypes.class);
+        BlockPathTypes $$6 = BlockPathTypes.BLOCKED;
+        BlockPos $$7 = $$4.blockPosition();
+        $$6 = super.getBlockPathTypes($$0, $$1, $$2, $$3, (EnumSet<BlockPathTypes>)$$5, $$6, $$7);
+        if ($$5.contains((Object)BlockPathTypes.FENCE)) {
             return BlockPathTypes.FENCE;
         }
-        BlockPathTypes $$13 = BlockPathTypes.BLOCKED;
-        for (BlockPathTypes $$14 : $$10) {
-            if ($$4.getPathfindingMalus($$14) < 0.0f) {
-                return $$14;
+        BlockPathTypes $$8 = BlockPathTypes.BLOCKED;
+        for (BlockPathTypes $$9 : $$5) {
+            if ($$4.getPathfindingMalus($$9) < 0.0f) {
+                return $$9;
             }
-            if (!($$4.getPathfindingMalus($$14) >= $$4.getPathfindingMalus($$13))) continue;
-            $$13 = $$14;
+            if (!($$4.getPathfindingMalus($$9) >= $$4.getPathfindingMalus($$8))) continue;
+            $$8 = $$9;
         }
-        if ($$11 == BlockPathTypes.OPEN && $$4.getPathfindingMalus($$13) == 0.0f) {
+        if ($$6 == BlockPathTypes.OPEN && $$4.getPathfindingMalus($$8) == 0.0f) {
             return BlockPathTypes.OPEN;
         }
-        return $$13;
+        return $$8;
     }
 
     @Override
@@ -256,8 +256,6 @@ extends WalkNodeEvaluator {
             BlockPathTypes $$6 = FlyNodeEvaluator.getBlockPathTypeRaw($$0, $$4.set($$1, $$2 - 1, $$3));
             if ($$6 == BlockPathTypes.DAMAGE_FIRE || $$6 == BlockPathTypes.LAVA) {
                 $$5 = BlockPathTypes.DAMAGE_FIRE;
-            } else if ($$6 == BlockPathTypes.DAMAGE_CACTUS) {
-                $$5 = BlockPathTypes.DAMAGE_CACTUS;
             } else if ($$6 == BlockPathTypes.DAMAGE_OTHER) {
                 $$5 = BlockPathTypes.DAMAGE_OTHER;
             } else if ($$6 == BlockPathTypes.COCOA) {

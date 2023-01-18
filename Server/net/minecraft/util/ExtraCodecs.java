@@ -27,13 +27,11 @@
  *  com.mojang.serialization.RecordBuilder
  *  com.mojang.serialization.codecs.RecordCodecBuilder
  *  java.lang.CharSequence
- *  java.lang.Comparable
  *  java.lang.Exception
  *  java.lang.Float
  *  java.lang.IllegalArgumentException
  *  java.lang.Integer
  *  java.lang.Long
- *  java.lang.Number
  *  java.lang.Object
  *  java.lang.String
  *  java.lang.Throwable
@@ -176,6 +174,7 @@ public class ExtraCodecs {
         $$12.forEach(($$1, $$2) -> $$0.getProperties().put($$1, $$2));
         return $$0;
     }));
+    public static final Codec<String> NON_EMPTY_STRING = ExtraCodecs.validate(Codec.STRING, $$0 -> $$0.isEmpty() ? DataResult.error((String)"Expected non-empty string") : DataResult.success((Object)$$0));
 
     public static <F, S> Codec<Either<F, S>> xor(Codec<F> $$0, Codec<S> $$1) {
         return new XorCodec<F, S>($$0, $$1);
@@ -272,58 +271,39 @@ public class ExtraCodecs {
         });
     }
 
-    private static <N extends Number> Function<N, DataResult<N>> checkRangeWithMessage(N $$0, N $$1, Function<N, String> $$2) {
-        return $$3 -> {
-            if (((Comparable)$$3).compareTo((Object)$$0) >= 0 && ((Comparable)$$3).compareTo((Object)$$1) <= 0) {
-                return DataResult.success((Object)$$3);
-            }
-            return DataResult.error((String)((String)$$2.apply($$3)));
-        };
+    public static <T> Codec<T> validate(Codec<T> $$0, Function<T, DataResult<T>> $$1) {
+        return $$0.flatXmap($$1, $$1);
     }
 
     private static Codec<Integer> intRangeWithMessage(int $$0, int $$1, Function<Integer, String> $$2) {
-        Function<Integer, DataResult<Integer>> $$3 = ExtraCodecs.checkRangeWithMessage($$0, $$1, $$2);
-        return Codec.INT.flatXmap($$3, $$3);
-    }
-
-    private static <N extends Number> Function<N, DataResult<N>> checkRangeMinExclusiveWithMessage(N $$0, N $$1, Function<N, String> $$2) {
-        return $$3 -> {
-            if (((Comparable)$$3).compareTo((Object)$$0) > 0 && ((Comparable)$$3).compareTo((Object)$$1) <= 0) {
+        return ExtraCodecs.validate(Codec.INT, $$3 -> {
+            if ($$3.compareTo(Integer.valueOf((int)$$0)) >= 0 && $$3.compareTo(Integer.valueOf((int)$$1)) <= 0) {
                 return DataResult.success((Object)$$3);
             }
             return DataResult.error((String)((String)$$2.apply($$3)));
-        };
+        });
     }
 
     private static Codec<Float> floatRangeMinExclusiveWithMessage(float $$0, float $$1, Function<Float, String> $$2) {
-        Function<Float, DataResult<Float>> $$3 = ExtraCodecs.checkRangeMinExclusiveWithMessage(Float.valueOf((float)$$0), Float.valueOf((float)$$1), $$2);
-        return Codec.FLOAT.flatXmap($$3, $$3);
-    }
-
-    public static <T> Function<List<T>, DataResult<List<T>>> nonEmptyListCheck() {
-        return $$0 -> {
-            if ($$0.isEmpty()) {
-                return DataResult.error((String)"List must have contents");
+        return ExtraCodecs.validate(Codec.FLOAT, $$3 -> {
+            if ($$3.compareTo(Float.valueOf((float)$$0)) > 0 && $$3.compareTo(Float.valueOf((float)$$1)) <= 0) {
+                return DataResult.success((Object)$$3);
             }
-            return DataResult.success((Object)$$0);
-        };
+            return DataResult.error((String)((String)$$2.apply($$3)));
+        });
     }
 
-    public static <T> Codec<List<T>> nonEmptyList(Codec<List<T>> $$0) {
-        return $$0.flatXmap(ExtraCodecs.nonEmptyListCheck(), ExtraCodecs.nonEmptyListCheck());
+    public static <T> Codec<List<T>> nonEmptyList(Codec<List<T>> $$02) {
+        return ExtraCodecs.validate($$02, $$0 -> $$0.isEmpty() ? DataResult.error((String)"List must have contents") : DataResult.success((Object)$$0));
     }
 
-    public static <T> Function<HolderSet<T>, DataResult<HolderSet<T>>> nonEmptyHolderSetCheck() {
-        return $$0 -> {
+    public static <T> Codec<HolderSet<T>> nonEmptyHolderSet(Codec<HolderSet<T>> $$02) {
+        return ExtraCodecs.validate($$02, $$0 -> {
             if ($$0.unwrap().right().filter(List::isEmpty).isPresent()) {
                 return DataResult.error((String)"List must have contents");
             }
             return DataResult.success((Object)$$0);
-        };
-    }
-
-    public static <T> Codec<HolderSet<T>> nonEmptyHolderSet(Codec<HolderSet<T>> $$0) {
-        return $$0.flatXmap(ExtraCodecs.nonEmptyHolderSetCheck(), ExtraCodecs.nonEmptyHolderSetCheck());
+        });
     }
 
     public static <A> Codec<A> lazyInitializedCodec(Supplier<Codec<A>> $$0) {
@@ -414,6 +394,19 @@ public class ExtraCodecs {
 
     private static DataResult<Pair<Optional<UUID>, Optional<String>>> mapGameProfileToIdName(GameProfile $$0) {
         return DataResult.success((Object)Pair.of((Object)Optional.ofNullable((Object)$$0.getId()), (Object)Optional.ofNullable((Object)$$0.getName())));
+    }
+
+    public static Codec<String> sizeLimitedString(int $$0, int $$1) {
+        return ExtraCodecs.validate(Codec.STRING, $$2 -> {
+            int $$3 = $$2.length();
+            if ($$3 < $$0) {
+                return DataResult.error((String)("String \"" + $$2 + "\" is too short: " + $$3 + ", expected range [" + $$0 + "-" + $$1 + "]"));
+            }
+            if ($$3 > $$1) {
+                return DataResult.error((String)("String \"" + $$2 + "\" is too long: " + $$3 + ", expected range [" + $$0 + "-" + $$1 + "]"));
+            }
+            return DataResult.success((Object)$$2);
+        });
     }
 
     static final class XorCodec<F, S>

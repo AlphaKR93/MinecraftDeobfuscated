@@ -6,7 +6,6 @@
  *  java.lang.Override
  *  java.util.List
  *  javax.annotation.Nullable
- *  net.minecraft.world.item.ItemStack
  */
 package net.minecraft.world.level.block;
 
@@ -18,7 +17,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -46,7 +44,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -121,7 +118,7 @@ extends BaseEntityBlock {
     }
 
     public static void dropHoneycomb(Level $$0, BlockPos $$1) {
-        BeehiveBlock.popResource($$0, $$1, new ItemStack((ItemLike)Items.HONEYCOMB, 3));
+        BeehiveBlock.popResource($$0, $$1, new ItemStack(Items.HONEYCOMB, 3));
     }
 
     @Override
@@ -134,16 +131,16 @@ extends BaseEntityBlock {
             if ($$6.is(Items.SHEARS)) {
                 $$12.playSound($$3, $$3.getX(), $$3.getY(), $$3.getZ(), SoundEvents.BEEHIVE_SHEAR, SoundSource.BLOCKS, 1.0f, 1.0f);
                 BeehiveBlock.dropHoneycomb($$12, $$2);
-                $$6.hurtAndBreak(1, (LivingEntity)$$3, $$1 -> $$1.broadcastBreakEvent($$4));
+                $$6.hurtAndBreak(1, $$3, $$1 -> $$1.broadcastBreakEvent($$4));
                 $$8 = true;
                 $$12.gameEvent($$3, GameEvent.SHEAR, $$2);
             } else if ($$6.is(Items.GLASS_BOTTLE)) {
                 $$6.shrink(1);
                 $$12.playSound($$3, $$3.getX(), $$3.getY(), $$3.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0f, 1.0f);
                 if ($$6.isEmpty()) {
-                    $$3.setItemInHand($$4, new ItemStack((ItemLike)Items.HONEY_BOTTLE));
-                } else if (!$$3.getInventory().add(new ItemStack((ItemLike)Items.HONEY_BOTTLE))) {
-                    $$3.drop(new ItemStack((ItemLike)Items.HONEY_BOTTLE), false);
+                    $$3.setItemInHand($$4, new ItemStack(Items.HONEY_BOTTLE));
+                } else if (!$$3.getInventory().add(new ItemStack(Items.HONEY_BOTTLE))) {
+                    $$3.drop(new ItemStack(Items.HONEY_BOTTLE), false);
                 }
                 $$8 = true;
                 $$12.gameEvent($$3, GameEvent.FLUID_PICKUP, $$2);
@@ -260,7 +257,7 @@ extends BaseEntityBlock {
         if (!$$0.isClientSide && $$3.isCreative() && $$0.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS) && ($$4 = $$0.getBlockEntity($$1)) instanceof BeehiveBlockEntity) {
             boolean $$8;
             BeehiveBlockEntity $$5 = (BeehiveBlockEntity)$$4;
-            ItemStack $$6 = new ItemStack((ItemLike)this);
+            ItemStack $$6 = new ItemStack(this);
             int $$7 = $$2.getValue(HONEY_LEVEL);
             boolean bl = $$8 = !$$5.isEmpty();
             if ($$8 || $$7 > 0) {
@@ -271,7 +268,7 @@ extends BaseEntityBlock {
                 }
                 CompoundTag $$10 = new CompoundTag();
                 $$10.putInt("honey_level", $$7);
-                $$6.addTagElement("BlockStateTag", (Tag)$$10);
+                $$6.addTagElement("BlockStateTag", $$10);
                 ItemEntity $$11 = new ItemEntity($$0, $$1.getX(), $$1.getY(), $$1.getZ(), $$6);
                 $$11.setDefaultPickUpDelay();
                 $$0.addFreshEntity($$11);

@@ -107,7 +107,7 @@ extends SavedData {
         ResourceKey $$1 = (ResourceKey)DimensionType.parseLegacy(new Dynamic((DynamicOps)NbtOps.INSTANCE, (Object)$$0.get("dimension"))).resultOrPartial(arg_0 -> ((Logger)LOGGER).error(arg_0)).orElseThrow(() -> new IllegalArgumentException("Invalid map dimension: " + $$0.get("dimension")));
         int $$2 = $$0.getInt("xCenter");
         int $$3 = $$0.getInt("zCenter");
-        byte $$4 = (byte)Mth.clamp((int)$$0.getByte("scale"), 0, 4);
+        byte $$4 = (byte)Mth.clamp($$0.getByte("scale"), 0, 4);
         boolean $$5 = !$$0.contains("trackingPosition", 1) || $$0.getBoolean("trackingPosition");
         boolean $$6 = $$0.getBoolean("unlimitedTracking");
         boolean $$7 = $$0.getBoolean("locked");

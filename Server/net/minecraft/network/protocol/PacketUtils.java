@@ -27,7 +27,7 @@ public class PacketUtils {
     public static <T extends PacketListener> void ensureRunningOnSameThread(Packet<T> $$0, T $$1, BlockableEventLoop<?> $$2) throws RunningOnDifferentThreadException {
         if (!$$2.isSameThread()) {
             $$2.executeIfPossible(() -> {
-                if ($$1.getConnection().isConnected()) {
+                if ($$1.isAcceptingMessages()) {
                     try {
                         $$0.handle($$1);
                     }

@@ -10,14 +10,13 @@
  *  java.lang.StringBuffer
  *  java.lang.Throwable
  *  java.util.Arrays
- *  java.util.function.Predicate
+ *  net.minecraft.server.level.ServerLevel
  *  org.apache.commons.lang3.exception.ExceptionUtils
  */
 package net.minecraft.gametest.framework;
 
 import com.google.common.base.MoreObjects;
 import java.util.Arrays;
-import java.util.function.Predicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -33,9 +32,9 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LecternBlock;
@@ -161,7 +160,7 @@ implements GameTestListener {
         $$2.setBlockAndUpdate($$5, Blocks.LECTERN.defaultBlockState().rotate($$0.getRotation()));
         BlockState $$6 = $$2.getBlockState($$5);
         ItemStack $$7 = ReportGameListener.createBook($$0.getTestName(), $$0.isRequired(), $$1);
-        LecternBlock.tryPlaceBook(null, $$2, $$5, $$6, $$7);
+        LecternBlock.tryPlaceBook(null, (Level)$$2, $$5, $$6, $$7);
     }
 
     private static ItemStack createBook(String $$0, boolean $$12, String $$2) {
@@ -179,7 +178,7 @@ implements GameTestListener {
     }
 
     protected static void say(ServerLevel $$02, ChatFormatting $$1, String $$22) {
-        $$02.getPlayers((Predicate<? super ServerPlayer>)((Predicate)$$0 -> true)).forEach($$2 -> $$2.sendSystemMessage(Component.literal($$22).withStyle($$1)));
+        $$02.getPlayers($$0 -> true).forEach($$2 -> $$2.sendSystemMessage(Component.literal($$22).withStyle($$1)));
     }
 
     private static void showRedBox(ServerLevel $$0, BlockPos $$1, String $$2) {

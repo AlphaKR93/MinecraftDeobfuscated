@@ -139,6 +139,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.ProgressListener;
 import net.minecraft.util.Unit;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -222,14 +224,10 @@ public class ServerLevel
 extends Level
 implements WorldGenLevel {
     public static final BlockPos END_SPAWN_POINT = new BlockPos(100, 50, 0);
-    private static final int MIN_RAIN_DELAY_TIME = 12000;
-    private static final int MAX_RAIN_DELAY_TIME = 180000;
-    private static final int MIN_RAIN_TIME = 12000;
-    private static final int MAX_RAIN_TIME = 24000;
-    private static final int MIN_THUNDER_DELAY_TIME = 12000;
-    private static final int MAX_THUNDER_DELAY_TIME = 180000;
-    private static final int MIN_THUNDER_TIME = 3600;
-    private static final int MAX_THUNDER_TIME = 15600;
+    public static final IntProvider RAIN_DELAY = UniformInt.of(12000, 180000);
+    public static final IntProvider RAIN_DURATION = UniformInt.of(12000, 24000);
+    private static final IntProvider THUNDER_DELAY = UniformInt.of(12000, 180000);
+    public static final IntProvider THUNDER_DURATION = UniformInt.of(3600, 15600);
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final int EMPTY_TIME_NO_TICK = 300;
     private static final int MAX_SCHEDULED_TICKS_PER_TICK = 65536;
@@ -463,6 +461,7 @@ implements WorldGenLevel {
                 this.setBlockAndUpdate((BlockPos)$$13, Blocks.ICE.defaultBlockState());
             }
             if ($$3) {
+                Biome.Precipitation $$19;
                 int $$15 = this.getGameRules().getInt(GameRules.RULE_SNOW_ACCUMULATION_HEIGHT);
                 if ($$15 > 0 && $$14.shouldSnow(this, $$12)) {
                     BlockState $$16 = this.getBlockState($$12);
@@ -477,12 +476,10 @@ implements WorldGenLevel {
                         this.setBlockAndUpdate($$12, Blocks.SNOW.defaultBlockState());
                     }
                 }
-                BlockState $$19 = this.getBlockState((BlockPos)$$13);
-                Biome.Precipitation $$20 = $$14.getPrecipitation();
-                if ($$20 == Biome.Precipitation.RAIN && $$14.coldEnoughToSnow((BlockPos)$$13)) {
-                    $$20 = Biome.Precipitation.SNOW;
+                if (($$19 = $$14.getPrecipitationAt((BlockPos)$$13)) != Biome.Precipitation.NONE) {
+                    BlockState $$20 = this.getBlockState((BlockPos)$$13);
+                    $$20.getBlock().handlePrecipitation($$20, this, (BlockPos)$$13, $$19);
                 }
-                $$19.getBlock().handlePrecipitation($$19, this, (BlockPos)$$13, $$20);
             }
         }
         $$6.popPush("tickBlocks");
@@ -589,14 +586,14 @@ implements WorldGenLevel {
                             $$4 = !$$4;
                         }
                     } else {
-                        $$2 = $$4 ? Mth.randomBetweenInclusive(this.random, 3600, 15600) : Mth.randomBetweenInclusive(this.random, 12000, 180000);
+                        $$2 = $$4 ? THUNDER_DURATION.sample(this.random) : THUNDER_DELAY.sample(this.random);
                     }
                     if ($$3 > 0) {
                         if (--$$3 == 0) {
                             $$5 = !$$5;
                         }
                     } else {
-                        $$3 = $$5 ? Mth.randomBetweenInclusive(this.random, 12000, 24000) : Mth.randomBetweenInclusive(this.random, 12000, 180000);
+                        $$3 = $$5 ? RAIN_DURATION.sample(this.random) : RAIN_DELAY.sample(this.random);
                     }
                 }
                 this.serverLevelData.setThunderTime($$2);
@@ -1394,7 +1391,7 @@ implements WorldGenLevel {
         }
 
         @Override
-        public void onDestroyed(Entity $$0) {
+        public void onTrackingEnd(Entity $$0) {
             ServerLevel.this.getScoreboard().entityRemoved($$0);
         }
 
@@ -1434,7 +1431,7 @@ implements WorldGenLevel {
         }
 
         @Override
-        public void onDestroyed(Entity $$0) {
+        public void onTrackingEnd(Entity $$0) {
             ServerLevel.this.getChunkSource().removeEntity($$0);
             if ($$0 instanceof ServerPlayer) {
                 ServerPlayer $$1 = (ServerPlayer)$$0;

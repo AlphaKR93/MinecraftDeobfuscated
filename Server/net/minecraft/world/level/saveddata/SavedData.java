@@ -13,9 +13,9 @@ package net.minecraft.world.level.saveddata;
 import com.mojang.logging.LogUtils;
 import java.io.File;
 import java.io.IOException;
-import net.minecraft.SharedConstants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtUtils;
 import org.slf4j.Logger;
 
 public abstract class SavedData {
@@ -42,7 +42,7 @@ public abstract class SavedData {
         }
         CompoundTag $$1 = new CompoundTag();
         $$1.put("data", this.save(new CompoundTag()));
-        $$1.putInt("DataVersion", SharedConstants.getCurrentVersion().getWorldVersion());
+        NbtUtils.addCurrentDataVersion($$1);
         try {
             NbtIo.writeCompressed($$1, $$0);
         }

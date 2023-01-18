@@ -41,9 +41,14 @@ extends OptionsSubScreen {
             for (KeyMapping $$1 : this.options.keyMappings) {
                 $$1.setKey($$1.getDefaultKey());
             }
-            KeyMapping.resetMapping();
+            this.resetMappingAndUpdateButtons();
         }).bounds(this.width / 2 - 155, this.height - 29, 150, 20).build());
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, $$0 -> this.minecraft.setScreen(this.lastScreen)).bounds(this.width / 2 - 155 + 160, this.height - 29, 150, 20).build());
+    }
+
+    private void resetMappingAndUpdateButtons() {
+        KeyMapping.resetMapping();
+        this.keyBindsList.children().forEach(KeyBindsList.Entry::onMappingChanged);
     }
 
     @Override
@@ -51,7 +56,7 @@ extends OptionsSubScreen {
         if (this.selectedKey != null) {
             this.options.setKey(this.selectedKey, InputConstants.Type.MOUSE.getOrCreate($$2));
             this.selectedKey = null;
-            KeyMapping.resetMapping();
+            this.resetMappingAndUpdateButtons();
             return true;
         }
         return super.mouseClicked($$0, $$1, $$2);
@@ -67,7 +72,7 @@ extends OptionsSubScreen {
             }
             this.selectedKey = null;
             this.lastKeySelection = Util.getMillis();
-            KeyMapping.resetMapping();
+            this.resetMappingAndUpdateButtons();
             return true;
         }
         return super.keyPressed($$0, $$1, $$2);

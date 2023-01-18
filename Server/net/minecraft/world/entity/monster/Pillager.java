@@ -11,7 +11,6 @@
  *  java.util.HashMap
  *  java.util.Map
  *  javax.annotation.Nullable
- *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.entity.monster;
 
@@ -191,6 +190,7 @@ InventoryCarrier {
         }
     }
 
+    @Override
     public boolean isAlliedTo(Entity $$0) {
         if (super.isAlliedTo($$0)) {
             return true;
@@ -251,6 +251,7 @@ InventoryCarrier {
         return this.hasActiveRaid() && $$0.is(Items.WHITE_BANNER);
     }
 
+    @Override
     public SlotAccess getSlot(int $$0) {
         int $$1 = $$0 - 300;
         if ($$1 >= 0 && $$1 < this.inventory.getContainerSize()) {

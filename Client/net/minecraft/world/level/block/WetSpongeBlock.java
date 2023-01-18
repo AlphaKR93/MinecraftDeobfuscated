@@ -14,7 +14,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -32,7 +31,7 @@ extends Block {
         if ($$1.dimensionType().ultraWarm()) {
             $$1.setBlock($$2, Blocks.SPONGE.defaultBlockState(), 3);
             $$1.levelEvent(2009, $$2, 0);
-            $$1.playSound((Player)null, $$2, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, (1.0f + $$1.getRandom().nextFloat() * 0.2f) * 0.7f);
+            $$1.playSound(null, $$2, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, (1.0f + $$1.getRandom().nextFloat() * 0.2f) * 0.7f);
         }
     }
 

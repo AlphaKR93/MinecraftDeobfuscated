@@ -76,7 +76,7 @@ extends BaseEntityBlock {
         } else {
             $$2.add((Object)CommonComponents.EMPTY);
             $$2.add((Object)Component.translatable("block.minecraft.spawner.desc1").withStyle(ChatFormatting.GRAY));
-            $$2.add((Object)Component.literal(" ").append(Component.translatable("block.minecraft.spawner.desc2").withStyle(ChatFormatting.BLUE)));
+            $$2.add((Object)CommonComponents.space().append(Component.translatable("block.minecraft.spawner.desc2").withStyle(ChatFormatting.BLUE)));
         }
     }
 

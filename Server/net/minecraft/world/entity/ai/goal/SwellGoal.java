@@ -7,11 +7,13 @@
  *  java.lang.Override
  *  java.util.EnumSet
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.entity.ai.goal;
 
 import java.util.EnumSet;
 import javax.annotation.Nullable;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Creeper;
@@ -30,7 +32,7 @@ extends Goal {
     @Override
     public boolean canUse() {
         LivingEntity $$0 = this.creeper.getTarget();
-        return this.creeper.getSwellDir() > 0 || $$0 != null && this.creeper.distanceToSqr($$0) < 9.0;
+        return this.creeper.getSwellDir() > 0 || $$0 != null && this.creeper.distanceToSqr((Entity)$$0) < 9.0;
     }
 
     @Override
@@ -55,11 +57,11 @@ extends Goal {
             this.creeper.setSwellDir(-1);
             return;
         }
-        if (this.creeper.distanceToSqr(this.target) > 49.0) {
+        if (this.creeper.distanceToSqr((Entity)this.target) > 49.0) {
             this.creeper.setSwellDir(-1);
             return;
         }
-        if (!this.creeper.getSensing().hasLineOfSight(this.target)) {
+        if (!this.creeper.getSensing().hasLineOfSight((Entity)this.target)) {
             this.creeper.setSwellDir(-1);
             return;
         }

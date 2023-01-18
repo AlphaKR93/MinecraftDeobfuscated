@@ -16,7 +16,6 @@
  *  java.util.Optional
  *  java.util.UUID
  *  java.util.function.Function
- *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world.level.gameevent;
 

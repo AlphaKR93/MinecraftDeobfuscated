@@ -6,6 +6,7 @@
  *  com.mojang.datafixers.util.Pair
  *  com.mojang.logging.LogUtils
  *  java.lang.Integer
+ *  java.lang.Iterable
  *  java.lang.Math
  *  java.lang.Object
  *  java.util.ArrayList
@@ -33,6 +34,7 @@ import java.util.function.Consumer;
 import javax.annotation.Nullable;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBundlePacket;
 import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
@@ -204,11 +206,13 @@ public class ServerEntity {
     }
 
     public void addPairing(ServerPlayer $$0) {
-        this.sendPairingData($$0.connection::send);
+        ArrayList $$1 = new ArrayList();
+        this.sendPairingData((Consumer<Packet<ClientGamePacketListener>>)((Consumer)arg_0 -> ((List)$$1).add(arg_0)));
+        $$0.connection.send(new ClientboundBundlePacket((Iterable<Packet<ClientGamePacketListener>>)$$1));
         this.entity.startSeenByPlayer($$0);
     }
 
-    public void sendPairingData(Consumer<Packet<?>> $$0) {
+    public void sendPairingData(Consumer<Packet<ClientGamePacketListener>> $$0) {
         Mob $$9;
         if (this.entity.isRemoved()) {
             LOGGER.warn("Fetching packet for removed entity {}", (Object)this.entity);

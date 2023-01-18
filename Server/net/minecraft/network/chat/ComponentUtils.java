@@ -161,7 +161,8 @@ public class ComponentUtils {
         if ($$0 != null && (componentContents = $$0.getContents()) instanceof TranslatableContents) {
             TranslatableContents $$1 = (TranslatableContents)componentContents;
             String $$2 = $$1.getKey();
-            return Language.getInstance().has($$2);
+            String $$3 = $$1.getFallback();
+            return $$3 != null || Language.getInstance().has($$2);
         }
         return true;
     }

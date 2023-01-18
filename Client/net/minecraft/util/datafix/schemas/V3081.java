@@ -27,14 +27,9 @@ extends NamespacedSchema {
         super($$0, $$1);
     }
 
-    protected static void registerMob(Schema $$0, Map<String, Supplier<TypeTemplate>> $$1, String $$2) {
-        $$0.register($$1, $$2, () -> V100.equipment($$0));
-        $$0.register($$1, "minecraft:warden", () -> DSL.optionalFields((String)"ArmorItems", (TypeTemplate)DSL.list((TypeTemplate)References.ITEM_STACK.in($$0)), (String)"HandItems", (TypeTemplate)DSL.list((TypeTemplate)References.ITEM_STACK.in($$0)), (String)"listener", (TypeTemplate)DSL.optionalFields((String)"event", (TypeTemplate)DSL.optionalFields((String)"game_event", (TypeTemplate)References.GAME_EVENT_NAME.in($$0)))));
-    }
-
     public Map<String, Supplier<TypeTemplate>> registerEntities(Schema $$0) {
         Map $$1 = super.registerEntities($$0);
-        V3081.registerMob($$0, (Map<String, Supplier<TypeTemplate>>)$$1, "minecraft:warden");
+        $$0.register($$1, "minecraft:warden", () -> DSL.optionalFields((String)"listener", (TypeTemplate)DSL.optionalFields((String)"event", (TypeTemplate)DSL.optionalFields((String)"game_event", (TypeTemplate)References.GAME_EVENT_NAME.in($$0))), (TypeTemplate)V100.equipment($$0)));
         return $$1;
     }
 }

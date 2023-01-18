@@ -90,13 +90,13 @@ extends Behavior<Mob> {
     }
 
     @Override
-    protected void tick(ServerLevel $$0, Mob $$1, long $$2) {
+    protected void start(ServerLevel $$0, Mob $$1, long $$2) {
         $$1.getBrain().setMemory(MemoryModuleType.PATH, this.path);
         $$1.getNavigation().moveTo(this.path, (double)this.speedModifier);
     }
 
     @Override
-    protected void tick(ServerLevel $$0, Mob $$1, long $$2) {
+    protected void start(ServerLevel $$0, Mob $$1, long $$2) {
         Path $$3 = $$1.getNavigation().getPath();
         Brain<?> $$4 = $$1.getBrain();
         if (this.path != $$3) {
@@ -109,7 +109,7 @@ extends Behavior<Mob> {
         WalkTarget $$5 = (WalkTarget)$$4.getMemory(MemoryModuleType.WALK_TARGET).get();
         if ($$5.getTarget().currentBlockPosition().distSqr(this.lastTargetPos) > 4.0 && this.tryComputePath($$1, $$5, $$0.getGameTime())) {
             this.lastTargetPos = $$5.getTarget().currentBlockPosition();
-            this.tick($$0, $$1, $$2);
+            this.start($$0, $$1, $$2);
         }
     }
 

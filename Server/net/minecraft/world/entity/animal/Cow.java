@@ -5,7 +5,6 @@
  *  java.lang.Object
  *  java.lang.Override
  *  javax.annotation.Nullable
- *  net.minecraft.world.level.Level
  */
 package net.minecraft.world.entity.animal;
 

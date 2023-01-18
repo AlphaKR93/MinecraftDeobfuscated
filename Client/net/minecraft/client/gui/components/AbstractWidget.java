@@ -4,6 +4,7 @@
  * Could not load the following classes:
  *  java.lang.Object
  *  java.lang.Override
+ *  java.util.function.Consumer
  *  java.util.function.Supplier
  *  javax.annotation.Nullable
  */
@@ -11,18 +12,23 @@ package net.minecraft.client.gui.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.annotation.Nullable;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.BelowOrAboveWidgetTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
@@ -41,8 +47,10 @@ public abstract class AbstractWidget
 extends GuiComponent
 implements Renderable,
 GuiEventListener,
+LayoutElement,
 NarratableEntry {
     public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
+    protected static final int BUTTON_TEXTURE_Y_OFFSET = 46;
     protected int width;
     protected int height;
     private int x;
@@ -67,18 +75,23 @@ NarratableEntry {
         this.message = $$4;
     }
 
+    @Override
     public int getHeight() {
         return this.height;
     }
 
-    protected int getYImage(boolean $$0) {
-        int $$1 = 1;
+    protected ResourceLocation getTextureLocation() {
+        return WIDGETS_LOCATION;
+    }
+
+    protected int getTextureY() {
+        int $$0 = 1;
         if (!this.active) {
-            $$1 = 0;
-        } else if ($$0) {
-            $$1 = 2;
+            $$0 = 0;
+        } else if (this.isHoveredOrFocused()) {
+            $$0 = 2;
         }
-        return $$1;
+        return 46 + $$0 * 20;
     }
 
     @Override
@@ -93,10 +106,11 @@ NarratableEntry {
 
     private void updateTooltip() {
         Screen $$1;
+        boolean $$0;
         if (this.tooltip == null) {
             return;
         }
-        boolean $$0 = this.isHoveredOrFocused();
+        boolean bl = $$0 = this.isHovered || this.isFocused() && Minecraft.getInstance().getLastInputType().isKeyboard();
         if ($$0 != this.wasHoveredOrFocused) {
             if ($$0) {
                 this.hoverOrFocusedStartTime = Util.getMillis();
@@ -109,7 +123,7 @@ NarratableEntry {
     }
 
     protected ClientTooltipPositioner createTooltipPositioner() {
-        if (this.isFocused()) {
+        if (!this.isHovered && this.isFocused() && Minecraft.getInstance().getLastInputType().isKeyboard()) {
             return new BelowOrAboveWidgetTooltipPositioner(this);
         }
         return DefaultTooltipPositioner.INSTANCE;
@@ -135,17 +149,20 @@ NarratableEntry {
         Minecraft $$4 = Minecraft.getInstance();
         Font $$5 = $$4.font;
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
-        RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
+        RenderSystem.setShaderTexture(0, this.getTextureLocation());
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, this.alpha);
-        int $$6 = this.getYImage(this.isHoveredOrFocused());
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        this.blit($$0, this.getX(), this.getY(), 0, 46 + $$6 * 20, this.width / 2, this.height);
-        this.blit($$0, this.getX() + this.width / 2, this.getY(), 200 - this.width / 2, 46 + $$6 * 20, this.width / 2, this.height);
+        int $$6 = this.width / 2;
+        int $$7 = this.width - $$6;
+        int $$8 = this.getTextureY();
+        this.blit($$0, this.getX(), this.getY(), 0, $$8, $$6, this.height);
+        this.blit($$0, this.getX() + $$6, this.getY(), 200 - $$7, $$8, $$7, this.height);
         this.renderBg($$0, $$4, $$1, $$2);
-        int $$7 = this.active ? 0xFFFFFF : 0xA0A0A0;
-        AbstractWidget.drawCenteredString($$0, $$5, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, $$7 | Mth.ceil(this.alpha * 255.0f) << 24);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        int $$9 = this.active ? 0xFFFFFF : 0xA0A0A0;
+        AbstractWidget.drawCenteredString($$0, $$5, this.getMessage(), this.getX() + $$6, this.getY() + (this.height - 8) / 2, $$9 | Mth.ceil(this.alpha * 255.0f) << 24);
     }
 
     protected void renderBg(PoseStack $$0, Minecraft $$1, int $$2, int $$3) {
@@ -201,20 +218,19 @@ NarratableEntry {
     }
 
     public boolean isHoveredOrFocused() {
-        return this.isHovered || this.focused;
+        return this.isHovered || this.isFocused();
     }
 
     @Override
-    public boolean changeFocus(boolean $$0) {
+    @Nullable
+    public ComponentPath nextFocusPath(FocusNavigationEvent $$0) {
         if (!this.active || !this.visible) {
-            return false;
+            return null;
         }
-        this.focused = !this.focused;
-        this.onFocusedChanged(this.focused);
-        return this.focused;
-    }
-
-    protected void onFocusedChanged(boolean $$0) {
+        if (!this.isFocused()) {
+            return ComponentPath.leaf(this);
+        }
+        return null;
     }
 
     @Override
@@ -226,6 +242,7 @@ NarratableEntry {
         $$0.play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0f));
     }
 
+    @Override
     public int getWidth() {
         return this.width;
     }
@@ -246,6 +263,7 @@ NarratableEntry {
         return this.message;
     }
 
+    @Override
     public boolean isFocused() {
         return this.focused;
     }
@@ -255,13 +273,14 @@ NarratableEntry {
         return this.visible && this.active;
     }
 
-    protected void setFocused(boolean $$0) {
+    @Override
+    public void setFocused(boolean $$0) {
         this.focused = $$0;
     }
 
     @Override
     public NarratableEntry.NarrationPriority narrationPriority() {
-        if (this.focused) {
+        if (this.isFocused()) {
             return NarratableEntry.NarrationPriority.FOCUSED;
         }
         if (this.isHovered) {
@@ -291,24 +310,33 @@ NarratableEntry {
         }
     }
 
+    @Override
     public int getX() {
         return this.x;
     }
 
+    @Override
     public void setX(int $$0) {
         this.x = $$0;
     }
 
-    public void setPosition(int $$0, int $$1) {
-        this.setX($$0);
-        this.setY($$1);
-    }
-
+    @Override
     public int getY() {
         return this.y;
     }
 
+    @Override
     public void setY(int $$0) {
         this.y = $$0;
+    }
+
+    @Override
+    public void visitWidgets(Consumer<AbstractWidget> $$0) {
+        $$0.accept((Object)this);
+    }
+
+    @Override
+    public ScreenRectangle getRectangle() {
+        return new ScreenRectangle(this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }
 }

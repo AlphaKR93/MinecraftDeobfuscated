@@ -29,6 +29,7 @@ import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
 import net.minecraft.Util;
+import net.minecraft.client.InputType;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
@@ -45,6 +46,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -108,7 +110,7 @@ public class KeyboardHandler {
     }
 
     private void debugComponent(ChatFormatting $$0, Component $$1) {
-        this.minecraft.gui.getChat().addMessage(Component.empty().append(Component.translatable("debug.prefix").withStyle($$0, ChatFormatting.BOLD)).append(" ").append($$1));
+        this.minecraft.gui.getChat().addMessage(Component.empty().append(Component.translatable("debug.prefix").withStyle($$0, ChatFormatting.BOLD)).append(CommonComponents.SPACE).append($$1));
     }
 
     private void debugFeedbackComponent(Component $$0) {
@@ -323,6 +325,7 @@ public class KeyboardHandler {
             this.debugCrashKeyReportedTime = Util.getMillis();
             this.debugCrashKeyReportedCount = 0L;
         }
+        this.minecraft.setLastInputType($$1 == 258 ? InputType.KEYBOARD_TAB : InputType.KEYBOARD_OTHER);
         Screen $$5 = this.minecraft.screen;
         if (!($$3 != 1 || this.minecraft.screen instanceof KeyBindsScreen && ((KeyBindsScreen)$$5).lastKeySelection > Util.getMillis() - 20L)) {
             if (this.minecraft.options.keyFullscreen.matches($$1, $$2)) {

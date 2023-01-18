@@ -71,7 +71,7 @@ extends Behavior<Frog> {
     }
 
     @Override
-    protected void stop(ServerLevel $$0, Frog $$1, long $$2) {
+    protected void tick(ServerLevel $$0, Frog $$1, long $$2) {
         LivingEntity $$3 = (LivingEntity)$$1.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).get();
         BehaviorUtils.lookAtEntity($$1, $$3);
         $$1.setTongueTarget($$3);
@@ -81,7 +81,7 @@ extends Behavior<Frog> {
     }
 
     @Override
-    protected void start(ServerLevel $$0, Frog $$1, long $$2) {
+    protected void tick(ServerLevel $$0, Frog $$1, long $$2) {
         $$1.getBrain().eraseMemory(MemoryModuleType.ATTACK_TARGET);
         $$1.eraseTongueTarget();
         $$1.setPose(Pose.STANDING);
@@ -100,7 +100,7 @@ extends Behavior<Frog> {
     }
 
     @Override
-    protected void start(ServerLevel $$0, Frog $$1, long $$2) {
+    protected void tick(ServerLevel $$0, Frog $$1, long $$2) {
         LivingEntity $$3 = (LivingEntity)$$1.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).get();
         $$1.setTongueTarget($$3);
         switch (this.state) {

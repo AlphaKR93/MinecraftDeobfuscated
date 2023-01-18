@@ -8,15 +8,14 @@
  *  java.lang.Float
  *  java.lang.Object
  *  java.lang.String
- *  java.util.function.Function
  */
 package net.minecraft.util.valueproviders;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import java.util.function.Function;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.util.valueproviders.FloatProviderType;
 import net.minecraft.util.valueproviders.SampledFloat;
@@ -27,7 +26,7 @@ implements SampledFloat {
     public static final Codec<FloatProvider> CODEC = CONSTANT_OR_DISPATCH_CODEC.xmap($$02 -> (FloatProvider)$$02.map(ConstantFloat::of, $$0 -> $$0), $$0 -> $$0.getType() == FloatProviderType.CONSTANT ? Either.left((Object)Float.valueOf((float)((ConstantFloat)$$0).getValue())) : Either.right((Object)$$0));
 
     public static Codec<FloatProvider> codec(float $$0, float $$1) {
-        Function $$22 = $$2 -> {
+        return ExtraCodecs.validate(CODEC, $$2 -> {
             if ($$2.getMinValue() < $$0) {
                 return DataResult.error((String)("Value provider too low: " + $$0 + " [" + $$2.getMinValue() + "-" + $$2.getMaxValue() + "]"));
             }
@@ -35,8 +34,7 @@ implements SampledFloat {
                 return DataResult.error((String)("Value provider too high: " + $$1 + " [" + $$2.getMinValue() + "-" + $$2.getMaxValue() + "]"));
             }
             return DataResult.success((Object)$$2);
-        };
-        return CODEC.flatXmap($$22, $$22);
+        });
     }
 
     public abstract float getMinValue();

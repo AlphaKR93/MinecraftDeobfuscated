@@ -26,7 +26,6 @@
  *  java.util.concurrent.TimeUnit
  *  java.util.concurrent.locks.ReentrantLock
  *  java.util.function.Consumer
- *  java.util.function.Supplier
  *  java.util.zip.GZIPOutputStream
  *  javax.annotation.Nullable
  *  org.apache.commons.compress.archivers.ArchiveEntry
@@ -39,12 +38,7 @@ package com.mojang.realmsclient.gui.screens;
 
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.RateLimiter;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.logging.LogUtils;
 import com.mojang.realmsclient.Unit;
 import com.mojang.realmsclient.client.FileUpload;
@@ -69,15 +63,12 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.zip.GZIPOutputStream;
 import javax.annotation.Nullable;
 import net.minecraft.SharedConstants;
 import net.minecraft.Util;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.realms.RealmsScreen;
@@ -92,6 +83,10 @@ public class RealmsUploadScreen
 extends RealmsScreen {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final ReentrantLock UPLOAD_LOCK = new ReentrantLock();
+    private static final int BAR_WIDTH = 200;
+    private static final int BAR_TOP = 80;
+    private static final int BAR_BOTTOM = 95;
+    private static final int BAR_BORDER = 1;
     private static final String[] DOTS = new String[]{"", ".", ". .", ". . ."};
     private static final Component VERIFYING_TEXT = Component.translatable("mco.upload.verifying");
     private final RealmsResetWorldScreen lastScreen;
@@ -131,9 +126,9 @@ extends RealmsScreen {
 
     @Override
     public void init() {
-        this.backButton = this.addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, $$0 -> this.onBack()).bounds(this.width / 2 - 100, this.height - 42, 200, 20).build());
+        this.backButton = this.addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, $$0 -> this.onBack()).bounds((this.width - 200) / 2, this.height - 42, 200, 20).build());
         this.backButton.visible = false;
-        this.cancelButton = this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, $$0 -> this.onCancel()).bounds(this.width / 2 - 100, this.height - 42, 200, 20).build());
+        this.cancelButton = this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, $$0 -> this.onCancel()).bounds((this.width - 200) / 2, this.height - 42, 200, 20).build());
         if (!this.uploadStarted) {
             if (this.lastScreen.slot == -1) {
                 this.upload();
@@ -202,24 +197,10 @@ extends RealmsScreen {
     private void drawProgressBar(PoseStack $$0) {
         double $$1 = Math.min((double)((double)this.uploadStatus.bytesWritten / (double)this.uploadStatus.totalBytes), (double)1.0);
         this.progress = String.format((Locale)Locale.ROOT, (String)"%.1f", (Object[])new Object[]{$$1 * 100.0});
-        RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionColorShader));
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.disableTexture();
-        double $$2 = this.width / 2 - 100;
-        double $$3 = 0.5;
-        Tesselator $$4 = Tesselator.getInstance();
-        BufferBuilder $$5 = $$4.getBuilder();
-        $$5.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        $$5.vertex($$2 - 0.5, 95.5, 0.0).color(217, 210, 210, 255).endVertex();
-        $$5.vertex($$2 + 200.0 * $$1 + 0.5, 95.5, 0.0).color(217, 210, 210, 255).endVertex();
-        $$5.vertex($$2 + 200.0 * $$1 + 0.5, 79.5, 0.0).color(217, 210, 210, 255).endVertex();
-        $$5.vertex($$2 - 0.5, 79.5, 0.0).color(217, 210, 210, 255).endVertex();
-        $$5.vertex($$2, 95.0, 0.0).color(128, 128, 128, 255).endVertex();
-        $$5.vertex($$2 + 200.0 * $$1, 95.0, 0.0).color(128, 128, 128, 255).endVertex();
-        $$5.vertex($$2 + 200.0 * $$1, 80.0, 0.0).color(128, 128, 128, 255).endVertex();
-        $$5.vertex($$2, 80.0, 0.0).color(128, 128, 128, 255).endVertex();
-        $$4.end();
-        RenderSystem.enableTexture();
+        int $$2 = (this.width - 200) / 2;
+        int $$3 = $$2 + (int)Math.round((double)(200.0 * $$1));
+        RealmsUploadScreen.fill($$0, $$2 - 1, 79, $$3 + 1, 175, -2501934);
+        RealmsUploadScreen.fill($$0, $$2, 80, $$3, 95, -8355712);
         RealmsUploadScreen.drawCenteredString($$0, this.font, this.progress + " %", this.width / 2, 84, 0xFFFFFF);
     }
 

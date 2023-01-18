@@ -5,6 +5,7 @@
  *  java.lang.Object
  *  java.lang.Override
  *  javax.annotation.Nullable
+ *  net.minecraft.world.level.LevelReader
  */
 package net.minecraft.world.level.block;
 
@@ -73,7 +74,7 @@ implements SimpleWaterloggedBlock {
     @Override
     public boolean canSurvive(BlockState $$0, LevelReader $$1, BlockPos $$2) {
         Direction $$3 = $$0.getValue(FACING);
-        return this.canAttachTo($$1, (BlockPos)$$2.relative($$3.getOpposite()), $$3);
+        return this.canAttachTo((BlockGetter)$$1, (BlockPos)$$2.relative($$3.getOpposite()), $$3);
     }
 
     @Override

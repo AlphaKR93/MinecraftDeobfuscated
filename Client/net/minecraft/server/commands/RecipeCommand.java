@@ -50,7 +50,7 @@ public class RecipeCommand {
             throw ERROR_GIVE_FAILED.create();
         }
         if ($$1.size() == 1) {
-            $$0.sendSuccess(Component.translatable("commands.recipe.give.success.single", $$2.size(), ((ServerPlayer)((Object)$$1.iterator().next())).getDisplayName()), true);
+            $$0.sendSuccess(Component.translatable("commands.recipe.give.success.single", $$2.size(), ((ServerPlayer)$$1.iterator().next()).getDisplayName()), true);
         } else {
             $$0.sendSuccess(Component.translatable("commands.recipe.give.success.multiple", $$2.size(), $$1.size()), true);
         }
@@ -66,7 +66,7 @@ public class RecipeCommand {
             throw ERROR_TAKE_FAILED.create();
         }
         if ($$1.size() == 1) {
-            $$0.sendSuccess(Component.translatable("commands.recipe.take.success.single", $$2.size(), ((ServerPlayer)((Object)$$1.iterator().next())).getDisplayName()), true);
+            $$0.sendSuccess(Component.translatable("commands.recipe.take.success.single", $$2.size(), ((ServerPlayer)$$1.iterator().next()).getDisplayName()), true);
         } else {
             $$0.sendSuccess(Component.translatable("commands.recipe.take.success.multiple", $$2.size(), $$1.size()), true);
         }

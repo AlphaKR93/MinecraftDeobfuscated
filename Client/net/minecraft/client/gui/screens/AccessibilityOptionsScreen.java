@@ -23,7 +23,7 @@ extends SimpleOptionsSubScreen {
     private static final String GUIDE_LINK = "https://aka.ms/MinecraftJavaAccessibility";
 
     private static OptionInstance<?>[] options(Options $$0) {
-        return new OptionInstance[]{$$0.narrator(), $$0.showSubtitles(), $$0.textBackgroundOpacity(), $$0.backgroundForChatOnly(), $$0.chatOpacity(), $$0.chatLineSpacing(), $$0.chatDelay(), $$0.autoJump(), $$0.toggleCrouch(), $$0.toggleSprint(), $$0.screenEffectScale(), $$0.fovEffectScale(), $$0.darkMojangStudiosBackground(), $$0.hideLightningFlash(), $$0.darknessEffectScale(), $$0.panoramaSpeed()};
+        return new OptionInstance[]{$$0.narrator(), $$0.showSubtitles(), $$0.textBackgroundOpacity(), $$0.backgroundForChatOnly(), $$0.chatOpacity(), $$0.chatLineSpacing(), $$0.chatDelay(), $$0.notificationDisplayTime(), $$0.toggleCrouch(), $$0.toggleSprint(), $$0.screenEffectScale(), $$0.fovEffectScale(), $$0.darknessEffectScale(), $$0.hideLightningFlash(), $$0.autoJump(), $$0.panoramaSpeed(), $$0.darkMojangStudiosBackground()};
     }
 
     public AccessibilityOptionsScreen(Screen $$0, Options $$1) {

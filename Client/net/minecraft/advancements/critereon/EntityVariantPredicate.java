@@ -16,7 +16,6 @@
  *  java.util.Optional
  *  java.util.function.Function
  *  javax.annotation.Nullable
- *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.advancements.critereon;
 

@@ -230,7 +230,11 @@ implements PowerableMob {
             this.level.playSound($$0, this.getX(), this.getY(), this.getZ(), $$3, this.getSoundSource(), 1.0f, this.random.nextFloat() * 0.4f + 0.8f);
             if (!this.level.isClientSide) {
                 this.ignite();
-                $$2.hurtAndBreak(1, $$0, $$1 -> $$1.broadcastBreakEvent($$12));
+                if (!$$2.isDamageableItem()) {
+                    $$2.shrink(1);
+                } else {
+                    $$2.hurtAndBreak(1, $$0, $$1 -> $$1.broadcastBreakEvent($$12));
+                }
             }
             return InteractionResult.sidedSuccess(this.level.isClientSide);
         }

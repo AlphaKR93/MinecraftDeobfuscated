@@ -25,6 +25,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -174,7 +175,7 @@ extends BaseFireBlock {
                 return;
             }
         }
-        int $$10 = ($$9 = $$1.isHumidAt($$2)) ? -50 : 0;
+        int $$10 = ($$9 = $$1.getBiome($$2).is(BiomeTags.INCREASED_FIRE_BURNOUT)) ? -50 : 0;
         this.checkBurnOut($$1, (BlockPos)$$2.east(), 300 + $$10, $$3, $$6);
         this.checkBurnOut($$1, (BlockPos)$$2.west(), 300 + $$10, $$3, $$6);
         this.checkBurnOut($$1, (BlockPos)$$2.below(), 250 + $$10, $$3, $$6);

@@ -29,6 +29,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.PathNavigationRegion;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.NodeEvaluator;
 import net.minecraft.world.level.pathfinder.Path;
@@ -241,7 +242,7 @@ public abstract class PathNavigation {
         double $$3 = Math.abs((double)(this.mob.getY() - (double)$$1.getY()));
         double $$4 = Math.abs((double)(this.mob.getZ() - ((double)$$1.getZ() + 0.5)));
         boolean bl = $$5 = $$2 < (double)this.maxDistanceToWaypoint && $$4 < (double)this.maxDistanceToWaypoint && $$3 < 1.0;
-        if ($$5 || this.mob.canCutCorner(this.path.getNextNode().type) && this.shouldTargetNextNodeInDirection($$0)) {
+        if ($$5 || this.canCutCorner(this.path.getNextNode().type) && this.shouldTargetNextNodeInDirection($$0)) {
             this.path.advance();
         }
         this.doStuckDetection($$0);
@@ -353,6 +354,10 @@ public abstract class PathNavigation {
 
     protected boolean canMoveDirectly(Vec3 $$0, Vec3 $$1) {
         return false;
+    }
+
+    public boolean canCutCorner(BlockPathTypes $$0) {
+        return $$0 != BlockPathTypes.DANGER_FIRE && $$0 != BlockPathTypes.DANGER_OTHER && $$0 != BlockPathTypes.WALKABLE_DOOR;
     }
 
     protected static boolean isClearForMovementBetween(Mob $$0, Vec3 $$1, Vec3 $$2, boolean $$3) {

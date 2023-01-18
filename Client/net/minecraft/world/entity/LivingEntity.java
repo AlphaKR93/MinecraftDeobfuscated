@@ -224,7 +224,6 @@ extends Entity {
     public int removeStingerTime;
     public int hurtTime;
     public int hurtDuration;
-    public float hurtDir;
     public int deathTime;
     public float oAttackAnim;
     public float attackAnim;
@@ -998,6 +997,7 @@ extends Entity {
     @Override
     public boolean hurt(DamageSource $$0, float $$1) {
         boolean $$19;
+        Entity $$8;
         if (this.isInvulnerableTo($$0)) {
             return false;
         }
@@ -1047,9 +1047,7 @@ extends Entity {
             this.hurtHelmet($$0, $$1);
             $$1 *= 0.75f;
         }
-        this.hurtDir = 0.0f;
-        Entity $$8 = $$0.getEntity();
-        if ($$8 != null) {
+        if (($$8 = $$0.getEntity()) != null) {
             Wolf $$9;
             if ($$8 instanceof LivingEntity && !$$0.isNoAggro()) {
                 this.setLastHurtByMob((LivingEntity)$$8);
@@ -1093,10 +1091,7 @@ extends Entity {
                     $$16 = (Math.random() - Math.random()) * 0.01;
                     $$17 = (Math.random() - Math.random()) * 0.01;
                 }
-                this.hurtDir = (float)(Mth.atan2($$17, $$16) * 57.2957763671875 - (double)this.getYRot());
                 this.knockback(0.4f, $$16, $$17);
-            } else {
-                this.hurtDir = (int)(Math.random() * 2.0) * 180;
             }
         }
         if (this.isDeadOrDying()) {
@@ -1345,6 +1340,10 @@ extends Entity {
         return this.position();
     }
 
+    public float getHurtDir() {
+        return 0.0f;
+    }
+
     public Fallsounds getFallSounds() {
         return new Fallsounds(SoundEvents.GENERIC_SMALL_FALL, SoundEvents.GENERIC_BIG_FALL);
     }
@@ -1430,9 +1429,8 @@ extends Entity {
     }
 
     @Override
-    public void animateHurt() {
+    public void animateHurt(float $$0) {
         this.hurtTime = this.hurtDuration = 10;
-        this.hurtDir = 0.0f;
     }
 
     public int getArmorValue() {
@@ -1486,6 +1484,7 @@ extends Entity {
     }
 
     protected void actuallyHurt(DamageSource $$0, float $$1) {
+        Entity entity;
         if (this.isInvulnerableTo($$0)) {
             return;
         }
@@ -1494,15 +1493,16 @@ extends Entity {
         $$1 = Math.max((float)($$1 - this.getAbsorptionAmount()), (float)0.0f);
         this.setAbsorptionAmount(this.getAbsorptionAmount() - ($$2 - $$1));
         float $$3 = $$2 - $$1;
-        if ($$3 > 0.0f && $$3 < 3.4028235E37f && $$0.getEntity() instanceof ServerPlayer) {
-            ((ServerPlayer)$$0.getEntity()).awardStat(Stats.DAMAGE_DEALT_ABSORBED, Math.round((float)($$3 * 10.0f)));
+        if ($$3 > 0.0f && $$3 < 3.4028235E37f && (entity = $$0.getEntity()) instanceof ServerPlayer) {
+            ServerPlayer $$4 = (ServerPlayer)entity;
+            $$4.awardStat(Stats.DAMAGE_DEALT_ABSORBED, Math.round((float)($$3 * 10.0f)));
         }
         if ($$1 == 0.0f) {
             return;
         }
-        float $$4 = this.getHealth();
-        this.setHealth($$4 - $$1);
-        this.getCombatTracker().recordDamage($$0, $$4, $$1);
+        float $$5 = this.getHealth();
+        this.getCombatTracker().recordDamage($$0, $$5, $$1);
+        this.setHealth($$5 - $$1);
         this.setAbsorptionAmount(this.getAbsorptionAmount() - $$1);
         this.gameEvent(GameEvent.ENTITY_DAMAGE);
     }
@@ -1589,7 +1589,6 @@ extends Entity {
                 this.animationSpeed = 1.5f;
                 this.invulnerableTime = 20;
                 this.hurtTime = this.hurtDuration = 10;
-                this.hurtDir = 0.0f;
                 if ($$0 == 33) {
                     this.playSound(SoundEvents.THORNS_HIT, this.getSoundVolume(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2f + 1.0f);
                 }
@@ -2897,6 +2896,11 @@ extends Entity {
     public AABB getLocalBoundsForPose(Pose $$0) {
         EntityDimensions $$1 = this.getDimensions($$0);
         return new AABB(-$$1.width / 2.0f, 0.0, -$$1.width / 2.0f, $$1.width / 2.0f, $$1.height, $$1.width / 2.0f);
+    }
+
+    @Override
+    public boolean canChangeDimensions() {
+        return super.canChangeDimensions() && !this.isSleeping();
     }
 
     public Optional<BlockPos> getSleepingPos() {

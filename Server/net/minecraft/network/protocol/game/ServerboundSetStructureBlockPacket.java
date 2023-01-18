@@ -62,9 +62,9 @@ implements Packet<ServerGamePacketListener> {
         this.mode = $$0.readEnum(StructureMode.class);
         this.name = $$0.readUtf();
         int $$1 = 48;
-        this.offset = new BlockPos(Mth.clamp((int)$$0.readByte(), -48, 48), Mth.clamp((int)$$0.readByte(), -48, 48), Mth.clamp((int)$$0.readByte(), -48, 48));
+        this.offset = new BlockPos(Mth.clamp($$0.readByte(), -48, 48), Mth.clamp($$0.readByte(), -48, 48), Mth.clamp($$0.readByte(), -48, 48));
         int $$2 = 48;
-        this.size = new Vec3i(Mth.clamp((int)$$0.readByte(), 0, 48), Mth.clamp((int)$$0.readByte(), 0, 48), Mth.clamp((int)$$0.readByte(), 0, 48));
+        this.size = new Vec3i(Mth.clamp($$0.readByte(), 0, 48), Mth.clamp($$0.readByte(), 0, 48), Mth.clamp($$0.readByte(), 0, 48));
         this.mirror = $$0.readEnum(Mirror.class);
         this.rotation = $$0.readEnum(Rotation.class);
         this.data = $$0.readUtf(128);

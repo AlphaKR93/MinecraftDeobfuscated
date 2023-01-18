@@ -205,7 +205,7 @@ extends Screen {
 
             @Override
             protected MutableComponent createNarrationMessage() {
-                return CommonComponents.joinForNarration(super.createNarrationMessage(), Component.translatable("selectWorld.resultFolder")).append(" ").append(CreateWorldScreen.this.resultFolder);
+                return CommonComponents.joinForNarration(super.createNarrationMessage(), Component.translatable("selectWorld.resultFolder")).append(CommonComponents.SPACE).append(CreateWorldScreen.this.resultFolder);
             }
         };
         this.nameEdit.setValue(this.initName);
@@ -217,7 +217,7 @@ extends Screen {
         this.addWidget(this.nameEdit);
         int $$02 = this.width / 2 - 155;
         int $$12 = this.width / 2 + 5;
-        this.modeButton = this.addRenderableWidget((GuiEventListener & Renderable)CycleButton.builder(SelectedGameMode::getDisplayName).withValues(SelectedGameMode.SURVIVAL, SelectedGameMode.HARDCORE, SelectedGameMode.CREATIVE).withInitialValue(this.gameMode).withCustomNarration((Function<CycleButton<SelectedGameMode>, MutableComponent>)((Function)$$0 -> AbstractWidget.wrapDefaultNarrationMessage($$0.getMessage()).append(CommonComponents.NARRATION_SEPARATOR).append(this.gameModeHelp1).append(" ").append(this.gameModeHelp2))).create($$02, 100, 150, 20, GAME_MODEL_LABEL, ($$0, $$1) -> this.setGameMode((SelectedGameMode)((Object)$$1))));
+        this.modeButton = this.addRenderableWidget((GuiEventListener & Renderable)CycleButton.builder(SelectedGameMode::getDisplayName).withValues(SelectedGameMode.SURVIVAL, SelectedGameMode.HARDCORE, SelectedGameMode.CREATIVE).withInitialValue(this.gameMode).withCustomNarration((Function<CycleButton<SelectedGameMode>, MutableComponent>)((Function)$$0 -> AbstractWidget.wrapDefaultNarrationMessage($$0.getMessage()).append(CommonComponents.NARRATION_SEPARATOR).append(this.gameModeHelp1).append(CommonComponents.SPACE).append(this.gameModeHelp2))).create($$02, 100, 150, 20, GAME_MODEL_LABEL, ($$0, $$1) -> this.setGameMode((SelectedGameMode)((Object)$$1))));
         this.difficultyButton = this.addRenderableWidget((GuiEventListener & Renderable)CycleButton.builder(Difficulty::getDisplayName).withValues(Difficulty.values()).withInitialValue(this.getEffectiveDifficulty()).create($$12, 100, 150, 20, Component.translatable("options.difficulty"), ($$0, $$1) -> {
             this.difficulty = $$1;
         }));
@@ -408,7 +408,7 @@ extends Screen {
             this.worldGenSettingsComponent.render($$0, $$1, $$2, $$3);
         } else {
             CreateWorldScreen.drawString($$0, this.font, NAME_LABEL, this.width / 2 - 100, 47, -6250336);
-            CreateWorldScreen.drawString($$0, this.font, Component.empty().append(OUTPUT_DIR_INFO).append(" ").append(this.resultFolder), this.width / 2 - 100, 85, -6250336);
+            CreateWorldScreen.drawString($$0, this.font, Component.empty().append(OUTPUT_DIR_INFO).append(CommonComponents.SPACE).append(this.resultFolder), this.width / 2 - 100, 85, -6250336);
             this.nameEdit.render($$0, $$1, $$2, $$3);
             CreateWorldScreen.drawString($$0, this.font, this.gameModeHelp1, this.width / 2 - 150, 122, -6250336);
             CreateWorldScreen.drawString($$0, this.font, this.gameModeHelp2, this.width / 2 - 150, 134, -6250336);

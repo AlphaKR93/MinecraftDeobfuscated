@@ -18,6 +18,7 @@
  *  java.lang.Iterable
  *  java.lang.Object
  *  java.lang.String
+ *  java.util.ArrayList
  *  java.util.Collections
  *  java.util.Iterator
  *  java.util.List
@@ -40,6 +41,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -69,6 +71,7 @@ public class DataCommands {
     private static final DynamicCommandExceptionType ERROR_GET_NON_EXISTENT = new DynamicCommandExceptionType($$0 -> Component.translatable("commands.data.get.unknown", $$0));
     private static final SimpleCommandExceptionType ERROR_MULTIPLE_TAGS = new SimpleCommandExceptionType((Message)Component.translatable("commands.data.get.multiple"));
     private static final DynamicCommandExceptionType ERROR_EXPECTED_OBJECT = new DynamicCommandExceptionType($$0 -> Component.translatable("commands.data.modify.expected_object", $$0));
+    private static final DynamicCommandExceptionType ERROR_EXPECTED_VALUE = new DynamicCommandExceptionType($$0 -> Component.translatable("commands.data.modify.expected_value", $$0));
     public static final List<Function<String, DataProvider>> ALL_PROVIDERS = ImmutableList.of(EntityDataAccessor.PROVIDER, BlockDataAccessor.PROVIDER, StorageDataAccessor.PROVIDER);
     public static final List<DataProvider> TARGET_PROVIDERS = (List)ALL_PROVIDERS.stream().map($$0 -> (DataProvider)$$0.apply((Object)"target")).collect(ImmutableList.toImmutableList());
     public static final List<DataProvider> SOURCE_PROVIDERS = (List)ALL_PROVIDERS.stream().map($$0 -> (DataProvider)$$0.apply((Object)"source")).collect(ImmutableList.toImmutableList());
@@ -107,21 +110,30 @@ public class DataCommands {
         $$03.register($$1);
     }
 
+    private static String getAsText(Tag $$0) throws CommandSyntaxException {
+        if ($$0.getType().isValue()) {
+            return $$0.getAsString();
+        }
+        throw ERROR_EXPECTED_VALUE.create((Object)$$0);
+    }
+
+    private static List<Tag> stringifyTagList(List<Tag> $$0, Function<String, String> $$1) throws CommandSyntaxException {
+        ArrayList $$2 = new ArrayList($$0.size());
+        for (Tag $$3 : $$0) {
+            String $$4 = DataCommands.getAsText($$3);
+            $$2.add((Object)StringTag.valueOf((String)$$1.apply((Object)$$4)));
+        }
+        return $$2;
+    }
+
     private static ArgumentBuilder<CommandSourceStack, ?> decorateModification(BiConsumer<ArgumentBuilder<CommandSourceStack, ?>, DataManipulatorDecorator> $$0) {
         LiteralArgumentBuilder<CommandSourceStack> $$1 = Commands.literal("modify");
         for (DataProvider $$2 : TARGET_PROVIDERS) {
             $$2.wrap((ArgumentBuilder<CommandSourceStack, ?>)$$1, (Function<ArgumentBuilder<CommandSourceStack, ?>, ArgumentBuilder<CommandSourceStack, ?>>)((Function)$$22 -> {
                 RequiredArgumentBuilder<CommandSourceStack, NbtPathArgument.NbtPath> $$3 = Commands.argument("targetPath", NbtPathArgument.nbtPath());
                 for (DataProvider $$4 : SOURCE_PROVIDERS) {
-                    $$0.accept($$3, $$2 -> $$4.wrap((ArgumentBuilder<CommandSourceStack, ?>)Commands.literal("from"), (Function<ArgumentBuilder<CommandSourceStack, ?>, ArgumentBuilder<CommandSourceStack, ?>>)((Function)$$32 -> $$32.executes($$3 -> {
-                        List $$4 = Collections.singletonList((Object)$$4.access((CommandContext<CommandSourceStack>)$$3).getData());
-                        return DataCommands.manipulateData((CommandContext<CommandSourceStack>)$$3, $$2, $$2, (List<Tag>)$$4);
-                    }).then(Commands.argument("sourcePath", NbtPathArgument.nbtPath()).executes($$3 -> {
-                        DataAccessor $$4 = $$4.access((CommandContext<CommandSourceStack>)$$3);
-                        NbtPathArgument.NbtPath $$5 = NbtPathArgument.getPath((CommandContext<CommandSourceStack>)$$3, "sourcePath");
-                        List<Tag> $$6 = $$5.get($$4.getData());
-                        return DataCommands.manipulateData((CommandContext<CommandSourceStack>)$$3, $$2, $$2, $$6);
-                    })))));
+                    $$0.accept($$3, $$2 -> $$4.wrap((ArgumentBuilder<CommandSourceStack, ?>)Commands.literal("from"), (Function<ArgumentBuilder<CommandSourceStack, ?>, ArgumentBuilder<CommandSourceStack, ?>>)((Function)$$32 -> $$32.executes($$3 -> DataCommands.manipulateData((CommandContext<CommandSourceStack>)$$3, $$2, $$2, DataCommands.getSingletonSource((CommandContext<CommandSourceStack>)$$3, $$4))).then(Commands.argument("sourcePath", NbtPathArgument.nbtPath()).executes($$3 -> DataCommands.manipulateData((CommandContext<CommandSourceStack>)$$3, $$2, $$2, DataCommands.resolveSourcePath((CommandContext<CommandSourceStack>)$$3, $$4)))))));
+                    $$0.accept($$3, $$2 -> $$4.wrap((ArgumentBuilder<CommandSourceStack, ?>)Commands.literal("string"), (Function<ArgumentBuilder<CommandSourceStack, ?>, ArgumentBuilder<CommandSourceStack, ?>>)((Function)$$32 -> $$32.executes($$3 -> DataCommands.manipulateData((CommandContext<CommandSourceStack>)$$3, $$2, $$2, DataCommands.stringifyTagList(DataCommands.getSingletonSource((CommandContext<CommandSourceStack>)$$3, $$4), (Function<String, String>)((Function)$$0 -> $$0)))).then(((RequiredArgumentBuilder)Commands.argument("sourcePath", NbtPathArgument.nbtPath()).executes($$3 -> DataCommands.manipulateData((CommandContext<CommandSourceStack>)$$3, $$2, $$2, DataCommands.stringifyTagList(DataCommands.resolveSourcePath((CommandContext<CommandSourceStack>)$$3, $$4), (Function<String, String>)((Function)$$0 -> $$0))))).then(((RequiredArgumentBuilder)Commands.argument("start", IntegerArgumentType.integer((int)0)).executes($$3 -> DataCommands.manipulateData((CommandContext<CommandSourceStack>)$$3, $$2, $$2, DataCommands.stringifyTagList(DataCommands.resolveSourcePath((CommandContext<CommandSourceStack>)$$3, $$4), (Function<String, String>)((Function)$$1 -> $$1.substring(IntegerArgumentType.getInteger((CommandContext)$$3, (String)"start"))))))).then(Commands.argument("end", IntegerArgumentType.integer((int)0)).executes($$3 -> DataCommands.manipulateData((CommandContext<CommandSourceStack>)$$3, $$2, $$2, DataCommands.stringifyTagList(DataCommands.resolveSourcePath((CommandContext<CommandSourceStack>)$$3, $$4), (Function<String, String>)((Function)$$1 -> $$1.substring(IntegerArgumentType.getInteger((CommandContext)$$3, (String)"start"), IntegerArgumentType.getInteger((CommandContext)$$3, (String)"end"))))))))))));
                 }
                 $$0.accept($$3, $$1 -> Commands.literal("value").then(Commands.argument("value", NbtTagArgument.nbtTag()).executes($$2 -> {
                     List $$3 = Collections.singletonList((Object)NbtTagArgument.getNbtTag($$2, "value"));
@@ -131,6 +143,17 @@ public class DataCommands {
             }));
         }
         return $$1;
+    }
+
+    private static List<Tag> getSingletonSource(CommandContext<CommandSourceStack> $$0, DataProvider $$1) throws CommandSyntaxException {
+        DataAccessor $$2 = $$1.access($$0);
+        return Collections.singletonList((Object)$$2.getData());
+    }
+
+    private static List<Tag> resolveSourcePath(CommandContext<CommandSourceStack> $$0, DataProvider $$1) throws CommandSyntaxException {
+        DataAccessor $$2 = $$1.access($$0);
+        NbtPathArgument.NbtPath $$3 = NbtPathArgument.getPath($$0, "sourcePath");
+        return $$3.get($$2.getData());
     }
 
     private static int manipulateData(CommandContext<CommandSourceStack> $$0, DataProvider $$1, DataManipulator $$2, List<Tag> $$3) throws CommandSyntaxException {

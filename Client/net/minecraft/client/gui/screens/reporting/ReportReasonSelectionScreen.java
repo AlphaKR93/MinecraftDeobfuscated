@@ -151,11 +151,6 @@ extends Screen {
         }
 
         @Override
-        protected boolean isFocused() {
-            return ReportReasonSelectionScreen.this.getFocused() == this;
-        }
-
-        @Override
         public void setSelected(@Nullable Entry $$0) {
             super.setSelected($$0);
             ReportReasonSelectionScreen.this.currentlySelectedReason = $$0 != null ? $$0.getReason() : null;

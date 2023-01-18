@@ -84,7 +84,7 @@ extends Block {
 
     @Override
     public void entityInside(BlockState $$0, Level $$1, BlockPos $$2, Entity $$3) {
-        if (!$$3.isPassenger() && !$$3.isVehicle() && $$3.canChangeDimensions()) {
+        if ($$3.canChangeDimensions()) {
             $$3.handleInsidePortal($$2);
         }
     }

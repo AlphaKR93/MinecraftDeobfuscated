@@ -31,7 +31,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import net.minecraft.client.resources.language.FormattedBidiReorder;
-import net.minecraft.client.resources.language.LanguageInfo;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
@@ -51,24 +50,21 @@ extends Language {
         this.defaultRightToLeft = $$1;
     }
 
-    public static ClientLanguage loadFrom(ResourceManager $$0, List<LanguageInfo> $$1) {
-        HashMap $$2 = Maps.newHashMap();
-        boolean $$3 = false;
-        for (LanguageInfo $$4 : $$1) {
-            $$3 |= $$4.isBidirectional();
-            String $$5 = $$4.getCode();
-            String $$6 = String.format((Locale)Locale.ROOT, (String)"lang/%s.json", (Object[])new Object[]{$$5});
-            for (String $$7 : $$0.getNamespaces()) {
+    public static ClientLanguage loadFrom(ResourceManager $$0, List<String> $$1, boolean $$2) {
+        HashMap $$3 = Maps.newHashMap();
+        for (String $$4 : $$1) {
+            String $$5 = String.format((Locale)Locale.ROOT, (String)"lang/%s.json", (Object[])new Object[]{$$4});
+            for (String $$6 : $$0.getNamespaces()) {
                 try {
-                    ResourceLocation $$8 = new ResourceLocation($$7, $$6);
-                    ClientLanguage.appendFrom($$5, $$0.getResourceStack($$8), (Map<String, String>)$$2);
+                    ResourceLocation $$7 = new ResourceLocation($$6, $$5);
+                    ClientLanguage.appendFrom($$4, $$0.getResourceStack($$7), (Map<String, String>)$$3);
                 }
-                catch (Exception $$9) {
-                    LOGGER.warn("Skipped language file: {}:{} ({})", new Object[]{$$7, $$6, $$9.toString()});
+                catch (Exception $$8) {
+                    LOGGER.warn("Skipped language file: {}:{} ({})", new Object[]{$$6, $$5, $$8.toString()});
                 }
             }
         }
-        return new ClientLanguage((Map<String, String>)ImmutableMap.copyOf((Map)$$2), $$3);
+        return new ClientLanguage((Map<String, String>)ImmutableMap.copyOf((Map)$$3), $$2);
     }
 
     private static void appendFrom(String $$0, List<Resource> $$1, Map<String, String> $$2) {
@@ -90,8 +86,8 @@ extends Language {
     }
 
     @Override
-    public String getOrDefault(String $$0) {
-        return (String)this.storage.getOrDefault((Object)$$0, (Object)$$0);
+    public String getOrDefault(String $$0, String $$1) {
+        return (String)this.storage.getOrDefault((Object)$$0, (Object)$$1);
     }
 
     @Override

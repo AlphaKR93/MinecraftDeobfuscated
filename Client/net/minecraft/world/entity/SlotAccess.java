@@ -5,7 +5,6 @@
  *  java.lang.Object
  *  java.lang.Override
  *  java.util.function.Predicate
- *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.entity;
 

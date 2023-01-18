@@ -13,6 +13,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.DyeColor;
@@ -45,7 +46,7 @@ extends Item {
             $$1.add((Object)FireworkStarItem.appendColors(Component.empty().withStyle(ChatFormatting.GRAY), $$3));
         }
         if (($$4 = $$0.getIntArray("FadeColors")).length > 0) {
-            $$1.add((Object)FireworkStarItem.appendColors(Component.translatable("item.minecraft.firework_star.fade_to").append(" ").withStyle(ChatFormatting.GRAY), $$4));
+            $$1.add((Object)FireworkStarItem.appendColors(Component.translatable("item.minecraft.firework_star.fade_to").append(CommonComponents.SPACE).withStyle(ChatFormatting.GRAY), $$4));
         }
         if ($$0.getBoolean("Trail")) {
             $$1.add((Object)Component.translatable("item.minecraft.firework_star.trail").withStyle(ChatFormatting.GRAY));

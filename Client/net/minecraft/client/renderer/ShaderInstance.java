@@ -357,7 +357,6 @@ AutoCloseable {
             int $$3 = Uniform.glGetUniformLocation(this.programId, $$2);
             Uniform.uploadInteger($$3, $$1);
             RenderSystem.activeTexture(33984 + $$1);
-            RenderSystem.enableTexture();
             Object $$4 = this.samplerMap.get((Object)$$2);
             int $$5 = -1;
             if ($$4 instanceof RenderTarget) {

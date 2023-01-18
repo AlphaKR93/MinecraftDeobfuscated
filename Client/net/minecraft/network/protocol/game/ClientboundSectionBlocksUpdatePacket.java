@@ -66,7 +66,7 @@ implements Packet<ClientGamePacketListener> {
         $$0.writeBoolean(this.suppressLightUpdates);
         $$0.writeVarInt(this.positions.length);
         for (int $$1 = 0; $$1 < this.positions.length; ++$$1) {
-            $$0.writeVarLong(Block.getId(this.states[$$1]) << 12 | this.positions[$$1]);
+            $$0.writeVarLong((long)Block.getId(this.states[$$1]) << 12 | (long)this.positions[$$1]);
         }
     }
 

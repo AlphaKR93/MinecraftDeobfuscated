@@ -5,22 +5,13 @@
  *  java.lang.Math
  *  java.lang.Object
  *  java.lang.Override
- *  java.util.function.Supplier
  */
 package net.minecraft.client.gui.components;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import java.util.function.Supplier;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -41,17 +32,17 @@ GuiEventListener {
 
     @Override
     public boolean mouseClicked(double $$0, double $$1, int $$2) {
+        boolean $$4;
         if (!this.visible) {
             return false;
         }
         boolean $$3 = this.withinContentAreaPoint($$0, $$1);
-        boolean $$4 = this.scrollbarVisible() && $$0 >= (double)(this.getX() + this.width) && $$0 <= (double)(this.getX() + this.width + 8) && $$1 >= (double)this.getY() && $$1 < (double)(this.getY() + this.height);
-        this.setFocused($$3 || $$4);
+        boolean bl = $$4 = this.scrollbarVisible() && $$0 >= (double)(this.getX() + this.width) && $$0 <= (double)(this.getX() + this.width + 8) && $$1 >= (double)this.getY() && $$1 < (double)(this.getY() + this.height);
         if ($$4 && $$2 == 0) {
             this.scrolling = true;
             return true;
         }
-        return false;
+        return $$3 || $$4;
     }
 
     @Override
@@ -109,7 +100,7 @@ GuiEventListener {
 
     protected void renderDecorations(PoseStack $$0) {
         if (this.scrollbarVisible()) {
-            this.renderScrollBar();
+            this.renderScrollBar($$0);
         }
     }
 
@@ -143,25 +134,14 @@ GuiEventListener {
         AbstractScrollWidget.fill($$0, this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1, -16777216);
     }
 
-    private void renderScrollBar() {
-        int $$0 = this.getScrollBarHeight();
-        int $$1 = this.getX() + this.width;
-        int $$2 = this.getX() + this.width + 8;
-        int $$3 = Math.max((int)this.getY(), (int)((int)this.scrollAmount * (this.height - $$0) / this.getMaxScrollAmount() + this.getY()));
-        int $$4 = $$3 + $$0;
-        RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionColorShader));
-        Tesselator $$5 = Tesselator.getInstance();
-        BufferBuilder $$6 = $$5.getBuilder();
-        $$6.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        $$6.vertex($$1, $$4, 0.0).color(128, 128, 128, 255).endVertex();
-        $$6.vertex($$2, $$4, 0.0).color(128, 128, 128, 255).endVertex();
-        $$6.vertex($$2, $$3, 0.0).color(128, 128, 128, 255).endVertex();
-        $$6.vertex($$1, $$3, 0.0).color(128, 128, 128, 255).endVertex();
-        $$6.vertex($$1, $$4 - 1, 0.0).color(192, 192, 192, 255).endVertex();
-        $$6.vertex($$2 - 1, $$4 - 1, 0.0).color(192, 192, 192, 255).endVertex();
-        $$6.vertex($$2 - 1, $$3, 0.0).color(192, 192, 192, 255).endVertex();
-        $$6.vertex($$1, $$3, 0.0).color(192, 192, 192, 255).endVertex();
-        $$5.end();
+    private void renderScrollBar(PoseStack $$0) {
+        int $$1 = this.getScrollBarHeight();
+        int $$2 = this.getX() + this.width;
+        int $$3 = this.getX() + this.width + 8;
+        int $$4 = Math.max((int)this.getY(), (int)((int)this.scrollAmount * (this.height - $$1) / this.getMaxScrollAmount() + this.getY()));
+        int $$5 = $$4 + $$1;
+        AbstractScrollWidget.fill($$0, $$2, $$4, $$3, $$5, -8355712);
+        AbstractScrollWidget.fill($$0, $$2, $$4, $$3 - 1, $$5 - 1, -4144960);
     }
 
     protected boolean withinContentAreaTopBottom(int $$0, int $$1) {

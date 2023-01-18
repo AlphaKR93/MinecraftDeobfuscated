@@ -47,7 +47,6 @@ extends GuiComponent {
         for (LerpingBossEvent $$3 : this.events.values()) {
             int $$4 = $$1 / 2 - 91;
             int $$5 = $$2;
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             RenderSystem.setShaderTexture(0, GUI_BARS_LOCATION);
             this.drawBar($$0, $$4, $$5, $$3);
             Component $$6 = $$3.getName();

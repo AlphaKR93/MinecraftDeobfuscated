@@ -9,7 +9,6 @@
  *  java.lang.Math
  *  java.lang.Object
  *  java.lang.String
- *  java.util.function.Function
  *  java.util.stream.IntStream
  *  javax.annotation.concurrent.Immutable
  */
@@ -18,12 +17,12 @@ package net.minecraft.core;
 import com.google.common.base.MoreObjects;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import java.util.function.Function;
 import java.util.stream.IntStream;
 import javax.annotation.concurrent.Immutable;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 
 @Immutable
@@ -35,17 +34,13 @@ implements Comparable<Vec3i> {
     private int y;
     private int z;
 
-    private static Function<Vec3i, DataResult<Vec3i>> checkOffsetAxes(int $$0) {
-        return $$1 -> {
+    public static Codec<Vec3i> offsetCodec(int $$0) {
+        return ExtraCodecs.validate(CODEC, $$1 -> {
             if (Math.abs((int)$$1.getX()) < $$0 && Math.abs((int)$$1.getY()) < $$0 && Math.abs((int)$$1.getZ()) < $$0) {
                 return DataResult.success((Object)$$1);
             }
             return DataResult.error((String)("Position out of range, expected at most " + $$0 + ": " + $$1));
-        };
-    }
-
-    public static Codec<Vec3i> offsetCodec(int $$0) {
-        return CODEC.flatXmap(Vec3i.checkOffsetAxes($$0), Vec3i.checkOffsetAxes($$0));
+        });
     }
 
     public Vec3i(int $$0, int $$1, int $$2) {

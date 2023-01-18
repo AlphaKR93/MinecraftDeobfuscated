@@ -25,6 +25,7 @@
  *  java.nio.file.attribute.FileAttribute
  *  java.util.Collection
  *  java.util.Locale
+ *  net.minecraft.server.MinecraftServer
  *  org.slf4j.Logger
  */
 package net.minecraft.server.commands;

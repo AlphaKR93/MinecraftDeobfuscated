@@ -22,7 +22,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -175,7 +174,6 @@ implements StatsUpdateListener {
     }
 
     void blitSlotIcon(PoseStack $$0, int $$1, int $$2, int $$3, int $$4) {
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
         RenderSystem.setShaderTexture(0, STATS_ICON_LOCATION);
         StatsScreen.blit($$0, $$1, $$2, this.getBlitOffset(), $$3, $$4, 18, 18, 128, 128);
@@ -220,7 +218,7 @@ implements StatsUpdateListener {
 
             @Override
             public Component getNarration() {
-                return Component.translatable("narrator.select", Component.empty().append(this.statDisplay).append(" ").append(this.getValueText()));
+                return Component.translatable("narrator.select", Component.empty().append(this.statDisplay).append(CommonComponents.SPACE).append(this.getValueText()));
             }
         }
     }
@@ -271,21 +269,21 @@ implements StatsUpdateListener {
         }
 
         @Override
-        protected void renderHeader(PoseStack $$0, int $$1, int $$2, Tesselator $$3) {
+        protected void renderHeader(PoseStack $$0, int $$1, int $$2) {
             if (!this.minecraft.mouseHandler.isLeftPressed()) {
                 this.headerPressed = -1;
             }
-            for (int $$4 = 0; $$4 < this.iconOffsets.length; ++$$4) {
-                StatsScreen.this.blitSlotIcon($$0, $$1 + StatsScreen.this.getColumnX($$4) - 18, $$2 + 1, 0, this.headerPressed == $$4 ? 0 : 18);
+            for (int $$3 = 0; $$3 < this.iconOffsets.length; ++$$3) {
+                StatsScreen.this.blitSlotIcon($$0, $$1 + StatsScreen.this.getColumnX($$3) - 18, $$2 + 1, 0, this.headerPressed == $$3 ? 0 : 18);
             }
             if (this.sortColumn != null) {
-                int $$5 = StatsScreen.this.getColumnX(this.getColumnIndex(this.sortColumn)) - 36;
-                int $$6 = this.sortOrder == 1 ? 2 : 1;
-                StatsScreen.this.blitSlotIcon($$0, $$1 + $$5, $$2 + 1, 18 * $$6, 0);
+                int $$4 = StatsScreen.this.getColumnX(this.getColumnIndex(this.sortColumn)) - 36;
+                int $$5 = this.sortOrder == 1 ? 2 : 1;
+                StatsScreen.this.blitSlotIcon($$0, $$1 + $$4, $$2 + 1, 18 * $$5, 0);
             }
-            for (int $$7 = 0; $$7 < this.iconOffsets.length; ++$$7) {
-                int $$8 = this.headerPressed == $$7 ? 1 : 0;
-                StatsScreen.this.blitSlotIcon($$0, $$1 + StatsScreen.this.getColumnX($$7) - 18 + $$8, $$2 + 1 + $$8, 18 * this.iconOffsets[$$7], 18);
+            for (int $$6 = 0; $$6 < this.iconOffsets.length; ++$$6) {
+                int $$7 = this.headerPressed == $$6 ? 1 : 0;
+                StatsScreen.this.blitSlotIcon($$0, $$1 + StatsScreen.this.getColumnX($$6) - 18 + $$7, $$2 + 1 + $$7, 18 * this.iconOffsets[$$6], 18);
             }
         }
 

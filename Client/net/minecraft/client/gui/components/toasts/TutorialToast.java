@@ -43,7 +43,6 @@ implements Toast {
     @Override
     public Toast.Visibility render(PoseStack $$0, ToastComponent $$1, long $$2) {
         RenderSystem.setShaderTexture(0, TEXTURE);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         $$1.blit($$0, 0, 0, 0, 96, this.width(), this.height());
         this.icon.render($$0, $$1, 6, 6);
         if (this.message == null) {

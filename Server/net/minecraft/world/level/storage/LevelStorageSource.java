@@ -111,13 +111,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.annotation.Nullable;
 import net.minecraft.FileUtil;
-import net.minecraft.SharedConstants;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.StreamTagVisitor;
 import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.visitors.FieldSelector;
@@ -129,7 +129,6 @@ import net.minecraft.util.DirectoryLock;
 import net.minecraft.util.MemoryReserve;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.util.datafix.DataFixers;
-import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.Level;
@@ -180,7 +179,7 @@ public class LevelStorageSource {
             if (!$$5.isPresent()) continue;
             $$3 = $$3.set($$4, (Dynamic)$$5.get());
         }
-        Dynamic $$6 = $$1.update(References.WORLD_GEN_SETTINGS, $$3, $$2, SharedConstants.getCurrentVersion().getWorldVersion());
+        Dynamic $$6 = DataFixTypes.WORLD_GEN_SETTINGS.updateToCurrentVersion($$1, $$3, $$2);
         return WorldGenSettings.CODEC.parse($$6);
     }
 
@@ -268,8 +267,8 @@ public class LevelStorageSource {
             if ($$2 instanceof CompoundTag) {
                 CompoundTag $$3 = (CompoundTag)$$2;
                 CompoundTag $$4 = $$3.getCompound(TAG_DATA);
-                int $$5 = $$4.contains("DataVersion", 99) ? $$4.getInt("DataVersion") : -1;
-                Dynamic $$6 = $$1.update(DataFixTypes.LEVEL.getType(), new Dynamic((DynamicOps)NbtOps.INSTANCE, (Object)$$4), $$5, SharedConstants.getCurrentVersion().getWorldVersion());
+                int $$5 = NbtUtils.getDataVersion($$4, -1);
+                Dynamic $$6 = DataFixTypes.LEVEL.updateToCurrentVersion($$1, new Dynamic((DynamicOps)NbtOps.INSTANCE, (Object)$$4), $$5);
                 return LevelStorageSource.readDataConfig($$6);
             }
         }
@@ -291,14 +290,14 @@ public class LevelStorageSource {
             CompoundTag $$9 = $$8.getCompound(TAG_DATA);
             CompoundTag $$10 = $$9.contains("Player", 10) ? $$9.getCompound("Player") : null;
             $$9.remove("Player");
-            int $$11 = $$9.contains("DataVersion", 99) ? $$9.getInt("DataVersion") : -1;
-            Dynamic $$12 = $$5.update(DataFixTypes.LEVEL.getType(), new Dynamic($$0, (Object)$$9), $$11, SharedConstants.getCurrentVersion().getWorldVersion());
+            int $$11 = NbtUtils.getDataVersion($$9, -1);
+            Dynamic $$12 = DataFixTypes.LEVEL.updateToCurrentVersion((DataFixer)$$5, new Dynamic($$0, (Object)$$9), $$11);
             WorldGenSettings $$13 = (WorldGenSettings)((Object)((Object)LevelStorageSource.readWorldGenSettings($$12, $$5, $$11).getOrThrow(false, Util.prefix("WorldGenSettings: ", (Consumer<String>)((Consumer)arg_0 -> ((Logger)LOGGER).error(arg_0))))));
             LevelVersion $$14 = LevelVersion.parse($$12);
             LevelSettings $$15 = LevelSettings.parse($$12, $$1);
             WorldDimensions.Complete $$16 = $$13.dimensions().bake($$2);
             Lifecycle $$17 = $$16.lifecycle().add($$3);
-            PrimaryLevelData $$18 = PrimaryLevelData.parse((Dynamic<Tag>)$$12, $$5, $$11, $$10, $$15, $$14, $$16.specialWorldProperty(), $$13.options(), $$17);
+            PrimaryLevelData $$18 = PrimaryLevelData.parse($$12, $$5, $$11, $$10, $$15, $$14, $$16.specialWorldProperty(), $$13.options(), $$17);
             return Pair.of((Object)$$18, (Object)((Object)$$16));
         };
     }
@@ -308,10 +307,10 @@ public class LevelStorageSource {
             try {
                 Tag $$4 = LevelStorageSource.readLightweightData($$2);
                 if ($$4 instanceof CompoundTag) {
+                    int $$7;
                     CompoundTag $$5 = (CompoundTag)$$4;
                     CompoundTag $$6 = $$5.getCompound(TAG_DATA);
-                    int $$7 = $$6.contains("DataVersion", 99) ? $$6.getInt("DataVersion") : -1;
-                    Dynamic $$8 = $$3.update(DataFixTypes.LEVEL.getType(), new Dynamic((DynamicOps)NbtOps.INSTANCE, (Object)$$6), $$7, SharedConstants.getCurrentVersion().getWorldVersion());
+                    Dynamic $$8 = DataFixTypes.LEVEL.updateToCurrentVersion((DataFixer)$$3, new Dynamic((DynamicOps)NbtOps.INSTANCE, (Object)$$6), $$7 = NbtUtils.getDataVersion($$6, -1));
                     LevelVersion $$9 = LevelVersion.parse($$8);
                     int $$10 = $$9.levelDataVersion();
                     if ($$10 == 19132 || $$10 == 19133) {
@@ -319,7 +318,7 @@ public class LevelStorageSource {
                         Path $$12 = $$0.iconFile();
                         WorldDataConfiguration $$13 = LevelStorageSource.readDataConfig($$8);
                         LevelSettings $$14 = LevelSettings.parse($$8, $$13);
-                        FeatureFlagSet $$15 = LevelStorageSource.parseFeatureFlagsFromSummary((Dynamic<Tag>)$$8);
+                        FeatureFlagSet $$15 = LevelStorageSource.parseFeatureFlagsFromSummary($$8);
                         boolean $$16 = FeatureFlags.isExperimental($$15);
                         return new LevelSummary($$14, $$9, $$0.directoryName(), $$11, $$1, $$16, $$12);
                     }
@@ -335,7 +334,7 @@ public class LevelStorageSource {
         };
     }
 
-    private static FeatureFlagSet parseFeatureFlagsFromSummary(Dynamic<Tag> $$02) {
+    private static FeatureFlagSet parseFeatureFlagsFromSummary(Dynamic<?> $$02) {
         Set $$1 = (Set)$$02.get("enabled_features").asStream().flatMap($$0 -> $$0.asString().result().map(ResourceLocation::tryParse).stream()).collect(Collectors.toSet());
         return FeatureFlags.REGISTRY.fromNames((Iterable<ResourceLocation>)$$1, (Consumer<ResourceLocation>)((Consumer)$$0 -> {}));
     }

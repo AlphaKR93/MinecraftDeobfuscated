@@ -820,7 +820,7 @@ extends Level {
         }
 
         @Override
-        public void onCreated(Entity $$0) {
+        public void onSectionChange(Entity $$0) {
         }
 
         @Override
@@ -851,7 +851,7 @@ extends Level {
         }
 
         @Override
-        public void onCreated(Entity $$0) {
+        public void onSectionChange(Entity $$0) {
         }
     }
 

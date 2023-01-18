@@ -41,7 +41,7 @@ extends EntityRenderer<ShulkerBullet> {
     @Override
     public void render(ShulkerBullet $$0, float $$1, float $$2, PoseStack $$3, MultiBufferSource $$4, int $$5) {
         $$3.pushPose();
-        float $$6 = Mth.rotlerp($$0.yRotO, $$0.getYRot(), $$2);
+        float $$6 = Mth.rotLerp($$2, $$0.yRotO, $$0.getYRot());
         float $$7 = Mth.lerp($$2, $$0.xRotO, $$0.getXRot());
         float $$8 = (float)$$0.tickCount + $$2;
         $$3.translate(0.0f, 0.15f, 0.0f);

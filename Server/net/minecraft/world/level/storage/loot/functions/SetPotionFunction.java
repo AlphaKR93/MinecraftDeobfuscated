@@ -10,6 +10,7 @@
  *  java.lang.Override
  *  java.lang.String
  *  java.util.function.Function
+ *  net.minecraft.core.registries.BuiltInRegistries
  */
 package net.minecraft.world.level.storage.loot.functions;
 

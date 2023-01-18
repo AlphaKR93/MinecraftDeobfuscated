@@ -82,7 +82,7 @@ implements BlockEntityRenderer<SkullBlockEntity> {
         BlockState $$7 = $$0.getBlockState();
         boolean $$8 = $$7.getBlock() instanceof WallSkullBlock;
         Direction $$9 = $$8 ? $$7.getValue(WallSkullBlock.FACING) : null;
-        int $$10 = $$8 ? RotationSegment.convertToSegment($$9) : $$7.getValue(SkullBlock.ROTATION);
+        int $$10 = $$8 ? RotationSegment.convertToSegment($$9.getOpposite()) : $$7.getValue(SkullBlock.ROTATION);
         float $$11 = RotationSegment.convertToDegrees($$10);
         SkullBlock.Type $$12 = ((AbstractSkullBlock)$$7.getBlock()).getType();
         SkullModelBase $$13 = (SkullModelBase)this.modelByType.get((Object)$$12);

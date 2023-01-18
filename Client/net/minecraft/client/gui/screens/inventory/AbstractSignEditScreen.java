@@ -18,12 +18,7 @@ package net.minecraft.client.gui.screens.inventory;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -32,9 +27,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundSignUpdatePacket;
@@ -197,20 +190,10 @@ extends Screen {
             int $$22 = this.minecraft.font.width($$16.substring(0, $$20)) - this.minecraft.font.width($$16) / 2;
             int $$23 = Math.min((int)$$21, (int)$$22);
             int $$24 = Math.max((int)$$21, (int)$$22);
-            Tesselator $$25 = Tesselator.getInstance();
-            BufferBuilder $$26 = $$25.getBuilder();
-            RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionColorShader));
-            RenderSystem.disableTexture();
             RenderSystem.enableColorLogicOp();
             RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-            $$26.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-            $$26.vertex($$9, $$23, $$8 + this.sign.getTextLineHeight(), 0.0f).color(0, 0, 255, 255).endVertex();
-            $$26.vertex($$9, $$24, $$8 + this.sign.getTextLineHeight(), 0.0f).color(0, 0, 255, 255).endVertex();
-            $$26.vertex($$9, $$24, $$8, 0.0f).color(0, 0, 255, 255).endVertex();
-            $$26.vertex($$9, $$23, $$8, 0.0f).color(0, 0, 255, 255).endVertex();
-            BufferUploader.drawWithShader($$26.end());
+            AbstractSignEditScreen.fill($$0, $$23, $$8, $$24, $$8 + this.sign.getTextLineHeight(), -16776961);
             RenderSystem.disableColorLogicOp();
-            RenderSystem.enableTexture();
         }
     }
 }

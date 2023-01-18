@@ -339,7 +339,6 @@ extends RealmsScreen {
 
     private void drawExpired(PoseStack $$0, int $$1, int $$2, int $$3, int $$4) {
         RenderSystem.setShaderTexture(0, EXPIRED_ICON_LOCATION);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         GuiComponent.blit($$0, $$1, $$2, 0.0f, 0.0f, 10, 28, 10, 28);
         if ($$3 >= $$1 && $$3 <= $$1 + 9 && $$4 >= $$2 && $$4 <= $$2 + 27) {
             this.toolTip = SERVER_EXPIRED_TOOLTIP;
@@ -348,7 +347,6 @@ extends RealmsScreen {
 
     private void drawExpiring(PoseStack $$0, int $$1, int $$2, int $$3, int $$4, int $$5) {
         RenderSystem.setShaderTexture(0, EXPIRES_SOON_ICON_LOCATION);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         if (this.animTick % 20 < 10) {
             GuiComponent.blit($$0, $$1, $$2, 0.0f, 0.0f, 10, 28, 20, 28);
         } else {
@@ -361,7 +359,6 @@ extends RealmsScreen {
 
     private void drawOpen(PoseStack $$0, int $$1, int $$2, int $$3, int $$4) {
         RenderSystem.setShaderTexture(0, ON_ICON_LOCATION);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         GuiComponent.blit($$0, $$1, $$2, 0.0f, 0.0f, 10, 28, 10, 28);
         if ($$3 >= $$1 && $$3 <= $$1 + 9 && $$4 >= $$2 && $$4 <= $$2 + 27) {
             this.toolTip = SERVER_OPEN_TOOLTIP;
@@ -370,7 +367,6 @@ extends RealmsScreen {
 
     private void drawClose(PoseStack $$0, int $$1, int $$2, int $$3, int $$4) {
         RenderSystem.setShaderTexture(0, OFF_ICON_LOCATION);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         GuiComponent.blit($$0, $$1, $$2, 0.0f, 0.0f, 10, 28, 10, 28);
         if ($$3 >= $$1 && $$3 <= $$1 + 9 && $$4 >= $$2 && $$4 <= $$2 + 27) {
             this.toolTip = SERVER_CLOSED_TOOLTIP;

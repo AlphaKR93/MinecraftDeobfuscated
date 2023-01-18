@@ -702,7 +702,7 @@ public final class ItemStack {
                         $$20 = $$16;
                     }
                     if ($$17) {
-                        $$2.add((Object)Component.literal(" ").append(Component.translatable("attribute.modifier.equals." + $$15.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format($$20), Component.translatable(((Attribute)$$14.getKey()).getDescriptionId()))).withStyle(ChatFormatting.DARK_GREEN));
+                        $$2.add((Object)CommonComponents.space().append(Component.translatable("attribute.modifier.equals." + $$15.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format($$20), Component.translatable(((Attribute)$$14.getKey()).getDescriptionId()))).withStyle(ChatFormatting.DARK_GREEN));
                         continue;
                     }
                     if ($$16 > 0.0) {

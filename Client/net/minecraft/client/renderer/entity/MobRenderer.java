@@ -79,7 +79,7 @@ extends LivingEntityRenderer<T, M> {
         float $$16 = 0.025f;
         VertexConsumer $$17 = $$3.getBuffer(RenderType.leash());
         Matrix4f $$18 = $$2.last().pose();
-        float $$19 = Mth.fastInvSqrt($$13 * $$13 + $$15 * $$15) * 0.025f / 2.0f;
+        float $$19 = Mth.invSqrt($$13 * $$13 + $$15 * $$15) * 0.025f / 2.0f;
         float $$20 = $$15 * $$19;
         float $$21 = $$13 * $$19;
         BlockPos $$22 = new BlockPos(((Entity)$$0).getEyePosition($$1));

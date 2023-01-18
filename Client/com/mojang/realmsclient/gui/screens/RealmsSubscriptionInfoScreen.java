@@ -167,7 +167,7 @@ extends RealmsScreen {
         int $$2 = $$0 % 30;
         MutableComponent $$3 = Component.empty();
         if ($$1 > 0) {
-            $$3.append(Integer.toString((int)$$1)).append(" ");
+            $$3.append(Integer.toString((int)$$1)).append(CommonComponents.SPACE);
             if ($$1 == 1) {
                 $$3.append(MONTH_SUFFIX);
             } else {
@@ -178,7 +178,7 @@ extends RealmsScreen {
             if ($$1 > 0) {
                 $$3.append(", ");
             }
-            $$3.append(Integer.toString((int)$$2)).append(" ");
+            $$3.append(Integer.toString((int)$$2)).append(CommonComponents.SPACE);
             if ($$2 == 1) {
                 $$3.append(DAY_SUFFIX);
             } else {

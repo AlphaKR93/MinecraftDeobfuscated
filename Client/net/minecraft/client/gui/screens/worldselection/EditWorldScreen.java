@@ -99,7 +99,16 @@ extends Screen {
 
     @Override
     protected void init() {
-        Button $$03 = this.addRenderableWidget(Button.builder(Component.translatable("selectWorld.edit.resetIcon"), $$02 -> {
+        this.renameButton = Button.builder(Component.translatable("selectWorld.edit.save"), $$0 -> this.onRename()).bounds(this.width / 2 - 100, this.height / 4 + 144 + 5, 98, 20).build();
+        this.nameEdit = new EditBox(this.font, this.width / 2 - 100, 38, 200, 20, Component.translatable("selectWorld.enterName"));
+        LevelSummary $$03 = this.levelAccess.getSummary();
+        String $$1 = $$03 == null ? "" : $$03.getLevelName();
+        this.nameEdit.setValue($$1);
+        this.nameEdit.setResponder((Consumer<String>)((Consumer)$$0 -> {
+            this.renameButton.active = !$$0.trim().isEmpty();
+        }));
+        this.addWidget(this.nameEdit);
+        Button $$2 = this.addRenderableWidget(Button.builder(Component.translatable("selectWorld.edit.resetIcon"), $$02 -> {
             this.levelAccess.getIconFile().ifPresent($$0 -> FileUtils.deleteQuietly((File)$$0.toFile()));
             $$02.active = false;
         }).bounds(this.width / 2 - 100, this.height / 4 + 0 + 5, 200, 20).build());
@@ -151,17 +160,9 @@ extends Screen {
             $$8.error().ifPresent($$0 -> LOGGER.error("Error exporting world settings: {}", $$0));
             this.minecraft.getToasts().addToast(SystemToast.multiline(this.minecraft, SystemToast.SystemToastIds.WORLD_GEN_SETTINGS_TRANSFER, $$10, $$9));
         }).bounds(this.width / 2 - 100, this.height / 4 + 120 + 5, 200, 20).build());
-        this.renameButton = this.addRenderableWidget(Button.builder(Component.translatable("selectWorld.edit.save"), $$0 -> this.onRename()).bounds(this.width / 2 - 100, this.height / 4 + 144 + 5, 98, 20).build());
+        this.addRenderableWidget(this.renameButton);
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, $$0 -> this.callback.accept(false)).bounds(this.width / 2 + 2, this.height / 4 + 144 + 5, 98, 20).build());
-        $$03.active = this.levelAccess.getIconFile().filter($$0 -> Files.isRegularFile((Path)$$0, (LinkOption[])new LinkOption[0])).isPresent();
-        LevelSummary $$1 = this.levelAccess.getSummary();
-        String $$2 = $$1 == null ? "" : $$1.getLevelName();
-        this.nameEdit = new EditBox(this.font, this.width / 2 - 100, 38, 200, 20, Component.translatable("selectWorld.enterName"));
-        this.nameEdit.setValue($$2);
-        this.nameEdit.setResponder((Consumer<String>)((Consumer)$$0 -> {
-            this.renameButton.active = !$$0.trim().isEmpty();
-        }));
-        this.addWidget(this.nameEdit);
+        $$2.active = this.levelAccess.getIconFile().filter($$0 -> Files.isRegularFile((Path)$$0, (LinkOption[])new LinkOption[0])).isPresent();
         this.setInitialFocus(this.nameEdit);
     }
 

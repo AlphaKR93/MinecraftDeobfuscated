@@ -114,10 +114,10 @@ extends Button {
             if ($$2) {
                 Component $$5 = CommonComponents.EMPTY;
             } else {
-                MutableComponent $$6 = Component.literal(" ").append($$1).append(" ").append($$0.minigameName);
+                MutableComponent $$6 = CommonComponents.space().append($$1).append(CommonComponents.SPACE).append($$0.minigameName);
             }
         } else {
-            $$7 = Component.literal(" ").append($$1);
+            $$7 = CommonComponents.space().append($$1);
         }
         if ($$4 == Action.JOIN) {
             Component $$8 = SLOT_ACTIVE_TOOLTIP;
@@ -158,8 +158,6 @@ extends Button {
         }
         if ($$5) {
             RenderSystem.setShaderColor(0.56f, 0.56f, 0.56f, 1.0f);
-        } else {
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         }
         RealmsWorldSlotButton.blit($$0, $$1 + 3, $$2 + 3, 0.0f, 0.0f, 74, 74, 74, 74);
         RenderSystem.setShaderTexture(0, SLOT_FRAME_LOCATION);
@@ -172,6 +170,7 @@ extends Button {
             RenderSystem.setShaderColor(0.56f, 0.56f, 0.56f, 1.0f);
         }
         RealmsWorldSlotButton.blit($$0, $$1, $$2, 0.0f, 0.0f, 80, 80, 80, 80);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         if ($$5) {
             this.renderCheckMark($$0, $$1, $$2);
         }
@@ -180,7 +179,6 @@ extends Button {
 
     private void renderCheckMark(PoseStack $$0, int $$1, int $$2) {
         RenderSystem.setShaderTexture(0, CHECK_MARK_LOCATION);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RealmsWorldSlotButton.blit($$0, $$1 + 67, $$2 + 4, 0.0f, 0.0f, 9, 8, 9, 8);

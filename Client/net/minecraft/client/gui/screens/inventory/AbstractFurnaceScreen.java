@@ -78,7 +78,6 @@ implements RecipeUpdateListener {
     @Override
     protected void renderBg(PoseStack $$0, float $$1, int $$2, int $$3) {
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, this.texture);
         int $$4 = this.leftPos;
         int $$5 = this.topPos;

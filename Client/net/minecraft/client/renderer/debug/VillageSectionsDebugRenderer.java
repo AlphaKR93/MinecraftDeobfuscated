@@ -43,9 +43,7 @@ implements DebugRenderer.SimpleDebugRenderer {
     public void render(PoseStack $$0, MultiBufferSource $$1, double $$2, double $$3, double $$4) {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.disableTexture();
         this.doRender($$2, $$3, $$4);
-        RenderSystem.enableTexture();
         RenderSystem.disableBlend();
     }
 

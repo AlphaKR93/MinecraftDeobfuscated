@@ -37,10 +37,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.PlayerFaceRenderer;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -93,124 +93,129 @@ extends GuiComponent {
         if (this.visible != $$0) {
             this.healthStates.clear();
             this.visible = $$0;
+            if ($$0) {
+                MutableComponent $$1 = ComponentUtils.formatList(this.getPlayerInfos(), Component.literal(", "), this::getNameForDisplay);
+                this.minecraft.getNarrator().sayNow(Component.translatable("multiplayer.player.list.narration", $$1));
+            }
         }
     }
 
+    private List<PlayerInfo> getPlayerInfos() {
+        return this.minecraft.player.connection.getListedOnlinePlayers().stream().sorted(PLAYER_COMPARATOR).limit(80L).toList();
+    }
+
     public void render(PoseStack $$02, int $$12, Scoreboard $$2, @Nullable Objective $$3) {
-        int $$17;
-        boolean $$14;
-        int $$11;
-        ClientPacketListener $$4 = this.minecraft.player.connection;
-        List $$5 = $$4.getListedOnlinePlayers().stream().sorted(PLAYER_COMPARATOR).limit(80L).toList();
+        int $$16;
+        boolean $$13;
+        int $$10;
+        List<PlayerInfo> $$4 = this.getPlayerInfos();
+        int $$5 = 0;
         int $$6 = 0;
-        int $$7 = 0;
-        for (PlayerInfo $$8 : $$5) {
-            int $$9 = this.minecraft.font.width(this.getNameForDisplay($$8));
-            $$6 = Math.max((int)$$6, (int)$$9);
+        for (PlayerInfo $$7 : $$4) {
+            int $$8 = this.minecraft.font.width(this.getNameForDisplay($$7));
+            $$5 = Math.max((int)$$5, (int)$$8);
             if ($$3 == null || $$3.getRenderType() == ObjectiveCriteria.RenderType.HEARTS) continue;
-            $$9 = this.minecraft.font.width(" " + $$2.getOrCreatePlayerScore($$8.getProfile().getName(), $$3).getScore());
-            $$7 = Math.max((int)$$7, (int)$$9);
+            $$8 = this.minecraft.font.width(" " + $$2.getOrCreatePlayerScore($$7.getProfile().getName(), $$3).getScore());
+            $$6 = Math.max((int)$$6, (int)$$8);
         }
         if (!this.healthStates.isEmpty()) {
-            Set $$10 = (Set)$$5.stream().map($$0 -> $$0.getProfile().getId()).collect(Collectors.toSet());
-            this.healthStates.keySet().removeIf($$1 -> !$$10.contains($$1));
+            Set $$9 = (Set)$$4.stream().map($$0 -> $$0.getProfile().getId()).collect(Collectors.toSet());
+            this.healthStates.keySet().removeIf($$1 -> !$$9.contains($$1));
         }
-        int $$122 = $$11 = $$5.size();
-        int $$13 = 1;
-        while ($$122 > 20) {
-            $$122 = ($$11 + ++$$13 - 1) / $$13;
+        int $$11 = $$10 = $$4.size();
+        int $$122 = 1;
+        while ($$11 > 20) {
+            $$11 = ($$10 + ++$$122 - 1) / $$122;
         }
-        boolean bl = $$14 = this.minecraft.isLocalServer() || this.minecraft.getConnection().getConnection().isEncrypted();
+        boolean bl = $$13 = this.minecraft.isLocalServer() || this.minecraft.getConnection().getConnection().isEncrypted();
         if ($$3 != null) {
             if ($$3.getRenderType() == ObjectiveCriteria.RenderType.HEARTS) {
-                int $$15 = 90;
+                int $$14 = 90;
             } else {
-                int $$16 = $$7;
+                int $$15 = $$6;
             }
         } else {
-            $$17 = 0;
+            $$16 = 0;
         }
-        int $$18 = Math.min((int)($$13 * (($$14 ? 9 : 0) + $$6 + $$17 + 13)), (int)($$12 - 50)) / $$13;
-        int $$19 = $$12 / 2 - ($$18 * $$13 + ($$13 - 1) * 5) / 2;
-        int $$20 = 10;
-        int $$21 = $$18 * $$13 + ($$13 - 1) * 5;
-        List<FormattedCharSequence> $$22 = null;
+        int $$17 = Math.min((int)($$122 * (($$13 ? 9 : 0) + $$5 + $$16 + 13)), (int)($$12 - 50)) / $$122;
+        int $$18 = $$12 / 2 - ($$17 * $$122 + ($$122 - 1) * 5) / 2;
+        int $$19 = 10;
+        int $$20 = $$17 * $$122 + ($$122 - 1) * 5;
+        List<FormattedCharSequence> $$21 = null;
         if (this.header != null) {
-            $$22 = this.minecraft.font.split(this.header, $$12 - 50);
-            for (Object $$23 : $$22) {
-                $$21 = Math.max((int)$$21, (int)this.minecraft.font.width((FormattedCharSequence)$$23));
+            $$21 = this.minecraft.font.split(this.header, $$12 - 50);
+            for (Object $$22 : $$21) {
+                $$20 = Math.max((int)$$20, (int)this.minecraft.font.width((FormattedCharSequence)$$22));
             }
         }
-        List<FormattedCharSequence> $$24 = null;
+        List<FormattedCharSequence> $$23 = null;
         if (this.footer != null) {
-            $$24 = this.minecraft.font.split(this.footer, $$12 - 50);
-            for (FormattedCharSequence $$25 : $$24) {
-                $$21 = Math.max((int)$$21, (int)this.minecraft.font.width($$25));
+            $$23 = this.minecraft.font.split(this.footer, $$12 - 50);
+            for (FormattedCharSequence $$24 : $$23) {
+                $$20 = Math.max((int)$$20, (int)this.minecraft.font.width($$24));
             }
         }
-        if ($$22 != null) {
-            int n = $$12 / 2 - $$21 / 2 - 1;
-            int n2 = $$12 / 2 + $$21 / 2 + 1;
-            int n3 = $$22.size();
+        if ($$21 != null) {
+            int n = $$12 / 2 - $$20 / 2 - 1;
+            int n2 = $$12 / 2 + $$20 / 2 + 1;
+            int n3 = $$21.size();
             Objects.requireNonNull((Object)this.minecraft.font);
-            PlayerTabOverlay.fill($$02, n, $$20 - 1, n2, $$20 + n3 * 9, Integer.MIN_VALUE);
-            for (FormattedCharSequence $$26 : $$22) {
-                int $$27 = this.minecraft.font.width($$26);
-                this.minecraft.font.drawShadow($$02, $$26, (float)($$12 / 2 - $$27 / 2), (float)$$20, -1);
+            PlayerTabOverlay.fill($$02, n, $$19 - 1, n2, $$19 + n3 * 9, Integer.MIN_VALUE);
+            for (FormattedCharSequence $$25 : $$21) {
+                int $$26 = this.minecraft.font.width($$25);
+                this.minecraft.font.drawShadow($$02, $$25, (float)($$12 / 2 - $$26 / 2), (float)$$19, -1);
                 Objects.requireNonNull((Object)this.minecraft.font);
-                $$20 += 9;
+                $$19 += 9;
             }
-            ++$$20;
+            ++$$19;
         }
-        PlayerTabOverlay.fill($$02, $$12 / 2 - $$21 / 2 - 1, $$20 - 1, $$12 / 2 + $$21 / 2 + 1, $$20 + $$122 * 9, Integer.MIN_VALUE);
-        int $$28 = this.minecraft.options.getBackgroundColor(0x20FFFFFF);
-        for (int $$29 = 0; $$29 < $$11; ++$$29) {
+        PlayerTabOverlay.fill($$02, $$12 / 2 - $$20 / 2 - 1, $$19 - 1, $$12 / 2 + $$20 / 2 + 1, $$19 + $$11 * 9, Integer.MIN_VALUE);
+        int $$27 = this.minecraft.options.getBackgroundColor(0x20FFFFFF);
+        for (int $$28 = 0; $$28 < $$10; ++$$28) {
+            int $$38;
             int $$39;
-            int $$40;
-            int $$30 = $$29 / $$122;
-            int $$31 = $$29 % $$122;
-            int $$32 = $$19 + $$30 * $$18 + $$30 * 5;
-            int $$33 = $$20 + $$31 * 9;
-            PlayerTabOverlay.fill($$02, $$32, $$33, $$32 + $$18, $$33 + 8, $$28);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+            int $$29 = $$28 / $$11;
+            int $$30 = $$28 % $$11;
+            int $$31 = $$18 + $$29 * $$17 + $$29 * 5;
+            int $$32 = $$19 + $$30 * 9;
+            PlayerTabOverlay.fill($$02, $$31, $$32, $$31 + $$17, $$32 + 8, $$27);
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-            if ($$29 >= $$5.size()) continue;
-            PlayerInfo $$34 = (PlayerInfo)$$5.get($$29);
-            GameProfile $$35 = $$34.getProfile();
-            if ($$14) {
-                Player $$36 = this.minecraft.level.getPlayerByUUID($$35.getId());
-                boolean $$37 = $$36 != null && LivingEntityRenderer.isEntityUpsideDown($$36);
-                boolean $$38 = $$36 != null && $$36.isModelPartShown(PlayerModelPart.HAT);
-                RenderSystem.setShaderTexture(0, $$34.getSkinLocation());
-                PlayerFaceRenderer.draw($$02, $$32, $$33, 8, $$38, $$37);
-                $$32 += 9;
+            if ($$28 >= $$4.size()) continue;
+            PlayerInfo $$33 = (PlayerInfo)$$4.get($$28);
+            GameProfile $$34 = $$33.getProfile();
+            if ($$13) {
+                Player $$35 = this.minecraft.level.getPlayerByUUID($$34.getId());
+                boolean $$36 = $$35 != null && LivingEntityRenderer.isEntityUpsideDown($$35);
+                boolean $$37 = $$35 != null && $$35.isModelPartShown(PlayerModelPart.HAT);
+                RenderSystem.setShaderTexture(0, $$33.getSkinLocation());
+                PlayerFaceRenderer.draw($$02, $$31, $$32, 8, $$37, $$36);
+                $$31 += 9;
             }
-            this.minecraft.font.drawShadow($$02, this.getNameForDisplay($$34), (float)$$32, (float)$$33, $$34.getGameMode() == GameType.SPECTATOR ? -1862270977 : -1);
-            if ($$3 != null && $$34.getGameMode() != GameType.SPECTATOR && ($$40 = ($$39 = $$32 + $$6 + 1) + $$17) - $$39 > 5) {
-                this.renderTablistScore($$3, $$33, $$35.getName(), $$39, $$40, $$35.getId(), $$02);
+            this.minecraft.font.drawShadow($$02, this.getNameForDisplay($$33), (float)$$31, (float)$$32, $$33.getGameMode() == GameType.SPECTATOR ? -1862270977 : -1);
+            if ($$3 != null && $$33.getGameMode() != GameType.SPECTATOR && ($$39 = ($$38 = $$31 + $$5 + 1) + $$16) - $$38 > 5) {
+                this.renderTablistScore($$3, $$32, $$34.getName(), $$38, $$39, $$34.getId(), $$02);
             }
-            this.renderPingIcon($$02, $$18, $$32 - ($$14 ? 9 : 0), $$33, $$34);
+            this.renderPingIcon($$02, $$17, $$31 - ($$13 ? 9 : 0), $$32, $$33);
         }
-        if ($$24 != null) {
-            $$20 += $$122 * 9 + 1;
-            int n = $$12 / 2 - $$21 / 2 - 1;
-            int n4 = $$12 / 2 + $$21 / 2 + 1;
-            int n5 = $$24.size();
+        if ($$23 != null) {
+            $$19 += $$11 * 9 + 1;
+            int n = $$12 / 2 - $$20 / 2 - 1;
+            int n4 = $$12 / 2 + $$20 / 2 + 1;
+            int n5 = $$23.size();
             Objects.requireNonNull((Object)this.minecraft.font);
-            PlayerTabOverlay.fill($$02, n, $$20 - 1, n4, $$20 + n5 * 9, Integer.MIN_VALUE);
-            for (FormattedCharSequence $$41 : $$24) {
-                int $$42 = this.minecraft.font.width($$41);
-                this.minecraft.font.drawShadow($$02, $$41, (float)($$12 / 2 - $$42 / 2), (float)$$20, -1);
+            PlayerTabOverlay.fill($$02, n, $$19 - 1, n4, $$19 + n5 * 9, Integer.MIN_VALUE);
+            for (FormattedCharSequence $$40 : $$23) {
+                int $$41 = this.minecraft.font.width($$40);
+                this.minecraft.font.drawShadow($$02, $$40, (float)($$12 / 2 - $$41 / 2), (float)$$19, -1);
                 Objects.requireNonNull((Object)this.minecraft.font);
-                $$20 += 9;
+                $$19 += 9;
             }
         }
     }
 
     protected void renderPingIcon(PoseStack $$0, int $$1, int $$2, int $$3, PlayerInfo $$4) {
         int $$11;
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, GUI_ICONS_LOCATION);
         boolean $$5 = false;
         if ($$4.getLatency() < 0) {

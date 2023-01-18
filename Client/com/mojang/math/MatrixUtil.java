@@ -46,7 +46,7 @@ public class MatrixUtil {
         float $$4 = $$1;
         float $$3 = 2.0f * ($$0 - $$2);
         if (G * $$4 * $$4 < $$3 * $$3) {
-            float $$5 = Mth.fastInvSqrt($$4 * $$4 + $$3 * $$3);
+            float $$5 = Mth.invSqrt($$4 * $$4 + $$3 * $$3);
             return Pair.of((Object)Float.valueOf((float)($$5 * $$4)), (Object)Float.valueOf((float)($$5 * $$3)));
         }
         return Pair.of((Object)Float.valueOf((float)SS), (Object)Float.valueOf((float)CS));
@@ -61,7 +61,7 @@ public class MatrixUtil {
             $$3 = $$4;
             $$4 = $$5;
         }
-        float $$6 = Mth.fastInvSqrt($$4 * $$4 + $$3 * $$3);
+        float $$6 = Mth.invSqrt($$4 * $$4 + $$3 * $$3);
         return Pair.of((Object)Float.valueOf((float)($$3 *= $$6)), (Object)Float.valueOf((float)($$4 *= $$6)));
     }
 

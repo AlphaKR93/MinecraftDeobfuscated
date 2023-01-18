@@ -3,13 +3,13 @@
  * 
  * Could not load the following classes:
  *  com.google.common.collect.Sets
+ *  java.lang.Integer
  *  java.lang.Object
  *  java.lang.Override
  *  java.lang.String
  *  java.lang.Throwable
  *  java.util.List
  *  java.util.Set
- *  java.util.function.Supplier
  *  javax.annotation.Nullable
  */
 package net.minecraft.client.renderer.entity;
@@ -18,19 +18,14 @@ import com.google.common.collect.Sets;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexMultiConsumer;
 import com.mojang.math.MatrixUtil;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Supplier;
 import javax.annotation.Nullable;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
@@ -38,15 +33,14 @@ import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -255,7 +249,6 @@ implements ResourceManagerReloadListener {
         RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         PoseStack $$4 = RenderSystem.getModelViewStack();
         $$4.pushPose();
         $$4.translate($$1, $$2, 100.0f + this.blitOffset);
@@ -344,40 +337,22 @@ implements ResourceManagerReloadListener {
         }
         if ($$1.isBarVisible()) {
             RenderSystem.disableDepthTest();
-            RenderSystem.disableTexture();
-            RenderSystem.disableBlend();
-            Tesselator $$8 = Tesselator.getInstance();
-            BufferBuilder $$9 = $$8.getBuilder();
-            int $$10 = $$1.getBarWidth();
-            int $$11 = $$1.getBarColor();
-            this.fillRect($$9, $$2 + 2, $$3 + 13, 13, 2, 0, 0, 0, 255);
-            this.fillRect($$9, $$2 + 2, $$3 + 13, $$10, 1, $$11 >> 16 & 0xFF, $$11 >> 8 & 0xFF, $$11 & 0xFF, 255);
-            RenderSystem.enableBlend();
-            RenderSystem.enableTexture();
+            int $$8 = $$1.getBarWidth();
+            int $$9 = $$1.getBarColor();
+            int $$10 = $$2 + 2;
+            int $$11 = $$3 + 13;
+            GuiComponent.fill($$5, $$10, $$11, $$10 + 13, $$11 + 2, -16777216);
+            GuiComponent.fill($$5, $$10, $$11, $$10 + $$8, $$11 + 1, $$9 | 0xFF000000);
             RenderSystem.enableDepthTest();
         }
         float f = $$13 = ($$12 = Minecraft.getInstance().player) == null ? 0.0f : $$12.getCooldowns().getCooldownPercent($$1.getItem(), Minecraft.getInstance().getFrameTime());
         if ($$13 > 0.0f) {
             RenderSystem.disableDepthTest();
-            RenderSystem.disableTexture();
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-            Tesselator $$14 = Tesselator.getInstance();
-            BufferBuilder $$15 = $$14.getBuilder();
-            this.fillRect($$15, $$2, $$3 + Mth.floor(16.0f * (1.0f - $$13)), 16, Mth.ceil(16.0f * $$13), 255, 255, 255, 127);
-            RenderSystem.enableTexture();
+            int $$14 = $$3 + Mth.floor(16.0f * (1.0f - $$13));
+            int $$15 = $$14 + Mth.ceil(16.0f * $$13);
+            GuiComponent.fill($$5, $$2, $$14, $$2 + 16, $$15, Integer.MAX_VALUE);
             RenderSystem.enableDepthTest();
         }
-    }
-
-    private void fillRect(BufferBuilder $$0, int $$1, int $$2, int $$3, int $$4, int $$5, int $$6, int $$7, int $$8) {
-        RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionColorShader));
-        $$0.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        $$0.vertex($$1 + 0, $$2 + 0, 0.0).color($$5, $$6, $$7, $$8).endVertex();
-        $$0.vertex($$1 + 0, $$2 + $$4, 0.0).color($$5, $$6, $$7, $$8).endVertex();
-        $$0.vertex($$1 + $$3, $$2 + $$4, 0.0).color($$5, $$6, $$7, $$8).endVertex();
-        $$0.vertex($$1 + $$3, $$2 + 0, 0.0).color($$5, $$6, $$7, $$8).endVertex();
-        BufferUploader.drawWithShader($$0.end());
     }
 
     @Override

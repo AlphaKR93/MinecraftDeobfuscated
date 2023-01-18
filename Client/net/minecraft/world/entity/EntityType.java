@@ -379,9 +379,11 @@ EntityTypeTest<Entity, T> {
     }
 
     public static <T extends Entity> Consumer<T> createDefaultStackConfig(ServerLevel $$02, ItemStack $$1, @Nullable Player $$2) {
-        Consumer<T> $$3 = $$0 -> {};
-        $$3 = EntityType.appendCustomNameConfig($$3, $$1);
-        return EntityType.appendCustomEntityStackConfig($$3, $$02, $$1, $$2);
+        return EntityType.appendDefaultStackConfig($$0 -> {}, $$02, $$1, $$2);
+    }
+
+    public static <T extends Entity> Consumer<T> appendDefaultStackConfig(Consumer<T> $$0, ServerLevel $$1, ItemStack $$2, @Nullable Player $$3) {
+        return EntityType.appendCustomEntityStackConfig(EntityType.appendCustomNameConfig($$0, $$2), $$1, $$2, $$3);
     }
 
     public static <T extends Entity> Consumer<T> appendCustomNameConfig(Consumer<T> $$0, ItemStack $$12) {

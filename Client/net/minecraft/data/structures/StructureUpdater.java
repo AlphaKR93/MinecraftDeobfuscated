@@ -33,24 +33,13 @@ implements SnbtToNbt.Filter {
     }
 
     public static CompoundTag update(String $$0, CompoundTag $$1) {
-        return StructureUpdater.updateStructure($$0, StructureUpdater.patchVersion($$1));
-    }
-
-    private static CompoundTag patchVersion(CompoundTag $$0) {
-        if (!$$0.contains("DataVersion", 99)) {
-            $$0.putInt("DataVersion", 500);
-        }
-        return $$0;
-    }
-
-    private static CompoundTag updateStructure(String $$0, CompoundTag $$1) {
         StructureTemplate $$2 = new StructureTemplate();
-        int $$3 = $$1.getInt("DataVersion");
-        int $$4 = 3200;
-        if ($$3 < 3200) {
-            LOGGER.warn("SNBT Too old, do not forget to update: {} < {}: {}", new Object[]{$$3, 3200, $$0});
+        int $$3 = NbtUtils.getDataVersion($$1, 500);
+        int $$4 = 3318;
+        if ($$3 < 3318) {
+            LOGGER.warn("SNBT Too old, do not forget to update: {} < {}: {}", new Object[]{$$3, 3318, $$0});
         }
-        CompoundTag $$5 = NbtUtils.update(DataFixers.getDataFixer(), DataFixTypes.STRUCTURE, $$1, $$3);
+        CompoundTag $$5 = DataFixTypes.STRUCTURE.updateToCurrentVersion(DataFixers.getDataFixer(), $$1, $$3);
         $$2.load(BuiltInRegistries.BLOCK.asLookup(), $$5);
         return $$2.save(new CompoundTag());
     }

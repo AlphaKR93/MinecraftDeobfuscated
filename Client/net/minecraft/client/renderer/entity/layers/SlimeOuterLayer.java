@@ -4,7 +4,6 @@
  * Could not load the following classes:
  *  java.lang.Object
  *  java.lang.Override
- *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.client.renderer.entity.layers;
 
@@ -37,8 +36,8 @@ extends RenderLayer<T, SlimeModel<T>> {
         VertexConsumer $$13;
         boolean $$11;
         Minecraft $$10 = Minecraft.getInstance();
-        boolean bl = $$11 = $$10.shouldEntityAppearGlowing((Entity)$$3) && $$3.isInvisible();
-        if ($$3.isInvisible() && !$$11) {
+        boolean bl = $$11 = $$10.shouldEntityAppearGlowing((Entity)$$3) && ((Entity)$$3).isInvisible();
+        if (((Entity)$$3).isInvisible() && !$$11) {
             return;
         }
         if ($$11) {

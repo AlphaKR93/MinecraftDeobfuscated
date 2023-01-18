@@ -4,6 +4,7 @@
  * Could not load the following classes:
  *  java.lang.Object
  *  java.lang.Override
+ *  net.minecraft.server.level.ServerLevel
  */
 package net.minecraft.world.level.block;
 
@@ -12,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -51,8 +53,8 @@ implements BonemealableBlock {
     @Override
     public void performBonemeal(ServerLevel $$0, RandomSource $$1, BlockPos $$2, BlockState $$3) {
         DoublePlantBlock $$4 = (DoublePlantBlock)($$3.is(Blocks.FERN) ? Blocks.LARGE_FERN : Blocks.TALL_GRASS);
-        if ($$4.defaultBlockState().canSurvive($$0, $$2) && $$0.isEmptyBlock((BlockPos)$$2.above())) {
-            DoublePlantBlock.placeAt($$0, $$4.defaultBlockState(), $$2, 2);
+        if ($$4.defaultBlockState().canSurvive((LevelReader)$$0, $$2) && $$0.isEmptyBlock((BlockPos)$$2.above())) {
+            DoublePlantBlock.placeAt((LevelAccessor)$$0, $$4.defaultBlockState(), $$2, 2);
         }
     }
 }

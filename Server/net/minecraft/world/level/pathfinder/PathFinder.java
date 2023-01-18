@@ -18,7 +18,6 @@
  *  java.util.function.Function
  *  java.util.stream.Collectors
  *  javax.annotation.Nullable
- *  net.minecraft.world.entity.Mob
  */
 package net.minecraft.world.level.pathfinder;
 

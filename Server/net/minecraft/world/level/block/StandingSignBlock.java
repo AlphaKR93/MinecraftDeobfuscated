@@ -44,7 +44,7 @@ extends SignBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext $$0) {
         FluidState $$1 = $$0.getLevel().getFluidState($$0.getClickedPos());
-        return (BlockState)((BlockState)this.defaultBlockState().setValue(ROTATION, RotationSegment.convertToSegment($$0.getRotation()))).setValue(WATERLOGGED, $$1.getType() == Fluids.WATER);
+        return (BlockState)((BlockState)this.defaultBlockState().setValue(ROTATION, RotationSegment.convertToSegment($$0.getRotation() + 180.0f))).setValue(WATERLOGGED, $$1.getType() == Fluids.WATER);
     }
 
     @Override

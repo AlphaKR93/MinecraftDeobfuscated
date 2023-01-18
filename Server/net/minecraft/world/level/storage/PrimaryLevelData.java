@@ -19,7 +19,6 @@
  *  java.util.UUID
  *  java.util.function.Consumer
  *  java.util.stream.Collectors
- *  java.util.stream.Stream
  *  javax.annotation.Nullable
  *  org.slf4j.Logger
  */
@@ -37,7 +36,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.SharedConstants;
@@ -146,13 +144,13 @@ WorldData {
     }
 
     public PrimaryLevelData(LevelSettings $$0, WorldOptions $$1, SpecialWorldProperty $$2, Lifecycle $$3) {
-        this(null, SharedConstants.getCurrentVersion().getWorldVersion(), null, false, 0, 0, 0, 0.0f, 0L, 0L, 19133, 0, 0, false, 0, false, false, false, WorldBorder.DEFAULT_SETTINGS, 0, 0, null, (Set<String>)Sets.newLinkedHashSet(), new TimerQueue<MinecraftServer>(TimerCallbacks.SERVER_CALLBACKS), null, new CompoundTag(), $$0.copy(), $$1, $$2, $$3);
+        this(null, SharedConstants.getCurrentVersion().getDataVersion().getVersion(), null, false, 0, 0, 0, 0.0f, 0L, 0L, 19133, 0, 0, false, 0, false, false, false, WorldBorder.DEFAULT_SETTINGS, 0, 0, null, (Set<String>)Sets.newLinkedHashSet(), new TimerQueue<MinecraftServer>(TimerCallbacks.SERVER_CALLBACKS), null, new CompoundTag(), $$0.copy(), $$1, $$2, $$3);
     }
 
-    public static PrimaryLevelData parse(Dynamic<Tag> $$02, DataFixer $$1, int $$2, @Nullable CompoundTag $$3, LevelSettings $$4, LevelVersion $$5, SpecialWorldProperty $$6, WorldOptions $$7, Lifecycle $$8) {
+    public static <T> PrimaryLevelData parse(Dynamic<T> $$02, DataFixer $$1, int $$2, @Nullable CompoundTag $$3, LevelSettings $$4, LevelVersion $$5, SpecialWorldProperty $$6, WorldOptions $$7, Lifecycle $$8) {
         long $$9 = $$02.get("Time").asLong(0L);
-        CompoundTag $$10 = (CompoundTag)$$02.get("DragonFight").result().map(Dynamic::getValue).orElseGet(() -> (Tag)$$02.get("DimensionData").get("1").get("DragonFight").orElseEmptyMap().getValue());
-        return new PrimaryLevelData($$1, $$2, $$3, $$02.get("WasModded").asBoolean(false), $$02.get("SpawnX").asInt(0), $$02.get("SpawnY").asInt(0), $$02.get("SpawnZ").asInt(0), $$02.get("SpawnAngle").asFloat(0.0f), $$9, $$02.get("DayTime").asLong($$9), $$5.levelDataVersion(), $$02.get("clearWeatherTime").asInt(0), $$02.get("rainTime").asInt(0), $$02.get("raining").asBoolean(false), $$02.get("thunderTime").asInt(0), $$02.get("thundering").asBoolean(false), $$02.get("initialized").asBoolean(true), $$02.get("DifficultyLocked").asBoolean(false), WorldBorder.Settings.read($$02, WorldBorder.DEFAULT_SETTINGS), $$02.get("WanderingTraderSpawnDelay").asInt(0), $$02.get("WanderingTraderSpawnChance").asInt(0), (UUID)$$02.get("WanderingTraderId").read(UUIDUtil.CODEC).result().orElse(null), (Set<String>)((Set)$$02.get("ServerBrands").asStream().flatMap($$0 -> $$0.asString().result().stream()).collect(Collectors.toCollection(Sets::newLinkedHashSet))), new TimerQueue<MinecraftServer>(TimerCallbacks.SERVER_CALLBACKS, (Stream<Dynamic<Tag>>)$$02.get("ScheduledEvents").asStream()), (CompoundTag)$$02.get("CustomBossEvents").orElseEmptyMap().getValue(), $$10, $$4, $$7, $$6, $$8);
+        CompoundTag $$10 = (CompoundTag)((Dynamic)$$02.get("DragonFight").result().orElseGet(() -> $$02.get("DimensionData").get("1").get("DragonFight").orElseEmptyMap())).convert((DynamicOps)NbtOps.INSTANCE).getValue();
+        return new PrimaryLevelData($$1, $$2, $$3, $$02.get("WasModded").asBoolean(false), $$02.get("SpawnX").asInt(0), $$02.get("SpawnY").asInt(0), $$02.get("SpawnZ").asInt(0), $$02.get("SpawnAngle").asFloat(0.0f), $$9, $$02.get("DayTime").asLong($$9), $$5.levelDataVersion(), $$02.get("clearWeatherTime").asInt(0), $$02.get("rainTime").asInt(0), $$02.get("raining").asBoolean(false), $$02.get("thunderTime").asInt(0), $$02.get("thundering").asBoolean(false), $$02.get("initialized").asBoolean(true), $$02.get("DifficultyLocked").asBoolean(false), WorldBorder.Settings.read($$02, WorldBorder.DEFAULT_SETTINGS), $$02.get("WanderingTraderSpawnDelay").asInt(0), $$02.get("WanderingTraderSpawnChance").asInt(0), (UUID)$$02.get("WanderingTraderId").read(UUIDUtil.CODEC).result().orElse(null), (Set<String>)((Set)$$02.get("ServerBrands").asStream().flatMap($$0 -> $$0.asString().result().stream()).collect(Collectors.toCollection(Sets::newLinkedHashSet))), new TimerQueue<MinecraftServer>(TimerCallbacks.SERVER_CALLBACKS, $$02.get("ScheduledEvents").asStream()), (CompoundTag)$$02.get("CustomBossEvents").orElseEmptyMap().getValue(), $$10, $$4, $$7, $$6, $$8);
     }
 
     @Override
@@ -177,7 +175,7 @@ WorldData {
         $$4.putBoolean("Snapshot", !SharedConstants.getCurrentVersion().isStable());
         $$4.putString("Series", SharedConstants.getCurrentVersion().getDataVersion().getSeries());
         $$12.put("Version", $$4);
-        $$12.putInt("DataVersion", SharedConstants.getCurrentVersion().getWorldVersion());
+        NbtUtils.addCurrentDataVersion($$12);
         RegistryOps<Tag> $$5 = RegistryOps.create(NbtOps.INSTANCE, $$02);
         WorldGenSettings.encode($$5, this.worldOptions, $$02).resultOrPartial(Util.prefix("WorldGenSettings: ", (Consumer<String>)((Consumer)arg_0 -> ((Logger)LOGGER).error(arg_0)))).ifPresent($$1 -> $$12.put(WORLD_GEN_SETTINGS, (Tag)$$1));
         $$12.putInt("GameType", this.settings.gameType().getId());
@@ -253,11 +251,11 @@ WorldData {
         if (this.upgradedPlayerTag || this.loadedPlayerTag == null) {
             return;
         }
-        if (this.playerDataVersion < SharedConstants.getCurrentVersion().getWorldVersion()) {
+        if (this.playerDataVersion < SharedConstants.getCurrentVersion().getDataVersion().getVersion()) {
             if (this.fixerUpper == null) {
                 throw Util.pauseInIde(new NullPointerException("Fixer Upper not set inside LevelData, and the player tag is not upgraded."));
             }
-            this.loadedPlayerTag = NbtUtils.update(this.fixerUpper, DataFixTypes.PLAYER, this.loadedPlayerTag, this.playerDataVersion);
+            this.loadedPlayerTag = DataFixTypes.PLAYER.updateToCurrentVersion(this.fixerUpper, this.loadedPlayerTag, this.playerDataVersion);
         }
         this.upgradedPlayerTag = true;
     }

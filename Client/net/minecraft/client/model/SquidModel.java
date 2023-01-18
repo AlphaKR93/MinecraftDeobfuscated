@@ -7,6 +7,7 @@
  *  java.lang.Override
  *  java.lang.String
  *  java.util.Arrays
+ *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.client.model;
 

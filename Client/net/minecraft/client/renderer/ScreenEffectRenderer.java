@@ -94,7 +94,6 @@ public class ScreenEffectRenderer {
 
     private static void renderWater(Minecraft $$0, PoseStack $$1) {
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
-        RenderSystem.enableTexture();
         RenderSystem.setShaderTexture(0, UNDERWATER_LOCATION);
         BufferBuilder $$2 = Tesselator.getInstance().getBuilder();
         BlockPos $$3 = new BlockPos($$0.player.getX(), $$0.player.getEyeY(), $$0.player.getZ());
@@ -117,6 +116,7 @@ public class ScreenEffectRenderer {
         $$2.vertex($$13, 1.0f, 1.0f, -0.5f).uv(0.0f + $$11, 0.0f + $$12).endVertex();
         $$2.vertex($$13, -1.0f, 1.0f, -0.5f).uv(4.0f + $$11, 0.0f + $$12).endVertex();
         BufferUploader.drawWithShader($$2.end());
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.disableBlend();
     }
 
@@ -127,7 +127,6 @@ public class ScreenEffectRenderer {
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.enableTexture();
         TextureAtlasSprite $$3 = ModelBakery.FIRE_1.sprite();
         RenderSystem.setShaderTexture(0, $$3.atlasLocation());
         float $$4 = $$3.getU0();

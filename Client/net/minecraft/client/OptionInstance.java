@@ -61,6 +61,7 @@ import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.util.OptionEnum;
 import org.slf4j.Logger;
@@ -261,14 +262,13 @@ public final class OptionInstance<T> {
 
         @Override
         public Codec<Integer> codec() {
-            Function $$02 = $$0 -> {
+            return ExtraCodecs.validate(Codec.INT, $$0 -> {
                 int $$1 = this.maxSupplier.getAsInt() + 1;
                 if ($$0.compareTo(Integer.valueOf((int)this.minInclusive)) >= 0 && $$0.compareTo(Integer.valueOf((int)$$1)) <= 0) {
                     return DataResult.success((Object)$$0);
                 }
                 return DataResult.error((String)("Value " + $$0 + " outside of range [" + this.minInclusive + ":" + $$1 + "]"), (Object)$$0);
-            };
-            return Codec.INT.flatXmap($$02, $$02);
+            });
         }
 
         @Override

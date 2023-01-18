@@ -7,7 +7,6 @@
  *  java.util.List
  *  java.util.Optional
  *  javax.annotation.Nullable
- *  net.minecraft.world.level.block.Blocks
  *  org.apache.commons.lang3.ArrayUtils
  */
 package net.minecraft.world.level.block;

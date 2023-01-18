@@ -184,11 +184,19 @@ FormattedText {
     }
 
     public static MutableComponent translatable(String $$0) {
-        return MutableComponent.create(new TranslatableContents($$0));
+        return MutableComponent.create(new TranslatableContents($$0, null, TranslatableContents.NO_ARGS));
     }
 
     public static MutableComponent translatable(String $$0, Object ... $$1) {
-        return MutableComponent.create(new TranslatableContents($$0, $$1));
+        return MutableComponent.create(new TranslatableContents($$0, null, $$1));
+    }
+
+    public static MutableComponent translatableWithFallback(String $$0, @Nullable String $$1) {
+        return MutableComponent.create(new TranslatableContents($$0, $$1, TranslatableContents.NO_ARGS));
+    }
+
+    public static MutableComponent translatableWithFallback(String $$0, @Nullable String $$1, Object ... $$2) {
+        return MutableComponent.create(new TranslatableContents($$0, $$1, $$2));
     }
 
     public static MutableComponent empty() {
@@ -262,70 +270,71 @@ FormattedText {
                 return Component.literal($$0.getAsString());
             }
             if ($$0.isJsonObject()) {
-                void $$26;
+                void $$27;
                 JsonObject $$3 = $$0.getAsJsonObject();
                 if ($$3.has("text")) {
                     String $$4 = GsonHelper.getAsString($$3, "text");
                     MutableComponent $$5 = $$4.isEmpty() ? Component.empty() : Component.literal($$4);
                 } else if ($$3.has("translate")) {
                     String $$6 = GsonHelper.getAsString($$3, "translate");
+                    String $$7 = GsonHelper.getAsString($$3, "fallback", null);
                     if ($$3.has("with")) {
-                        JsonArray $$7 = GsonHelper.getAsJsonArray($$3, "with");
-                        Object[] $$8 = new Object[$$7.size()];
-                        for (int $$9 = 0; $$9 < $$8.length; ++$$9) {
-                            $$8[$$9] = Serializer.unwrapTextArgument(this.deserialize($$7.get($$9), $$1, $$2));
+                        JsonArray $$8 = GsonHelper.getAsJsonArray($$3, "with");
+                        Object[] $$9 = new Object[$$8.size()];
+                        for (int $$10 = 0; $$10 < $$9.length; ++$$10) {
+                            $$9[$$10] = Serializer.unwrapTextArgument(this.deserialize($$8.get($$10), $$1, $$2));
                         }
-                        MutableComponent $$10 = Component.translatable($$6, $$8);
+                        MutableComponent $$11 = Component.translatableWithFallback($$6, $$7, $$9);
                     } else {
-                        MutableComponent $$11 = Component.translatable($$6);
+                        MutableComponent $$12 = Component.translatableWithFallback($$6, $$7);
                     }
                 } else if ($$3.has("score")) {
-                    JsonObject $$12 = GsonHelper.getAsJsonObject($$3, "score");
-                    if (!$$12.has("name") || !$$12.has("objective")) throw new JsonParseException("A score component needs a least a name and an objective");
-                    MutableComponent $$13 = Component.score(GsonHelper.getAsString($$12, "name"), GsonHelper.getAsString($$12, "objective"));
+                    JsonObject $$13 = GsonHelper.getAsJsonObject($$3, "score");
+                    if (!$$13.has("name") || !$$13.has("objective")) throw new JsonParseException("A score component needs a least a name and an objective");
+                    MutableComponent $$14 = Component.score(GsonHelper.getAsString($$13, "name"), GsonHelper.getAsString($$13, "objective"));
                 } else if ($$3.has("selector")) {
-                    Optional<Component> $$15 = this.parseSeparator($$1, $$2, $$3);
-                    MutableComponent $$16 = Component.selector(GsonHelper.getAsString($$3, "selector"), $$15);
+                    Optional<Component> $$16 = this.parseSeparator($$1, $$2, $$3);
+                    MutableComponent $$17 = Component.selector(GsonHelper.getAsString($$3, "selector"), $$16);
                 } else if ($$3.has("keybind")) {
-                    MutableComponent $$17 = Component.keybind(GsonHelper.getAsString($$3, "keybind"));
+                    MutableComponent $$18 = Component.keybind(GsonHelper.getAsString($$3, "keybind"));
                 } else {
-                    void $$24;
+                    void $$25;
                     if (!$$3.has("nbt")) throw new JsonParseException("Don't know how to turn " + $$0 + " into a Component");
-                    String $$18 = GsonHelper.getAsString($$3, "nbt");
-                    Optional<Component> $$19 = this.parseSeparator($$1, $$2, $$3);
-                    boolean $$20 = GsonHelper.getAsBoolean($$3, "interpret", false);
+                    String $$19 = GsonHelper.getAsString($$3, "nbt");
+                    Optional<Component> $$20 = this.parseSeparator($$1, $$2, $$3);
+                    boolean $$21 = GsonHelper.getAsBoolean($$3, "interpret", false);
                     if ($$3.has("block")) {
-                        BlockDataSource $$21 = new BlockDataSource(GsonHelper.getAsString($$3, "block"));
+                        BlockDataSource $$22 = new BlockDataSource(GsonHelper.getAsString($$3, "block"));
                     } else if ($$3.has("entity")) {
-                        EntityDataSource $$22 = new EntityDataSource(GsonHelper.getAsString($$3, "entity"));
+                        EntityDataSource $$23 = new EntityDataSource(GsonHelper.getAsString($$3, "entity"));
                     } else {
                         if (!$$3.has("storage")) throw new JsonParseException("Don't know how to turn " + $$0 + " into a Component");
-                        StorageDataSource $$23 = new StorageDataSource(new ResourceLocation(GsonHelper.getAsString($$3, "storage")));
+                        StorageDataSource $$24 = new StorageDataSource(new ResourceLocation(GsonHelper.getAsString($$3, "storage")));
                     }
-                    MutableComponent $$25 = Component.nbt($$18, $$20, $$19, (DataSource)$$24);
+                    MutableComponent $$26 = Component.nbt($$19, $$21, $$20, (DataSource)$$25);
                 }
                 if ($$3.has("extra")) {
-                    JsonArray $$27 = GsonHelper.getAsJsonArray($$3, "extra");
-                    if ($$27.size() <= 0) throw new JsonParseException("Unexpected empty array of components");
-                    for (int $$28 = 0; $$28 < $$27.size(); ++$$28) {
-                        $$26.append(this.deserialize($$27.get($$28), $$1, $$2));
+                    JsonArray $$28 = GsonHelper.getAsJsonArray($$3, "extra");
+                    if ($$28.size() <= 0) throw new JsonParseException("Unexpected empty array of components");
+                    for (int $$29 = 0; $$29 < $$28.size(); ++$$29) {
+                        $$27.append(this.deserialize($$28.get($$29), $$1, $$2));
                     }
                 }
-                $$26.setStyle((Style)$$2.deserialize($$0, Style.class));
-                return $$26;
+                $$27.setStyle((Style)$$2.deserialize($$0, Style.class));
+                return $$27;
             }
             if (!$$0.isJsonArray()) throw new JsonParseException("Don't know how to turn " + $$0 + " into a Component");
-            JsonArray $$29 = $$0.getAsJsonArray();
-            MutableComponent $$30 = null;
-            for (JsonElement $$31 : $$29) {
-                MutableComponent $$32 = this.deserialize($$31, (Type)$$31.getClass(), $$2);
-                if ($$30 == null) {
-                    $$30 = $$32;
+            JsonArray $$30 = $$0.getAsJsonArray();
+            MutableComponent $$31 = null;
+            for (JsonElement $$32 : $$30) {
+                MutableComponent $$33 = this.deserialize($$32, (Type)$$32.getClass(), $$2);
+                if ($$31 == null) {
+                    $$31 = $$33;
                     continue;
                 }
-                $$30.append($$32);
+                $$31.append($$33);
             }
-            return $$30;
+            return $$31;
         }
 
         private static Object unwrapTextArgument(Object $$0) {
@@ -382,52 +391,56 @@ FormattedText {
             } else if ($$6 instanceof TranslatableContents) {
                 TranslatableContents $$8 = (TranslatableContents)$$6;
                 $$3.addProperty("translate", $$8.getKey());
+                String $$9 = $$8.getFallback();
+                if ($$9 != null) {
+                    $$3.addProperty("fallback", $$9);
+                }
                 if ($$8.getArgs().length <= 0) return $$3;
-                JsonArray $$9 = new JsonArray();
-                for (Object $$10 : $$8.getArgs()) {
-                    if ($$10 instanceof Component) {
-                        $$9.add(this.serialize((Component)$$10, (Type)$$10.getClass(), $$2));
+                JsonArray $$10 = new JsonArray();
+                for (Object $$11 : $$8.getArgs()) {
+                    if ($$11 instanceof Component) {
+                        $$10.add(this.serialize((Component)$$11, (Type)$$11.getClass(), $$2));
                         continue;
                     }
-                    $$9.add((JsonElement)new JsonPrimitive(String.valueOf((Object)$$10)));
+                    $$10.add((JsonElement)new JsonPrimitive(String.valueOf((Object)$$11)));
                 }
-                $$3.add("with", (JsonElement)$$9);
+                $$3.add("with", (JsonElement)$$10);
                 return $$3;
             } else if ($$6 instanceof ScoreContents) {
-                ScoreContents $$11 = (ScoreContents)$$6;
-                JsonObject $$12 = new JsonObject();
-                $$12.addProperty("name", $$11.getName());
-                $$12.addProperty("objective", $$11.getObjective());
-                $$3.add("score", (JsonElement)$$12);
+                ScoreContents $$12 = (ScoreContents)$$6;
+                JsonObject $$13 = new JsonObject();
+                $$13.addProperty("name", $$12.getName());
+                $$13.addProperty("objective", $$12.getObjective());
+                $$3.add("score", (JsonElement)$$13);
                 return $$3;
             } else if ($$6 instanceof SelectorContents) {
-                SelectorContents $$13 = (SelectorContents)$$6;
-                $$3.addProperty("selector", $$13.getPattern());
-                this.serializeSeparator($$2, $$3, $$13.getSeparator());
+                SelectorContents $$14 = (SelectorContents)$$6;
+                $$3.addProperty("selector", $$14.getPattern());
+                this.serializeSeparator($$2, $$3, $$14.getSeparator());
                 return $$3;
             } else if ($$6 instanceof KeybindContents) {
-                KeybindContents $$14 = (KeybindContents)$$6;
-                $$3.addProperty("keybind", $$14.getName());
+                KeybindContents $$15 = (KeybindContents)$$6;
+                $$3.addProperty("keybind", $$15.getName());
                 return $$3;
             } else {
                 if (!($$6 instanceof NbtContents)) throw new IllegalArgumentException("Don't know how to serialize " + $$6 + " as a Component");
-                NbtContents $$15 = (NbtContents)$$6;
-                $$3.addProperty("nbt", $$15.getNbtPath());
-                $$3.addProperty("interpret", Boolean.valueOf((boolean)$$15.isInterpreting()));
-                this.serializeSeparator($$2, $$3, $$15.getSeparator());
-                DataSource $$16 = $$15.getDataSource();
-                if ($$16 instanceof BlockDataSource) {
-                    BlockDataSource $$17 = (BlockDataSource)$$16;
-                    $$3.addProperty("block", $$17.posPattern());
+                NbtContents $$16 = (NbtContents)$$6;
+                $$3.addProperty("nbt", $$16.getNbtPath());
+                $$3.addProperty("interpret", Boolean.valueOf((boolean)$$16.isInterpreting()));
+                this.serializeSeparator($$2, $$3, $$16.getSeparator());
+                DataSource $$17 = $$16.getDataSource();
+                if ($$17 instanceof BlockDataSource) {
+                    BlockDataSource $$18 = (BlockDataSource)$$17;
+                    $$3.addProperty("block", $$18.posPattern());
                     return $$3;
-                } else if ($$16 instanceof EntityDataSource) {
-                    EntityDataSource $$18 = (EntityDataSource)$$16;
-                    $$3.addProperty("entity", $$18.selectorPattern());
+                } else if ($$17 instanceof EntityDataSource) {
+                    EntityDataSource $$19 = (EntityDataSource)$$17;
+                    $$3.addProperty("entity", $$19.selectorPattern());
                     return $$3;
                 } else {
-                    if (!($$16 instanceof StorageDataSource)) throw new IllegalArgumentException("Don't know how to serialize " + $$6 + " as a Component");
-                    StorageDataSource $$19 = (StorageDataSource)$$16;
-                    $$3.addProperty("storage", $$19.id().toString());
+                    if (!($$17 instanceof StorageDataSource)) throw new IllegalArgumentException("Don't know how to serialize " + $$6 + " as a Component");
+                    StorageDataSource $$20 = (StorageDataSource)$$17;
+                    $$3.addProperty("storage", $$20.id().toString());
                 }
             }
             return $$3;

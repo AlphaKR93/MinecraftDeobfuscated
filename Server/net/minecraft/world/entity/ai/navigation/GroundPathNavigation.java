@@ -4,7 +4,6 @@
  * Could not load the following classes:
  *  java.lang.Object
  *  java.lang.Override
- *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world.entity.ai.navigation;
 

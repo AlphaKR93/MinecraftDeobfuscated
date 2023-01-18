@@ -69,7 +69,6 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -234,19 +233,9 @@ extends ObjectSelectionList<Entry> {
     }
 
     @Override
-    protected boolean isFocused() {
-        return this.screen.getFocused() == this;
-    }
-
-    @Override
     public void setSelected(@Nullable Entry $$0) {
         super.setSelected($$0);
         this.screen.updateButtonStatus($$0 != null && $$0.isSelectable());
-    }
-
-    @Override
-    protected void moveSelection(AbstractSelectionList.SelectionDirection $$0) {
-        this.moveSelection($$0, Entry::isSelectable);
     }
 
     public Optional<WorldListEntry> getSelectedOpt() {
@@ -369,7 +358,6 @@ extends ObjectSelectionList<Entry> {
             Objects.requireNonNull((Object)this.minecraft.font);
             font2.draw($$0, $$12, f2, (float)($$2 + 9 + 9 + 3), 0x808080);
             RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             RenderSystem.setShaderTexture(0, this.icon != null ? this.iconLocation : ICON_MISSING);
             RenderSystem.enableBlend();
             GuiComponent.blit($$0, $$3, $$2, 0.0f, 0.0f, 32, 32, 32, 32);
@@ -379,7 +367,6 @@ extends ObjectSelectionList<Entry> {
                 RenderSystem.setShaderTexture(0, ICON_OVERLAY_LOCATION);
                 GuiComponent.fill($$0, $$3, $$2, $$3 + 32, $$2 + 32, -1601138544);
                 RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
-                RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
                 int $$13 = $$6 - $$3;
                 boolean $$14 = $$13 < 32;
                 int n = $$15 = $$14 ? 32 : 0;
@@ -428,7 +415,7 @@ extends ObjectSelectionList<Entry> {
                 return true;
             }
             this.lastClickTime = Util.getMillis();
-            return false;
+            return true;
         }
 
         public void joinWorld() {

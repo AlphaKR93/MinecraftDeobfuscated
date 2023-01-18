@@ -181,8 +181,8 @@ extends ChunkGenerator {
         NoiseSettings $$6 = this.settings.value().noiseSettings().clampToHeightAccessor($$0);
         int $$7 = $$6.getCellHeight();
         int $$8 = $$6.minY();
-        int $$9 = Mth.intFloorDiv($$8, $$7);
-        int $$10 = Mth.intFloorDiv($$6.height(), $$7);
+        int $$9 = Mth.floorDiv($$8, $$7);
+        int $$10 = Mth.floorDiv($$6.height(), $$7);
         if ($$10 <= 0) {
             return OptionalInt.empty();
         }
@@ -277,8 +277,8 @@ extends ChunkGenerator {
     public CompletableFuture<ChunkAccess> fillFromNoise(Executor $$0, Blender $$1, RandomState $$2, StructureManager $$3, ChunkAccess $$4) {
         NoiseSettings $$5 = this.settings.value().noiseSettings().clampToHeightAccessor($$4.getHeightAccessorForGeneration());
         int $$6 = $$5.minY();
-        int $$7 = Mth.intFloorDiv($$6, $$5.getCellHeight());
-        int $$8 = Mth.intFloorDiv($$5.height(), $$5.getCellHeight());
+        int $$7 = Mth.floorDiv($$6, $$5.getCellHeight());
+        int $$8 = Mth.floorDiv($$5.height(), $$5.getCellHeight());
         if ($$8 <= 0) {
             return CompletableFuture.completedFuture((Object)$$4);
         }

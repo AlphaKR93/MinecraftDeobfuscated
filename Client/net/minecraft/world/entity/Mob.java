@@ -195,10 +195,6 @@ extends LivingEntity {
         this.pathfindingMalus.put((Object)$$0, (Object)Float.valueOf((float)$$1));
     }
 
-    public boolean canCutCorner(BlockPathTypes $$0) {
-        return $$0 != BlockPathTypes.DANGER_FIRE && $$0 != BlockPathTypes.DANGER_CACTUS && $$0 != BlockPathTypes.DANGER_OTHER && $$0 != BlockPathTypes.WALKABLE_DOOR;
-    }
-
     protected BodyRotationControl createBodyControl() {
         return new BodyRotationControl(this);
     }

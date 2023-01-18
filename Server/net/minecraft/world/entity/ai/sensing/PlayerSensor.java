@@ -10,7 +10,6 @@
  *  java.util.Optional
  *  java.util.Set
  *  java.util.stream.Collectors
- *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world.entity.ai.sensing;
 
@@ -38,11 +37,11 @@ extends Sensor<LivingEntity> {
 
     @Override
     protected void doTick(ServerLevel $$0, LivingEntity $$12) {
-        List $$2 = (List)$$0.players().stream().filter(EntitySelector.NO_SPECTATORS).filter($$1 -> $$12.closerThan((Entity)$$1, 16.0)).sorted(Comparator.comparingDouble(arg_0 -> ((LivingEntity)$$12).distanceToSqr(arg_0))).collect(Collectors.toList());
+        List $$2 = (List)$$0.players().stream().filter(EntitySelector.NO_SPECTATORS).filter($$1 -> $$12.closerThan((Entity)$$1, 16.0)).sorted(Comparator.comparingDouble($$12::distanceToSqr)).collect(Collectors.toList());
         Brain<?> $$3 = $$12.getBrain();
         $$3.setMemory(MemoryModuleType.NEAREST_PLAYERS, $$2);
         List $$4 = (List)$$2.stream().filter($$1 -> PlayerSensor.isEntityTargetable($$12, $$1)).collect(Collectors.toList());
-        $$3.setMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER, $$4.isEmpty() ? null : (Player)((Object)$$4.get(0)));
+        $$3.setMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER, $$4.isEmpty() ? null : (Player)$$4.get(0));
         Optional $$5 = $$4.stream().filter($$1 -> PlayerSensor.isEntityAttackable($$12, $$1)).findFirst();
         $$3.setMemory(MemoryModuleType.NEAREST_VISIBLE_ATTACKABLE_PLAYER, $$5);
     }

@@ -8,6 +8,7 @@
  *  java.util.ArrayList
  *  java.util.Comparator
  *  java.util.Objects
+ *  java.util.function.Consumer
  *  java.util.function.DoubleConsumer
  *  javax.annotation.Nullable
  */
@@ -17,16 +18,18 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractScrollWidget;
-import net.minecraft.client.gui.components.GridWidget;
-import net.minecraft.client.gui.components.LayoutSettings;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
-import net.minecraft.client.gui.components.SpacerWidget;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.layouts.LayoutSettings;
+import net.minecraft.client.gui.layouts.SpacerElement;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.telemetry.TelemetryEventType;
@@ -103,11 +106,11 @@ extends AbstractScrollWidget {
 
     @Override
     protected void renderContents(PoseStack $$0, int $$1, int $$2, float $$3) {
-        int $$4 = this.getY() + this.innerPadding();
+        int $$42 = this.getY() + this.innerPadding();
         int $$5 = this.getX() + this.innerPadding();
         $$0.pushPose();
-        $$0.translate((double)$$5, (double)$$4, 0.0);
-        this.content.container().render($$0, $$1, $$2, $$3);
+        $$0.translate((double)$$5, (double)$$42, 0.0);
+        this.content.container().visitWidgets((Consumer<AbstractWidget>)((Consumer)$$4 -> $$4.render($$0, $$1, $$2, $$3)));
         $$0.popPose();
     }
 
@@ -136,22 +139,22 @@ extends AbstractScrollWidget {
         return this.width - this.totalInnerPadding();
     }
 
-    record Content(GridWidget container, Component narration) {
+    record Content(GridLayout container, Component narration) {
     }
 
     static class ContentBuilder {
         private final int width;
-        private final GridWidget grid;
-        private final GridWidget.RowHelper helper;
+        private final GridLayout grid;
+        private final GridLayout.RowHelper helper;
         private final LayoutSettings alignHeader;
         private final MutableComponent narration = Component.empty();
 
         public ContentBuilder(int $$0) {
             this.width = $$0;
-            this.grid = new GridWidget();
+            this.grid = new GridLayout();
             this.grid.defaultCellSetting().alignHorizontallyLeft();
             this.helper = this.grid.createRowHelper(1);
-            this.helper.addChild(SpacerWidget.width($$0));
+            this.helper.addChild(SpacerElement.width($$0));
             this.alignHeader = this.helper.newCellSettings().alignHorizontallyCenter().paddingHorizontal(32);
         }
 
@@ -170,11 +173,11 @@ extends AbstractScrollWidget {
         }
 
         public void addSpacer(int $$0) {
-            this.helper.addChild(SpacerWidget.height($$0));
+            this.helper.addChild(SpacerElement.height($$0));
         }
 
         public Content build() {
-            this.grid.pack();
+            this.grid.arrangeElements();
             return new Content(this.grid, this.narration);
         }
     }

@@ -35,7 +35,7 @@ implements ServerHandshakePacketListener {
     }
 
     @Override
-    public Connection getConnection() {
-        return this.connection;
+    public boolean isAcceptingMessages() {
+        return this.connection.isConnected();
     }
 }

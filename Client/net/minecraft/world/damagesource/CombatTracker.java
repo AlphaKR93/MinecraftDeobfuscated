@@ -71,7 +71,7 @@ public class CombatTracker {
     }
 
     public Component getDeathMessage() {
-        Component $$14;
+        Component $$16;
         if (this.entries.isEmpty()) {
             return Component.translatable("death.attack.generic", this.mob.getDisplayName());
         }
@@ -84,29 +84,39 @@ public class CombatTracker {
             if ($$0.getSource() == DamageSource.FALL || $$0.getSource() == DamageSource.OUT_OF_WORLD) {
                 MutableComponent $$5 = Component.translatable("death.fell.accident." + this.getFallLocation($$0), this.mob.getDisplayName());
             } else if ($$4 != null && !$$4.equals($$2)) {
-                ItemStack $$7;
+                ItemStack $$8;
                 Entity $$6 = $$0.getSource().getEntity();
-                ItemStack itemStack = $$7 = $$6 instanceof LivingEntity ? ((LivingEntity)$$6).getMainHandItem() : ItemStack.EMPTY;
-                if (!$$7.isEmpty() && $$7.hasCustomHoverName()) {
-                    MutableComponent $$8 = Component.translatable("death.fell.assist.item", this.mob.getDisplayName(), $$4, $$7.getDisplayName());
+                if ($$6 instanceof LivingEntity) {
+                    LivingEntity $$7 = (LivingEntity)$$6;
+                    v0 = $$7.getMainHandItem();
                 } else {
-                    MutableComponent $$9 = Component.translatable("death.fell.assist", this.mob.getDisplayName(), $$4);
+                    v0 = $$8 = ItemStack.EMPTY;
+                }
+                if (!$$8.isEmpty() && $$8.hasCustomHoverName()) {
+                    MutableComponent $$9 = Component.translatable("death.fell.assist.item", this.mob.getDisplayName(), $$4, $$8.getDisplayName());
+                } else {
+                    MutableComponent $$10 = Component.translatable("death.fell.assist", this.mob.getDisplayName(), $$4);
                 }
             } else if ($$2 != null) {
-                ItemStack $$10;
-                ItemStack itemStack = $$10 = $$3 instanceof LivingEntity ? ((LivingEntity)$$3).getMainHandItem() : ItemStack.EMPTY;
-                if (!$$10.isEmpty() && $$10.hasCustomHoverName()) {
-                    MutableComponent $$11 = Component.translatable("death.fell.finish.item", this.mob.getDisplayName(), $$2, $$10.getDisplayName());
+                ItemStack $$12;
+                if ($$3 instanceof LivingEntity) {
+                    LivingEntity $$11 = (LivingEntity)$$3;
+                    v1 = $$11.getMainHandItem();
                 } else {
-                    MutableComponent $$12 = Component.translatable("death.fell.finish", this.mob.getDisplayName(), $$2);
+                    v1 = $$12 = ItemStack.EMPTY;
+                }
+                if (!$$12.isEmpty() && $$12.hasCustomHoverName()) {
+                    MutableComponent $$13 = Component.translatable("death.fell.finish.item", this.mob.getDisplayName(), $$2, $$12.getDisplayName());
+                } else {
+                    MutableComponent $$14 = Component.translatable("death.fell.finish", this.mob.getDisplayName(), $$2);
                 }
             } else {
-                MutableComponent $$13 = Component.translatable("death.fell.killer", this.mob.getDisplayName());
+                MutableComponent $$15 = Component.translatable("death.fell.killer", this.mob.getDisplayName());
             }
         } else {
-            $$14 = $$1.getSource().getLocalizedDeathMessage(this.mob);
+            $$16 = $$1.getSource().getLocalizedDeathMessage(this.mob);
         }
-        return $$14;
+        return $$16;
     }
 
     @Nullable
@@ -116,13 +126,19 @@ public class CombatTracker {
         float $$2 = 0.0f;
         float $$3 = 0.0f;
         for (CombatEntry $$4 : this.entries) {
-            if ($$4.getSource().getEntity() instanceof Player && ($$1 == null || $$4.getDamage() > $$3)) {
-                $$3 = $$4.getDamage();
-                $$1 = (Player)$$4.getSource().getEntity();
+            Entity entity = $$4.getSource().getEntity();
+            if (entity instanceof Player) {
+                Player $$5 = (Player)entity;
+                if ($$1 == null || $$4.getDamage() > $$3) {
+                    $$3 = $$4.getDamage();
+                    $$1 = $$5;
+                }
             }
-            if (!($$4.getSource().getEntity() instanceof LivingEntity) || $$0 != null && !($$4.getDamage() > $$2)) continue;
+            if (!((entity = $$4.getSource().getEntity()) instanceof LivingEntity)) continue;
+            LivingEntity $$6 = (LivingEntity)entity;
+            if ($$0 != null && !($$4.getDamage() > $$2)) continue;
             $$2 = $$4.getDamage();
-            $$0 = (LivingEntity)$$4.getSource().getEntity();
+            $$0 = $$6;
         }
         if ($$1 != null && $$3 >= $$2 / 3.0f) {
             return $$1;

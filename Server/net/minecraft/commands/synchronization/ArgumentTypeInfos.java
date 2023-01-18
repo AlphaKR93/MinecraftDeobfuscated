@@ -131,7 +131,7 @@ public class ArgumentTypeInfos {
         ArgumentTypeInfos.register($$0, "float_range", RangeArgument.Floats.class, SingletonArgumentInfo.contextFree(RangeArgument::floatRange));
         ArgumentTypeInfos.register($$0, "dimension", DimensionArgument.class, SingletonArgumentInfo.contextFree(DimensionArgument::dimension));
         ArgumentTypeInfos.register($$0, "gamemode", GameModeArgument.class, SingletonArgumentInfo.contextFree(GameModeArgument::gameMode));
-        ArgumentTypeInfos.register($$0, "time", TimeArgument.class, SingletonArgumentInfo.contextFree(TimeArgument::time));
+        ArgumentTypeInfos.register($$0, "time", TimeArgument.class, new TimeArgument.Info());
         ArgumentTypeInfos.register($$0, "resource_or_tag", ArgumentTypeInfos.fixClassType(ResourceOrTagArgument.class), new ResourceOrTagArgument.Info());
         ArgumentTypeInfos.register($$0, "resource_or_tag_key", ArgumentTypeInfos.fixClassType(ResourceOrTagKeyArgument.class), new ResourceOrTagKeyArgument.Info());
         ArgumentTypeInfos.register($$0, "resource", ArgumentTypeInfos.fixClassType(ResourceArgument.class), new ResourceArgument.Info());

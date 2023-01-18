@@ -4,6 +4,7 @@
  * Could not load the following classes:
  *  com.google.common.collect.Lists
  *  java.lang.Deprecated
+ *  java.lang.IncompatibleClassChangeError
  *  java.lang.Math
  *  java.lang.Object
  *  java.lang.Override
@@ -12,7 +13,6 @@
  *  java.util.List
  *  java.util.Objects
  *  java.util.function.Predicate
- *  java.util.function.Supplier
  *  javax.annotation.Nullable
  */
 package net.minecraft.client.gui.components;
@@ -20,28 +20,24 @@ package net.minecraft.client.gui.components;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import java.util.AbstractList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.gui.navigation.ScreenDirection;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -107,6 +103,10 @@ NarratableEntry {
         this.selected = $$0;
     }
 
+    public E getFirstElement() {
+        return (E)((Entry)this.children.get(0));
+    }
+
     public void setRenderBackground(boolean $$0) {
         this.renderBackground = $$0;
     }
@@ -126,10 +126,11 @@ NarratableEntry {
 
     protected final void clearEntries() {
         this.children.clear();
+        this.selected = null;
     }
 
     protected void replaceEntries(Collection<E> $$0) {
-        this.children.clear();
+        this.clearEntries();
         this.children.addAll($$0);
     }
 
@@ -198,7 +199,7 @@ NarratableEntry {
     protected void clickedHeader(int $$0, int $$1) {
     }
 
-    protected void renderHeader(PoseStack $$0, int $$1, int $$2, Tesselator $$3) {
+    protected void renderHeader(PoseStack $$0, int $$1, int $$2) {
     }
 
     protected void renderBackground(PoseStack $$0) {
@@ -209,93 +210,55 @@ NarratableEntry {
 
     @Override
     public void render(PoseStack $$0, int $$1, int $$2, float $$3) {
-        int $$14;
+        int $$12;
         this.renderBackground($$0);
         int $$4 = this.getScrollbarPosition();
         int $$5 = $$4 + 6;
-        Tesselator $$6 = Tesselator.getInstance();
-        BufferBuilder $$7 = $$6.getBuilder();
-        RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexColorShader));
         this.hovered = this.isMouseOver($$1, $$2) ? this.getEntryAtPosition($$1, $$2) : null;
         Object v0 = this.hovered;
         if (this.renderBackground) {
             RenderSystem.setShaderTexture(0, GuiComponent.BACKGROUND_LOCATION);
+            RenderSystem.setShaderColor(0.125f, 0.125f, 0.125f, 1.0f);
+            int $$6 = 32;
+            AbstractSelectionList.blit($$0, this.x0, this.y0, this.x1, this.y1 + (int)this.getScrollAmount(), this.x1 - this.x0, this.y1 - this.y0, 32, 32);
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-            float $$8 = 32.0f;
-            $$7.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-            $$7.vertex(this.x0, this.y1, 0.0).uv((float)this.x0 / 32.0f, (float)(this.y1 + (int)this.getScrollAmount()) / 32.0f).color(32, 32, 32, 255).endVertex();
-            $$7.vertex(this.x1, this.y1, 0.0).uv((float)this.x1 / 32.0f, (float)(this.y1 + (int)this.getScrollAmount()) / 32.0f).color(32, 32, 32, 255).endVertex();
-            $$7.vertex(this.x1, this.y0, 0.0).uv((float)this.x1 / 32.0f, (float)(this.y0 + (int)this.getScrollAmount()) / 32.0f).color(32, 32, 32, 255).endVertex();
-            $$7.vertex(this.x0, this.y0, 0.0).uv((float)this.x0 / 32.0f, (float)(this.y0 + (int)this.getScrollAmount()) / 32.0f).color(32, 32, 32, 255).endVertex();
-            $$6.end();
         }
-        int $$9 = this.getRowLeft();
-        int $$10 = this.y0 + 4 - (int)this.getScrollAmount();
+        int $$7 = this.getRowLeft();
+        int $$8 = this.y0 + 4 - (int)this.getScrollAmount();
         if (this.renderHeader) {
-            this.renderHeader($$0, $$9, $$10, $$6);
+            this.renderHeader($$0, $$7, $$8);
         }
         this.renderList($$0, $$1, $$2, $$3);
         if (this.renderTopAndBottom) {
-            RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexColorShader));
             RenderSystem.setShaderTexture(0, GuiComponent.BACKGROUND_LOCATION);
             RenderSystem.enableDepthTest();
             RenderSystem.depthFunc(519);
-            float $$11 = 32.0f;
-            int $$12 = -100;
-            $$7.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-            $$7.vertex(this.x0, this.y0, -100.0).uv(0.0f, (float)this.y0 / 32.0f).color(64, 64, 64, 255).endVertex();
-            $$7.vertex(this.x0 + this.width, this.y0, -100.0).uv((float)this.width / 32.0f, (float)this.y0 / 32.0f).color(64, 64, 64, 255).endVertex();
-            $$7.vertex(this.x0 + this.width, 0.0, -100.0).uv((float)this.width / 32.0f, 0.0f).color(64, 64, 64, 255).endVertex();
-            $$7.vertex(this.x0, 0.0, -100.0).uv(0.0f, 0.0f).color(64, 64, 64, 255).endVertex();
-            $$7.vertex(this.x0, this.height, -100.0).uv(0.0f, (float)this.height / 32.0f).color(64, 64, 64, 255).endVertex();
-            $$7.vertex(this.x0 + this.width, this.height, -100.0).uv((float)this.width / 32.0f, (float)this.height / 32.0f).color(64, 64, 64, 255).endVertex();
-            $$7.vertex(this.x0 + this.width, this.y1, -100.0).uv((float)this.width / 32.0f, (float)this.y1 / 32.0f).color(64, 64, 64, 255).endVertex();
-            $$7.vertex(this.x0, this.y1, -100.0).uv(0.0f, (float)this.y1 / 32.0f).color(64, 64, 64, 255).endVertex();
-            $$6.end();
+            int $$9 = 32;
+            int $$10 = -100;
+            RenderSystem.setShaderColor(0.25f, 0.25f, 0.25f, 1.0f);
+            AbstractSelectionList.blit($$0, this.x0, 0, -100, 0.0f, 0.0f, this.width, this.y0, 32, 32);
+            AbstractSelectionList.blit($$0, this.x0, this.y1, -100, 0.0f, this.y1, this.width, this.height - this.y1, 32, 32);
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             RenderSystem.depthFunc(515);
             RenderSystem.disableDepthTest();
             RenderSystem.enableBlend();
             RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE);
-            RenderSystem.disableTexture();
-            RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionColorShader));
-            int $$13 = 4;
-            $$7.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-            $$7.vertex(this.x0, this.y0 + 4, 0.0).color(0, 0, 0, 0).endVertex();
-            $$7.vertex(this.x1, this.y0 + 4, 0.0).color(0, 0, 0, 0).endVertex();
-            $$7.vertex(this.x1, this.y0, 0.0).color(0, 0, 0, 255).endVertex();
-            $$7.vertex(this.x0, this.y0, 0.0).color(0, 0, 0, 255).endVertex();
-            $$7.vertex(this.x0, this.y1, 0.0).color(0, 0, 0, 255).endVertex();
-            $$7.vertex(this.x1, this.y1, 0.0).color(0, 0, 0, 255).endVertex();
-            $$7.vertex(this.x1, this.y1 - 4, 0.0).color(0, 0, 0, 0).endVertex();
-            $$7.vertex(this.x0, this.y1 - 4, 0.0).color(0, 0, 0, 0).endVertex();
-            $$6.end();
+            int $$11 = 4;
+            this.fillGradient($$0, this.x0, this.y0, this.x1, this.y0 + 4, -16777216, 0);
+            this.fillGradient($$0, this.x0, this.y1 - 4, this.x1, this.y1, 0, -16777216);
         }
-        if (($$14 = this.getMaxScroll()) > 0) {
-            RenderSystem.disableTexture();
-            RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionColorShader));
-            int $$15 = (int)((float)((this.y1 - this.y0) * (this.y1 - this.y0)) / (float)this.getMaxPosition());
-            $$15 = Mth.clamp($$15, 32, this.y1 - this.y0 - 8);
-            int $$16 = (int)this.getScrollAmount() * (this.y1 - this.y0 - $$15) / $$14 + this.y0;
-            if ($$16 < this.y0) {
-                $$16 = this.y0;
+        if (($$12 = this.getMaxScroll()) > 0) {
+            int $$13 = (int)((float)((this.y1 - this.y0) * (this.y1 - this.y0)) / (float)this.getMaxPosition());
+            $$13 = Mth.clamp($$13, 32, this.y1 - this.y0 - 8);
+            int $$14 = (int)this.getScrollAmount() * (this.y1 - this.y0 - $$13) / $$12 + this.y0;
+            if ($$14 < this.y0) {
+                $$14 = this.y0;
             }
-            $$7.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-            $$7.vertex($$4, this.y1, 0.0).color(0, 0, 0, 255).endVertex();
-            $$7.vertex($$5, this.y1, 0.0).color(0, 0, 0, 255).endVertex();
-            $$7.vertex($$5, this.y0, 0.0).color(0, 0, 0, 255).endVertex();
-            $$7.vertex($$4, this.y0, 0.0).color(0, 0, 0, 255).endVertex();
-            $$7.vertex($$4, $$16 + $$15, 0.0).color(128, 128, 128, 255).endVertex();
-            $$7.vertex($$5, $$16 + $$15, 0.0).color(128, 128, 128, 255).endVertex();
-            $$7.vertex($$5, $$16, 0.0).color(128, 128, 128, 255).endVertex();
-            $$7.vertex($$4, $$16, 0.0).color(128, 128, 128, 255).endVertex();
-            $$7.vertex($$4, $$16 + $$15 - 1, 0.0).color(192, 192, 192, 255).endVertex();
-            $$7.vertex($$5 - 1, $$16 + $$15 - 1, 0.0).color(192, 192, 192, 255).endVertex();
-            $$7.vertex($$5 - 1, $$16, 0.0).color(192, 192, 192, 255).endVertex();
-            $$7.vertex($$4, $$16, 0.0).color(192, 192, 192, 255).endVertex();
-            $$6.end();
+            AbstractSelectionList.fill($$0, $$4, this.y0, $$5, this.y1, -16777216);
+            AbstractSelectionList.fill($$0, $$4, $$14, $$5, $$14 + $$13, -8355712);
+            AbstractSelectionList.fill($$0, $$4, $$14, $$5 - 1, $$14 + $$13 - 1, -4144960);
         }
         this.renderDecorations($$0, $$1, $$2);
-        RenderSystem.enableTexture();
         RenderSystem.disableBlend();
     }
 
@@ -352,6 +315,11 @@ NarratableEntry {
         E $$3 = this.getEntryAtPosition($$0, $$1);
         if ($$3 != null) {
             if ($$3.mouseClicked($$0, $$1, $$2)) {
+                GuiEventListener $$4 = this.getFocused();
+                if ($$4 != $$3 && $$4 instanceof ContainerEventHandler) {
+                    ContainerEventHandler $$5 = (ContainerEventHandler)$$4;
+                    $$5.setFocused(null);
+                }
                 this.setFocused((GuiEventListener)$$3);
                 this.setDragging(true);
                 return true;
@@ -400,50 +368,61 @@ NarratableEntry {
     }
 
     @Override
-    public boolean keyPressed(int $$0, int $$1, int $$2) {
-        if (super.keyPressed($$0, $$1, $$2)) {
-            return true;
-        }
-        if ($$0 == 264) {
-            this.moveSelection(SelectionDirection.DOWN);
-            return true;
-        }
-        if ($$0 == 265) {
-            this.moveSelection(SelectionDirection.UP);
-            return true;
-        }
-        return false;
-    }
-
-    protected void moveSelection(SelectionDirection $$02) {
-        this.moveSelection($$02, $$0 -> true);
-    }
-
-    protected void refreshSelection() {
-        E $$0 = this.getSelected();
-        if ($$0 != null) {
-            this.setSelected($$0);
-            this.ensureVisible($$0);
-        }
-    }
-
-    protected boolean moveSelection(SelectionDirection $$0, Predicate<E> $$1) {
-        int $$2;
-        int n = $$2 = $$0 == SelectionDirection.UP ? -1 : 1;
-        if (!this.children().isEmpty()) {
-            int $$4;
-            int $$3 = this.children().indexOf(this.getSelected());
-            while ($$3 != ($$4 = Mth.clamp($$3 + $$2, 0, this.getItemCount() - 1))) {
-                Entry $$5 = (Entry)this.children().get($$4);
-                if ($$1.test((Object)$$5)) {
-                    this.setSelected($$5);
-                    this.ensureVisible($$5);
-                    return true;
-                }
-                $$3 = $$4;
+    public void setFocused(@Nullable GuiEventListener $$0) {
+        super.setFocused($$0);
+        int $$1 = this.children.indexOf((Object)$$0);
+        if ($$1 >= 0) {
+            Entry $$2 = (Entry)this.children.get($$1);
+            this.setSelected($$2);
+            if (this.minecraft.getLastInputType().isKeyboard()) {
+                this.ensureVisible($$2);
             }
         }
-        return false;
+    }
+
+    @Nullable
+    protected E nextEntry(ScreenDirection $$02) {
+        return this.nextEntry($$02, $$0 -> true);
+    }
+
+    @Nullable
+    protected E nextEntry(ScreenDirection $$0, Predicate<E> $$1) {
+        return this.nextEntry($$0, $$1, this.getSelected());
+    }
+
+    @Nullable
+    protected E nextEntry(ScreenDirection $$0, Predicate<E> $$1, @Nullable E $$2) {
+        int $$3;
+        switch ($$0) {
+            default: {
+                throw new IncompatibleClassChangeError();
+            }
+            case RIGHT: 
+            case LEFT: {
+                int n = 0;
+                break;
+            }
+            case UP: {
+                int n = -1;
+                break;
+            }
+            case DOWN: {
+                int n = $$3 = 1;
+            }
+        }
+        if (!this.children().isEmpty() && $$3 != 0) {
+            if ($$2 == null) {
+                int $$4 = $$3 > 0 ? 0 : this.children().size() - 1;
+            } else {
+                int $$5 = this.children().indexOf($$2) + $$3;
+            }
+            for (void $$6 = $$5; $$6 >= 0 && $$6 < this.children.size(); $$6 += $$3) {
+                Entry $$7 = (Entry)this.children().get((int)$$6);
+                if (!$$1.test((Object)$$7)) continue;
+                return (E)$$7;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -492,12 +471,8 @@ NarratableEntry {
         return this.y0 + 4 - (int)this.getScrollAmount() + $$0 * this.itemHeight + this.headerHeight;
     }
 
-    private int getRowBottom(int $$0) {
+    protected int getRowBottom(int $$0) {
         return this.getRowTop($$0) + this.itemHeight;
-    }
-
-    protected boolean isFocused() {
-        return false;
     }
 
     @Override
@@ -545,6 +520,11 @@ NarratableEntry {
         }
     }
 
+    @Override
+    public ScreenRectangle getRectangle() {
+        return new ScreenRectangle(this.x0, this.y0, this.x1 - this.x0, this.y1 - this.y0);
+    }
+
     class TrackedList
     extends AbstractList<E> {
         private final List<E> delegate = Lists.newArrayList();
@@ -576,10 +556,22 @@ NarratableEntry {
         }
     }
 
-    public static abstract class Entry<E extends Entry<E>>
+    protected static abstract class Entry<E extends Entry<E>>
     implements GuiEventListener {
         @Deprecated
         AbstractSelectionList<E> list;
+
+        protected Entry() {
+        }
+
+        @Override
+        public void setFocused(boolean $$0) {
+        }
+
+        @Override
+        public boolean isFocused() {
+            return this.list.getFocused() == this;
+        }
 
         public abstract void render(PoseStack var1, int var2, int var3, int var4, int var5, int var6, int var7, int var8, boolean var9, float var10);
 
@@ -587,11 +579,5 @@ NarratableEntry {
         public boolean isMouseOver(double $$0, double $$1) {
             return Objects.equals(this.list.getEntryAtPosition($$0, $$1), (Object)this);
         }
-    }
-
-    protected static enum SelectionDirection {
-        UP,
-        DOWN;
-
     }
 }

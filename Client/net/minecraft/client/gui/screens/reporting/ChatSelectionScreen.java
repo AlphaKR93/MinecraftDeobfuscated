@@ -31,11 +31,11 @@ import net.minecraft.Util;
 import net.minecraft.client.GuiMessageTag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.MultiLineLabel;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.components.PlayerFaceRenderer;
+import net.minecraft.client.gui.navigation.ScreenDirection;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.reporting.ChatSelectionLogFiller;
 import net.minecraft.client.multiplayer.chat.ChatTrustLevel;
@@ -219,15 +219,18 @@ extends Screen {
         }
 
         @Override
-        protected void moveSelection(AbstractSelectionList.SelectionDirection $$0) {
-            if (!this.moveSelectableSelection($$0) && $$0 == AbstractSelectionList.SelectionDirection.UP) {
-                ChatSelectionScreen.this.onReachedScrollTop();
-                this.moveSelectableSelection($$0);
-            }
+        @Nullable
+        protected Entry nextEntry(ScreenDirection $$0) {
+            return (Entry)this.nextEntry($$0, Entry::canSelect);
         }
 
-        private boolean moveSelectableSelection(AbstractSelectionList.SelectionDirection $$0) {
-            return this.moveSelection($$0, Entry::canSelect);
+        @Override
+        public void setSelected(@Nullable Entry $$0) {
+            super.setSelected($$0);
+            Entry $$1 = this.nextEntry(ScreenDirection.UP);
+            if ($$1 == null) {
+                ChatSelectionScreen.this.onReachedScrollTop();
+            }
         }
 
         @Override
@@ -236,18 +239,12 @@ extends Screen {
             if ($$3 != null && $$3.keyPressed($$0, $$1, $$2)) {
                 return true;
             }
-            this.setFocused(null);
             return super.keyPressed($$0, $$1, $$2);
         }
 
         public int getFooterTop() {
             Objects.requireNonNull((Object)ChatSelectionScreen.this.font);
             return this.y1 + 9;
-        }
-
-        @Override
-        protected boolean isFocused() {
-            return ChatSelectionScreen.this.getFocused() == this;
         }
 
         public class MessageEntry
@@ -338,7 +335,7 @@ extends Screen {
             @Override
             public boolean mouseClicked(double $$0, double $$1, int $$2) {
                 if ($$2 == 0) {
-                    ChatSelectionList.this.setSelected(null);
+                    ChatSelectionList.this.setSelected((Entry)null);
                     return this.toggleReport();
                 }
                 return false;

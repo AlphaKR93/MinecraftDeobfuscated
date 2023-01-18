@@ -796,7 +796,7 @@ implements AutoCloseable {
             }
             $$3 /= (float)$$2.hurtDuration;
             $$3 = Mth.sin($$3 * $$3 * $$3 * $$3 * (float)Math.PI);
-            float $$5 = $$2.hurtDir;
+            float $$5 = $$2.getHurtDir();
             $$0.mulPose(Axis.YP.rotationDegrees(-$$5));
             $$0.mulPose(Axis.ZP.rotationDegrees(-$$3 * 14.0f));
             $$0.mulPose(Axis.YP.rotationDegrees($$5));
@@ -901,7 +901,6 @@ implements AutoCloseable {
             if (this.postEffect != null && this.effectActive) {
                 RenderSystem.disableBlend();
                 RenderSystem.disableDepthTest();
-                RenderSystem.enableTexture();
                 RenderSystem.resetTextureMatrix();
                 this.postEffect.process($$0);
             }

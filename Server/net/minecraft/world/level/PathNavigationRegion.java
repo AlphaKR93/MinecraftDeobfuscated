@@ -8,6 +8,7 @@
  *  java.util.List
  *  java.util.function.Supplier
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world.level;
 

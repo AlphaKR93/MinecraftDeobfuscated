@@ -23,6 +23,7 @@
  *  java.util.HashMap
  *  java.util.HashSet
  *  java.util.Locale
+ *  java.util.Set
  */
 package net.minecraft.server.commands;
 
@@ -42,6 +43,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -53,6 +55,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -170,7 +173,7 @@ public class SpreadPlayersCommand {
             } else {
                 $$11 = $$2[$$6++];
             }
-            $$8.teleportToWithTicket((double)Mth.floor($$11.x) + 0.5, $$11.getSpawnY($$1, $$3), (double)Mth.floor($$11.z) + 0.5);
+            $$8.teleportTo($$1, (double)Mth.floor($$11.x) + 0.5, $$11.getSpawnY($$1, $$3), (double)Mth.floor($$11.z) + 0.5, (Set<RelativeMovement>)Set.of(), $$8.getYRot(), $$8.getXRot());
             double $$12 = Double.MAX_VALUE;
             for (Position $$13 : $$2) {
                 if ($$11 == $$13) continue;

@@ -134,7 +134,7 @@ implements ArgumentType<Operation> {
         if ($$1 == 0) {
             throw ERROR_DIVIDE_BY_ZERO.create();
         }
-        return Mth.intFloorDiv($$0, $$1);
+        return Mth.floorDiv($$0, $$1);
     }
 
     private static /* synthetic */ int lambda$getSimpleOperation$4(int $$0, int $$1) throws CommandSyntaxException {

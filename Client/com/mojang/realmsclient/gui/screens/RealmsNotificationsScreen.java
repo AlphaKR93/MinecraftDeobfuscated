@@ -128,7 +128,6 @@ extends RealmsScreen {
         int $$8 = 0;
         if (hasUnreadNews) {
             RenderSystem.setShaderTexture(0, NEWS_ICON_LOCATION);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             $$0.pushPose();
             $$0.scale(0.4f, 0.4f, 0.4f);
             GuiComponent.blit($$0, (int)((double)($$6 + 2 - $$8) * 2.5), (int)((double)$$7 * 2.5), 0.0f, 0.0f, 40, 40, 40, 40);
@@ -137,13 +136,11 @@ extends RealmsScreen {
         }
         if ($$3 != 0) {
             RenderSystem.setShaderTexture(0, INVITE_ICON_LOCATION);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             GuiComponent.blit($$0, $$6 - $$8, $$7 - 6, 0.0f, 0.0f, 15, 25, 31, 25);
             $$8 += 16;
         }
         if (trialAvailable) {
             RenderSystem.setShaderTexture(0, TRIAL_ICON_LOCATION);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             int $$9 = 0;
             if ((Util.getMillis() / 800L & 1L) == 1L) {
                 $$9 = 8;

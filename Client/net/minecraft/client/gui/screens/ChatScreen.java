@@ -60,6 +60,7 @@ extends Screen {
         this.input.setBordered(false);
         this.input.setValue(this.initial);
         this.input.setResponder((Consumer<String>)((Consumer)this::onEdited));
+        this.input.setCanLoseFocus(false);
         this.addWidget(this.input);
         this.commandSuggestions = new CommandSuggestions(this.minecraft, this, this.input, this.font, false, false, 1, 10, true, -805306368);
         this.commandSuggestions.updateCommandInfo();
@@ -191,8 +192,6 @@ extends Screen {
 
     @Override
     public void render(PoseStack $$0, int $$1, int $$2, float $$3) {
-        this.setFocused(this.input);
-        this.input.setFocus(true);
         ChatScreen.fill($$0, 2, this.height - 14, this.width - 2, this.height - 2, this.minecraft.options.getBackgroundColor(Integer.MIN_VALUE));
         this.input.render($$0, $$1, $$2, $$3);
         super.render($$0, $$1, $$2, $$3);

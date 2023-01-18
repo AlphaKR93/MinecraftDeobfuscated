@@ -2,12 +2,13 @@
  * Decompiled with CFR 0.1.0 (FabricMC a830a72d).
  * 
  * Could not load the following classes:
+ *  com.google.gson.JsonObject
  *  com.mojang.brigadier.Message
  *  com.mojang.brigadier.StringReader
  *  com.mojang.brigadier.arguments.ArgumentType
  *  com.mojang.brigadier.context.CommandContext
  *  com.mojang.brigadier.exceptions.CommandSyntaxException
- *  com.mojang.brigadier.exceptions.DynamicCommandExceptionType
+ *  com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType
  *  com.mojang.brigadier.exceptions.SimpleCommandExceptionType
  *  com.mojang.brigadier.suggestion.Suggestions
  *  com.mojang.brigadier.suggestion.SuggestionsBuilder
@@ -16,7 +17,9 @@
  *  java.lang.Integer
  *  java.lang.Iterable
  *  java.lang.Math
+ *  java.lang.Number
  *  java.lang.Object
+ *  java.lang.Override
  *  java.lang.String
  *  java.util.Arrays
  *  java.util.Collection
@@ -24,12 +27,13 @@
  */
 package net.minecraft.commands.arguments;
 
+import com.google.gson.JsonObject;
 import com.mojang.brigadier.Message;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
@@ -38,18 +42,30 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.synchronization.ArgumentTypeInfo;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 
 public class TimeArgument
 implements ArgumentType<Integer> {
     private static final Collection<String> EXAMPLES = Arrays.asList((Object[])new String[]{"0d", "0s", "0t", "0"});
     private static final SimpleCommandExceptionType ERROR_INVALID_UNIT = new SimpleCommandExceptionType((Message)Component.translatable("argument.time.invalid_unit"));
-    private static final DynamicCommandExceptionType ERROR_INVALID_TICK_COUNT = new DynamicCommandExceptionType($$0 -> Component.translatable("argument.time.invalid_tick_count", $$0));
+    private static final Dynamic2CommandExceptionType ERROR_TICK_COUNT_TOO_LOW = new Dynamic2CommandExceptionType(($$0, $$1) -> Component.translatable("argument.time.tick_count_too_low", $$1, $$0));
     private static final Object2IntMap<String> UNITS = new Object2IntOpenHashMap();
+    final int minimum;
+
+    private TimeArgument(int $$0) {
+        this.minimum = $$0;
+    }
 
     public static TimeArgument time() {
-        return new TimeArgument();
+        return new TimeArgument(0);
+    }
+
+    public static TimeArgument time(int $$0) {
+        return new TimeArgument($$0);
     }
 
     public Integer parse(StringReader $$0) throws CommandSyntaxException {
@@ -60,8 +76,8 @@ implements ArgumentType<Integer> {
             throw ERROR_INVALID_UNIT.create();
         }
         int $$4 = Math.round((float)($$1 * (float)$$3));
-        if ($$4 < 0) {
-            throw ERROR_INVALID_TICK_COUNT.create((Object)$$4);
+        if ($$4 < this.minimum) {
+            throw ERROR_TICK_COUNT_TOO_LOW.create((Object)$$4, (Object)this.minimum);
         }
         return $$4;
     }
@@ -86,5 +102,48 @@ implements ArgumentType<Integer> {
         UNITS.put((Object)"s", 20);
         UNITS.put((Object)"t", 1);
         UNITS.put((Object)"", 1);
+    }
+
+    public static class Info
+    implements ArgumentTypeInfo<TimeArgument, Template> {
+        @Override
+        public void serializeToNetwork(Template $$0, FriendlyByteBuf $$1) {
+            $$1.writeInt($$0.min);
+        }
+
+        @Override
+        public Template deserializeFromNetwork(FriendlyByteBuf $$0) {
+            int $$1 = $$0.readInt();
+            return new Template($$1);
+        }
+
+        @Override
+        public void serializeToJson(Template $$0, JsonObject $$1) {
+            $$1.addProperty("min", (Number)Integer.valueOf((int)$$0.min));
+        }
+
+        @Override
+        public Template unpack(TimeArgument $$0) {
+            return new Template($$0.minimum);
+        }
+
+        public final class Template
+        implements ArgumentTypeInfo.Template<TimeArgument> {
+            final int min;
+
+            Template(int $$1) {
+                this.min = $$1;
+            }
+
+            @Override
+            public TimeArgument instantiate(CommandBuildContext $$0) {
+                return TimeArgument.time(this.min);
+            }
+
+            @Override
+            public ArgumentTypeInfo<TimeArgument, ?> type() {
+                return Info.this;
+            }
+        }
     }
 }

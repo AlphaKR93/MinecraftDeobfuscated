@@ -9,21 +9,14 @@
  *  java.lang.String
  *  java.util.Objects
  *  java.util.function.Consumer
- *  java.util.function.Supplier
- *  org.joml.Matrix4f
  */
 package net.minecraft.client.gui.components;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -32,11 +25,8 @@ import net.minecraft.client.gui.components.MultilineTextField;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import org.joml.Matrix4f;
 
 public class MultiLineEditBox
 extends AbstractScrollWidget {
@@ -219,23 +209,10 @@ extends AbstractScrollWidget {
     }
 
     private void renderHighlight(PoseStack $$0, int $$1, int $$2, int $$3, int $$4) {
-        Matrix4f $$5 = $$0.last().pose();
-        Tesselator $$6 = Tesselator.getInstance();
-        BufferBuilder $$7 = $$6.getBuilder();
-        RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionShader));
-        RenderSystem.setShaderColor(0.0f, 0.0f, 1.0f, 1.0f);
-        RenderSystem.disableTexture();
         RenderSystem.enableColorLogicOp();
         RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-        $$7.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-        $$7.vertex($$5, $$1, $$4, 0.0f).endVertex();
-        $$7.vertex($$5, $$3, $$4, 0.0f).endVertex();
-        $$7.vertex($$5, $$3, $$2, 0.0f).endVertex();
-        $$7.vertex($$5, $$1, $$2, 0.0f).endVertex();
-        $$6.end();
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        MultiLineEditBox.fill($$0, $$1, $$2, $$3, $$4, -16776961);
         RenderSystem.disableColorLogicOp();
-        RenderSystem.enableTexture();
     }
 
     private void scrollToCursor() {

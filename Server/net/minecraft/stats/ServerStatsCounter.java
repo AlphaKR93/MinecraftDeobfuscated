@@ -128,10 +128,7 @@ extends StatsCounter {
                 return;
             }
             CompoundTag $$4 = ServerStatsCounter.fromJson($$3.getAsJsonObject());
-            if (!$$4.contains("DataVersion", 99)) {
-                $$4.putInt("DataVersion", 1343);
-            }
-            if (($$4 = NbtUtils.update($$0, DataFixTypes.STATS, $$4, $$4.getInt("DataVersion"))).contains("stats", 10)) {
+            if (($$4 = DataFixTypes.STATS.updateToCurrentVersion($$0, $$4, NbtUtils.getDataVersion($$4, 1343))).contains("stats", 10)) {
                 CompoundTag $$5 = $$4.getCompound("stats");
                 for (String $$6 : $$5.getAllKeys()) {
                     if (!$$5.contains($$6, 10)) continue;
@@ -184,7 +181,7 @@ extends StatsCounter {
         }
         JsonObject $$5 = new JsonObject();
         $$5.add("stats", (JsonElement)$$3);
-        $$5.addProperty("DataVersion", (Number)Integer.valueOf((int)SharedConstants.getCurrentVersion().getWorldVersion()));
+        $$5.addProperty("DataVersion", (Number)Integer.valueOf((int)SharedConstants.getCurrentVersion().getDataVersion().getVersion()));
         return $$5.toString();
     }
 

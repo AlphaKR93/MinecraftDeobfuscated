@@ -22,6 +22,7 @@ import java.util.Optional;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.MobEffectTextureManager;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffect;
@@ -56,7 +57,6 @@ extends AbstractContainerScreen<T> {
         if ($$5.isEmpty() || $$4 < 32) {
             return;
         }
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         boolean $$6 = $$4 >= 120;
         int $$7 = 33;
         if ($$5.size() > 5) {
@@ -87,7 +87,6 @@ extends AbstractContainerScreen<T> {
         RenderSystem.setShaderTexture(0, INVENTORY_LOCATION);
         int $$5 = this.topPos;
         for (MobEffectInstance $$6 : $$3) {
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             if ($$4) {
                 this.blit($$0, $$1, $$5, 0, 166, 120, 32);
             } else {
@@ -123,7 +122,7 @@ extends AbstractContainerScreen<T> {
     private Component getEffectName(MobEffectInstance $$0) {
         MutableComponent $$1 = $$0.getEffect().getDisplayName().copy();
         if ($$0.getAmplifier() >= 1 && $$0.getAmplifier() <= 9) {
-            $$1.append(" ").append(Component.translatable("enchantment.level." + ($$0.getAmplifier() + 1)));
+            $$1.append(CommonComponents.SPACE).append(Component.translatable("enchantment.level." + ($$0.getAmplifier() + 1)));
         }
         return $$1;
     }

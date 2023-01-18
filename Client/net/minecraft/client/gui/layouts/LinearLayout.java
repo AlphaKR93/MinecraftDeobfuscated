@@ -2,46 +2,44 @@
  * Decompiled with CFR 0.1.0 (FabricMC a830a72d).
  * 
  * Could not load the following classes:
- *  com.google.common.collect.Lists
  *  java.lang.IncompatibleClassChangeError
  *  java.lang.Math
  *  java.lang.Object
  *  java.lang.Override
  *  java.util.ArrayList
- *  java.util.Collections
  *  java.util.Iterator
  *  java.util.List
+ *  java.util.function.Consumer
  */
-package net.minecraft.client.gui.components;
+package net.minecraft.client.gui.layouts;
 
-import com.google.common.collect.Lists;
 import com.mojang.math.Divisor;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import net.minecraft.client.gui.components.AbstractContainerWidget;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.LayoutSettings;
-import net.minecraft.network.chat.Component;
+import java.util.function.Consumer;
+import net.minecraft.client.gui.layouts.AbstractLayout;
+import net.minecraft.client.gui.layouts.LayoutElement;
+import net.minecraft.client.gui.layouts.LayoutSettings;
 
-public class LinearLayoutWidget
-extends AbstractContainerWidget {
+public class LinearLayout
+extends AbstractLayout {
     private final Orientation orientation;
     private final List<ChildContainer> children = new ArrayList();
-    private final List<AbstractWidget> containedChildrenView = Collections.unmodifiableList((List)Lists.transform(this.children, $$0 -> $$0.child));
     private final LayoutSettings defaultChildLayoutSettings = LayoutSettings.defaults();
 
-    public LinearLayoutWidget(int $$0, int $$1, Orientation $$2) {
+    public LinearLayout(int $$0, int $$1, Orientation $$2) {
         this(0, 0, $$0, $$1, $$2);
     }
 
-    public LinearLayoutWidget(int $$02, int $$1, int $$2, int $$3, Orientation $$4) {
-        super($$02, $$1, $$2, $$3, Component.empty());
+    public LinearLayout(int $$0, int $$1, int $$2, int $$3, Orientation $$4) {
+        super($$0, $$1, $$2, $$3);
         this.orientation = $$4;
     }
 
-    public void pack() {
+    @Override
+    public void arrangeElements() {
+        super.arrangeElements();
         if (this.children.isEmpty()) {
             return;
         }
@@ -69,12 +67,20 @@ extends AbstractContainerWidget {
         for (ChildContainer $$10 : this.children) {
             this.orientation.setSecondaryPosition($$10, $$9, $$1);
         }
-        this.orientation.setSecondaryLength(this, $$1);
+        switch (this.orientation) {
+            case HORIZONTAL: {
+                this.height = $$1;
+                break;
+            }
+            case VERTICAL: {
+                this.width = $$1;
+            }
+        }
     }
 
     @Override
-    protected List<? extends AbstractWidget> getContainedChildren() {
-        return this.containedChildrenView;
+    protected void visitChildren(Consumer<LayoutElement> $$0) {
+        this.children.forEach($$1 -> $$0.accept((Object)$$1.child));
     }
 
     public LayoutSettings newChildLayoutSettings() {
@@ -85,11 +91,11 @@ extends AbstractContainerWidget {
         return this.defaultChildLayoutSettings;
     }
 
-    public <T extends AbstractWidget> T addChild(T $$0) {
+    public <T extends LayoutElement> T addChild(T $$0) {
         return this.addChild($$0, this.newChildLayoutSettings());
     }
 
-    public <T extends AbstractWidget> T addChild(T $$0, LayoutSettings $$1) {
+    public <T extends LayoutElement> T addChild(T $$0, LayoutSettings $$1) {
         this.children.add((Object)new ChildContainer($$0, $$1));
         return $$0;
     }
@@ -99,7 +105,7 @@ extends AbstractContainerWidget {
         VERTICAL;
 
 
-        int getPrimaryLength(AbstractWidget $$0) {
+        int getPrimaryLength(LayoutElement $$0) {
             return switch (this) {
                 default -> throw new IncompatibleClassChangeError();
                 case HORIZONTAL -> $$0.getWidth();
@@ -115,7 +121,7 @@ extends AbstractContainerWidget {
             };
         }
 
-        int getSecondaryLength(AbstractWidget $$0) {
+        int getSecondaryLength(LayoutElement $$0) {
             return switch (this) {
                 default -> throw new IncompatibleClassChangeError();
                 case HORIZONTAL -> $$0.getHeight();
@@ -155,7 +161,7 @@ extends AbstractContainerWidget {
             }
         }
 
-        int getPrimaryPosition(AbstractWidget $$0) {
+        int getPrimaryPosition(LayoutElement $$0) {
             return switch (this) {
                 default -> throw new IncompatibleClassChangeError();
                 case HORIZONTAL -> $$0.getX();
@@ -163,30 +169,18 @@ extends AbstractContainerWidget {
             };
         }
 
-        int getSecondaryPosition(AbstractWidget $$0) {
+        int getSecondaryPosition(LayoutElement $$0) {
             return switch (this) {
                 default -> throw new IncompatibleClassChangeError();
                 case HORIZONTAL -> $$0.getY();
                 case VERTICAL -> $$0.getX();
             };
         }
-
-        void setSecondaryLength(AbstractWidget $$0, int $$1) {
-            switch (this) {
-                case HORIZONTAL: {
-                    $$0.height = $$1;
-                    break;
-                }
-                case VERTICAL: {
-                    $$0.width = $$1;
-                }
-            }
-        }
     }
 
     static class ChildContainer
-    extends AbstractContainerWidget.AbstractChildWrapper {
-        protected ChildContainer(AbstractWidget $$0, LayoutSettings $$1) {
+    extends AbstractLayout.AbstractChildWrapper {
+        protected ChildContainer(LayoutElement $$0, LayoutSettings $$1) {
             super($$0, $$1);
         }
     }

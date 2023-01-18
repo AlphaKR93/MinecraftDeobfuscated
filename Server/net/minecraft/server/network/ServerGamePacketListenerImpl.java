@@ -23,6 +23,7 @@
  *  java.lang.Override
  *  java.lang.String
  *  java.lang.Throwable
+ *  java.net.SocketAddress
  *  java.time.Duration
  *  java.time.Instant
  *  java.util.ArrayList
@@ -58,6 +59,7 @@ import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.net.SocketAddress;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -196,6 +198,7 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.HasCustomInventoryScreen;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PlayerRideableJumping;
+import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.ChatVisiblity;
 import net.minecraft.world.entity.player.Inventory;
@@ -246,7 +249,7 @@ ServerGamePacketListener {
     private static final int NO_BLOCK_UPDATES_TO_ACK = -1;
     private static final int TRACKED_MESSAGE_DISCONNECT_THRESHOLD = 4096;
     private static final Component CHAT_VALIDATION_FAILED = Component.translatable("multiplayer.disconnect.chat_validation_failed");
-    public final Connection connection;
+    private final Connection connection;
     private final MinecraftServer server;
     public ServerPlayer player;
     private int tickCount;
@@ -381,8 +384,8 @@ ServerGamePacketListener {
     }
 
     @Override
-    public Connection getConnection() {
-        return this.connection;
+    public boolean isAcceptingMessages() {
+        return this.connection.isConnected();
     }
 
     private boolean isSingleplayerOwner() {
@@ -397,7 +400,7 @@ ServerGamePacketListener {
 
     private <T, R> CompletableFuture<R> filterTextPacket(T $$02, BiFunction<TextFilter, T, CompletableFuture<R>> $$1) {
         return ((CompletableFuture)$$1.apply((Object)this.player.getTextFilter(), $$02)).thenApply($$0 -> {
-            if (!this.getConnection().isConnected()) {
+            if (!this.isAcceptingMessages()) {
                 LOGGER.debug("Ignoring packet due to disconnection");
                 throw new CancellationException("disconnected");
             }
@@ -985,23 +988,23 @@ ServerGamePacketListener {
     }
 
     public void dismount(double $$0, double $$1, double $$2, float $$3, float $$4) {
-        this.teleport($$0, $$1, $$2, $$3, $$4, (Set<ClientboundPlayerPositionPacket.RelativeArgument>)Collections.emptySet(), true);
+        this.teleport($$0, $$1, $$2, $$3, $$4, (Set<RelativeMovement>)Collections.emptySet(), true);
     }
 
     public void teleport(double $$0, double $$1, double $$2, float $$3, float $$4) {
-        this.teleport($$0, $$1, $$2, $$3, $$4, (Set<ClientboundPlayerPositionPacket.RelativeArgument>)Collections.emptySet(), false);
+        this.teleport($$0, $$1, $$2, $$3, $$4, (Set<RelativeMovement>)Collections.emptySet(), false);
     }
 
-    public void teleport(double $$0, double $$1, double $$2, float $$3, float $$4, Set<ClientboundPlayerPositionPacket.RelativeArgument> $$5) {
+    public void teleport(double $$0, double $$1, double $$2, float $$3, float $$4, Set<RelativeMovement> $$5) {
         this.teleport($$0, $$1, $$2, $$3, $$4, $$5, false);
     }
 
-    public void teleport(double $$0, double $$1, double $$2, float $$3, float $$4, Set<ClientboundPlayerPositionPacket.RelativeArgument> $$5, boolean $$6) {
-        double $$7 = $$5.contains((Object)ClientboundPlayerPositionPacket.RelativeArgument.X) ? this.player.getX() : 0.0;
-        double $$8 = $$5.contains((Object)ClientboundPlayerPositionPacket.RelativeArgument.Y) ? this.player.getY() : 0.0;
-        double $$9 = $$5.contains((Object)ClientboundPlayerPositionPacket.RelativeArgument.Z) ? this.player.getZ() : 0.0;
-        float $$10 = $$5.contains((Object)ClientboundPlayerPositionPacket.RelativeArgument.Y_ROT) ? this.player.getYRot() : 0.0f;
-        float $$11 = $$5.contains((Object)ClientboundPlayerPositionPacket.RelativeArgument.X_ROT) ? this.player.getXRot() : 0.0f;
+    public void teleport(double $$0, double $$1, double $$2, float $$3, float $$4, Set<RelativeMovement> $$5, boolean $$6) {
+        double $$7 = $$5.contains((Object)RelativeMovement.X) ? this.player.getX() : 0.0;
+        double $$8 = $$5.contains((Object)RelativeMovement.Y) ? this.player.getY() : 0.0;
+        double $$9 = $$5.contains((Object)RelativeMovement.Z) ? this.player.getZ() : 0.0;
+        float $$10 = $$5.contains((Object)RelativeMovement.Y_ROT) ? this.player.getYRot() : 0.0f;
+        float $$11 = $$5.contains((Object)RelativeMovement.X_ROT) ? this.player.getXRot() : 0.0f;
         this.awaitingPositionFromClient = new Vec3($$0, $$1, $$2);
         if (++this.awaitingTeleport == Integer.MAX_VALUE) {
             this.awaitingTeleport = 0;
@@ -1463,6 +1466,10 @@ ServerGamePacketListener {
 
     public void sendDisguisedChatMessage(Component $$0, ChatType.Bound $$1) {
         this.send(new ClientboundDisguisedChatPacket($$0, $$1.toNetwork(this.player.level.registryAccess())));
+    }
+
+    public SocketAddress getRemoteAddress() {
+        return this.connection.getRemoteAddress();
     }
 
     @Override

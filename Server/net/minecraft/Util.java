@@ -348,7 +348,7 @@ public class Util {
         block2: {
             $$2 = null;
             try {
-                $$2 = DataFixers.getDataFixer().getSchema(DataFixUtils.makeKey((int)SharedConstants.getCurrentVersion().getWorldVersion())).getChoiceType($$0, $$1);
+                $$2 = DataFixers.getDataFixer().getSchema(DataFixUtils.makeKey((int)SharedConstants.getCurrentVersion().getDataVersion().getVersion())).getChoiceType($$0, $$1);
             }
             catch (IllegalArgumentException $$3) {
                 LOGGER.error("No data fixer registered for {}", (Object)$$1);

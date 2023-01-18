@@ -9,7 +9,6 @@
 package net.minecraft.world.entity.vehicle;
 
 import java.util.List;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
@@ -30,10 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class MinecartHopper
 extends AbstractMinecartContainer
 implements Hopper {
-    public static final int MOVE_ITEM_SPEED = 4;
     private boolean enabled = true;
-    private int cooldownTime = -1;
-    private final BlockPos lastPosition = BlockPos.ZERO;
 
     public MinecartHopper(EntityType<? extends MinecartHopper> $$0, Level $$1) {
         super($$0, $$1);
@@ -98,20 +94,8 @@ implements Hopper {
     @Override
     public void tick() {
         super.tick();
-        if (!this.level.isClientSide && this.isAlive() && this.isEnabled()) {
-            BlockPos $$0 = this.blockPosition();
-            if ($$0.equals(this.lastPosition)) {
-                --this.cooldownTime;
-            } else {
-                this.setCooldown(0);
-            }
-            if (!this.isOnCooldown()) {
-                this.setCooldown(0);
-                if (this.suckInItems()) {
-                    this.setCooldown(4);
-                    this.setChanged();
-                }
-            }
+        if (!this.level.isClientSide && this.isAlive() && this.isEnabled() && this.suckInItems()) {
+            this.setChanged();
         }
     }
 
@@ -120,8 +104,9 @@ implements Hopper {
             return true;
         }
         List $$0 = this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(0.25, 0.0, 0.25), EntitySelector.ENTITY_STILL_ALIVE);
-        if (!$$0.isEmpty()) {
-            HopperBlockEntity.addItem(this, (ItemEntity)$$0.get(0));
+        for (ItemEntity $$1 : $$0) {
+            if (!HopperBlockEntity.addItem(this, $$1)) continue;
+            return true;
         }
         return false;
     }
@@ -134,23 +119,13 @@ implements Hopper {
     @Override
     protected void addAdditionalSaveData(CompoundTag $$0) {
         super.addAdditionalSaveData($$0);
-        $$0.putInt("TransferCooldown", this.cooldownTime);
         $$0.putBoolean("Enabled", this.enabled);
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag $$0) {
         super.readAdditionalSaveData($$0);
-        this.cooldownTime = $$0.getInt("TransferCooldown");
         this.enabled = $$0.contains("Enabled") ? $$0.getBoolean("Enabled") : true;
-    }
-
-    public void setCooldown(int $$0) {
-        this.cooldownTime = $$0;
-    }
-
-    public boolean isOnCooldown() {
-        return this.cooldownTime > 0;
     }
 
     @Override

@@ -219,7 +219,6 @@ extends GuiComponent {
         int $$24 = this.width - $$11;
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
         RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.enableBlend();
         int $$25 = $$2 + this.y;
         if ($$6) {

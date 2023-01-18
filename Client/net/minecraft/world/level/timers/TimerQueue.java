@@ -7,6 +7,7 @@
  *  com.google.common.primitives.UnsignedLong
  *  com.mojang.logging.LogUtils
  *  com.mojang.serialization.Dynamic
+ *  com.mojang.serialization.DynamicOps
  *  java.lang.Long
  *  java.lang.Object
  *  java.lang.String
@@ -26,6 +27,7 @@ import com.google.common.collect.Table;
 import com.google.common.primitives.UnsignedLong;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.DynamicOps;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,6 +37,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.timers.TimerCallback;
 import net.minecraft.world.level.timers.TimerCallbacks;
@@ -54,17 +57,19 @@ public class TimerQueue<T> {
         return Comparator.comparingLong($$0 -> $$0.triggerTime).thenComparing($$0 -> $$0.sequentialId);
     }
 
-    public TimerQueue(TimerCallbacks<T> $$02, Stream<Dynamic<Tag>> $$1) {
+    public TimerQueue(TimerCallbacks<T> $$02, Stream<? extends Dynamic<?>> $$1) {
         this($$02);
         this.queue.clear();
         this.events.clear();
         this.sequentialId = UnsignedLong.ZERO;
         $$1.forEach($$0 -> {
-            if (!($$0.getValue() instanceof CompoundTag)) {
-                LOGGER.warn("Invalid format of events: {}", $$0);
-                return;
+            Tag $$1 = (Tag)$$0.convert((DynamicOps)NbtOps.INSTANCE).getValue();
+            if ($$1 instanceof CompoundTag) {
+                CompoundTag $$2 = (CompoundTag)$$1;
+                this.loadEvent($$2);
+            } else {
+                LOGGER.warn("Invalid format of events: {}", (Object)$$1);
             }
-            this.loadEvent((CompoundTag)$$0.getValue());
         });
     }
 

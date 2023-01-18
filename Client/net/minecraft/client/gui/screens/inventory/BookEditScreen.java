@@ -29,11 +29,7 @@ package net.minecraft.client.gui.screens.inventory;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import java.util.ArrayList;
@@ -426,7 +422,6 @@ extends Screen {
         this.renderBackground($$0);
         this.setFocused(null);
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, BookViewScreen.BOOK_LOCATION);
         int $$4 = (this.width - 192) / 2;
         int $$5 = 2;
@@ -448,7 +443,7 @@ extends Screen {
             for (LineInfo $$13 : $$12.lines) {
                 this.font.draw($$0, $$13.asComponent, (float)$$13.x, (float)$$13.y, -16777216);
             }
-            this.renderHighlight($$12.selection);
+            this.renderHighlight($$0, $$12.selection);
             this.renderCursor($$0, $$12.cursor, $$12.cursorAtEnd);
         }
         super.render($$0, $$1, $$2, $$3);
@@ -470,28 +465,17 @@ extends Screen {
         }
     }
 
-    private void renderHighlight(Rect2i[] $$0) {
-        Tesselator $$1 = Tesselator.getInstance();
-        BufferBuilder $$2 = $$1.getBuilder();
-        RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionShader));
-        RenderSystem.setShaderColor(0.0f, 0.0f, 255.0f, 255.0f);
-        RenderSystem.disableTexture();
+    private void renderHighlight(PoseStack $$0, Rect2i[] $$1) {
         RenderSystem.enableColorLogicOp();
         RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-        $$2.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-        for (Rect2i $$3 : $$0) {
-            int $$4 = $$3.getX();
-            int $$5 = $$3.getY();
-            int $$6 = $$4 + $$3.getWidth();
-            int $$7 = $$5 + $$3.getHeight();
-            $$2.vertex($$4, $$7, 0.0).endVertex();
-            $$2.vertex($$6, $$7, 0.0).endVertex();
-            $$2.vertex($$6, $$5, 0.0).endVertex();
-            $$2.vertex($$4, $$5, 0.0).endVertex();
+        for (Rect2i $$2 : $$1) {
+            int $$3 = $$2.getX();
+            int $$4 = $$2.getY();
+            int $$5 = $$3 + $$2.getWidth();
+            int $$6 = $$4 + $$2.getHeight();
+            BookEditScreen.fill($$0, $$3, $$4, $$5, $$6, -16776961);
         }
-        $$1.end();
         RenderSystem.disableColorLogicOp();
-        RenderSystem.enableTexture();
     }
 
     private Pos2i convertScreenToLocal(Pos2i $$0) {

@@ -48,14 +48,14 @@ extends Behavior<E> {
     }
 
     @Override
-    protected void stop(ServerLevel $$0, E $$1, long $$2) {
+    protected void tick(ServerLevel $$0, E $$1, long $$2) {
         LivingEntity $$3 = CrossbowAttack.getAttackTarget($$1);
         this.lookAtTarget((Mob)$$1, $$3);
         this.crossbowAttack($$1, $$3);
     }
 
     @Override
-    protected void stop(ServerLevel $$0, E $$1, long $$2) {
+    protected void tick(ServerLevel $$0, E $$1, long $$2) {
         if (((LivingEntity)$$1).isUsingItem()) {
             ((LivingEntity)$$1).stopUsingItem();
         }

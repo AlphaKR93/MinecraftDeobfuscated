@@ -40,6 +40,7 @@
  *  java.util.List
  *  java.util.Objects
  *  java.util.Optional
+ *  java.util.function.UnaryOperator
  *  org.slf4j.Logger
  */
 package net.minecraft.client.multiplayer;
@@ -73,6 +74,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.ConnectScreen;
@@ -84,6 +86,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.protocol.handshake.ClientIntentionPacket;
 import net.minecraft.network.protocol.status.ClientStatusPacketListener;
 import net.minecraft.network.protocol.status.ClientboundPongResponsePacket;
@@ -97,7 +100,7 @@ import org.slf4j.Logger;
 public class ServerStatusPinger {
     static final Splitter SPLITTER = Splitter.on((char)'\u0000').limit(6);
     static final Logger LOGGER = LogUtils.getLogger();
-    private static final Component CANT_CONNECT_MESSAGE = Component.translatable("multiplayer.status.cannot_connect").withStyle(ChatFormatting.DARK_RED);
+    private static final Component CANT_CONNECT_MESSAGE = Component.translatable("multiplayer.status.cannot_connect").withStyle((UnaryOperator<Style>)((UnaryOperator)$$0 -> $$0.withColor(-65536)));
     private final List<Connection> connections = Collections.synchronizedList((List)Lists.newArrayList());
 
     public void pingServer(final ServerData $$0, final Runnable $$1) throws UnknownHostException {
@@ -112,7 +115,7 @@ public class ServerStatusPinger {
         this.connections.add((Object)$$5);
         $$0.motd = Component.translatable("multiplayer.status.pinging");
         $$0.ping = -1L;
-        $$0.playerList = null;
+        $$0.playerList = Collections.emptyList();
         $$5.setListener(new ClientStatusPacketListener(){
             private boolean success;
             private boolean receivedPing;
@@ -136,6 +139,7 @@ public class ServerStatusPinger {
                 }
                 if ($$12.getPlayers() != null) {
                     $$0.status = ServerStatusPinger.formatPlayerCount($$12.getPlayers().getNumPlayers(), $$12.getPlayers().getMaxPlayers());
+                    $$0.players = $$12.getPlayers();
                     ArrayList $$2 = Lists.newArrayList();
                     GameProfile[] $$3 = $$12.getPlayers().getSample();
                     if ($$3 != null && $$3.length > 0) {
@@ -185,8 +189,8 @@ public class ServerStatusPinger {
             }
 
             @Override
-            public Connection getConnection() {
-                return $$5;
+            public boolean isAcceptingMessages() {
+                return $$5.isConnected();
             }
         });
         try {
@@ -260,6 +264,7 @@ public class ServerStatusPinger {
                             $$1.version = Component.literal($$6);
                             $$1.motd = Component.literal($$7);
                             $$1.status = ServerStatusPinger.formatPlayerCount($$8, $$9);
+                            $$1.players = new ServerStatus.Players($$9, $$8);
                         }
                         $$0.close();
                     }

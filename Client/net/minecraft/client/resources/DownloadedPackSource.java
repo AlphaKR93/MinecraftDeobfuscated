@@ -107,7 +107,7 @@ implements RepositorySource {
     }
 
     private static Map<String, String> getDownloadHeaders() {
-        return Map.of((Object)"X-Minecraft-Username", (Object)Minecraft.getInstance().getUser().getName(), (Object)"X-Minecraft-UUID", (Object)Minecraft.getInstance().getUser().getUuid(), (Object)"X-Minecraft-Version", (Object)SharedConstants.getCurrentVersion().getName(), (Object)"X-Minecraft-Version-ID", (Object)SharedConstants.getCurrentVersion().getId(), (Object)"X-Minecraft-Pack-Format", (Object)String.valueOf((int)PackType.CLIENT_RESOURCES.getVersion(SharedConstants.getCurrentVersion())), (Object)"User-Agent", (Object)("Minecraft Java/" + SharedConstants.getCurrentVersion().getName()));
+        return Map.of((Object)"X-Minecraft-Username", (Object)Minecraft.getInstance().getUser().getName(), (Object)"X-Minecraft-UUID", (Object)Minecraft.getInstance().getUser().getUuid(), (Object)"X-Minecraft-Version", (Object)SharedConstants.getCurrentVersion().getName(), (Object)"X-Minecraft-Version-ID", (Object)SharedConstants.getCurrentVersion().getId(), (Object)"X-Minecraft-Pack-Format", (Object)String.valueOf((int)SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES)), (Object)"User-Agent", (Object)("Minecraft Java/" + SharedConstants.getCurrentVersion().getName()));
     }
 
     /*

@@ -9,7 +9,6 @@
  *  java.util.ArrayList
  *  java.util.List
  *  java.util.function.Supplier
- *  net.minecraft.world.item.ItemStack
  *  org.joml.Matrix4f
  */
 package net.minecraft.client.gui.screens.inventory;
@@ -95,7 +94,6 @@ extends AbstractContainerScreen<EnchantmentMenu> {
     protected void renderBg(PoseStack $$0, float $$1, int $$2, int $$3) {
         Lighting.setupForFlatItems();
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, ENCHANTING_TABLE_LOCATION);
         int $$4 = (this.width - this.imageWidth) / 2;
         int $$5 = (this.height - this.imageHeight) / 2;
@@ -119,8 +117,8 @@ extends AbstractContainerScreen<EnchantmentMenu> {
         $$0.mulPose(Axis.XP.rotationDegrees(180.0f));
         float $$11 = Mth.lerp($$1, this.oFlip, this.flip) + 0.25f;
         float $$12 = Mth.lerp($$1, this.oFlip, this.flip) + 0.75f;
-        $$11 = ($$11 - (float)Mth.fastFloor($$11)) * 1.6f - 0.3f;
-        $$12 = ($$12 - (float)Mth.fastFloor($$12)) * 1.6f - 0.3f;
+        $$11 = ($$11 - (float)Mth.floor($$11)) * 1.6f - 0.3f;
+        $$12 = ($$12 - (float)Mth.floor($$12)) * 1.6f - 0.3f;
         if ($$11 < 0.0f) {
             $$11 = 0.0f;
         }
@@ -142,7 +140,6 @@ extends AbstractContainerScreen<EnchantmentMenu> {
         RenderSystem.viewport(0, 0, this.minecraft.getWindow().getWidth(), this.minecraft.getWindow().getHeight());
         RenderSystem.restoreProjectionMatrix();
         Lighting.setupFor3DItems();
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         EnchantmentNames.getInstance().initSeed(((EnchantmentMenu)this.menu).getEnchantmentSeed());
         int $$15 = ((EnchantmentMenu)this.menu).getGoldCount();
         for (int $$16 = 0; $$16 < 3; ++$$16) {
@@ -152,7 +149,6 @@ extends AbstractContainerScreen<EnchantmentMenu> {
             RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
             RenderSystem.setShaderTexture(0, ENCHANTING_TABLE_LOCATION);
             int $$19 = ((EnchantmentMenu)this.menu).costs[$$16];
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             if ($$19 == 0) {
                 this.blit($$0, $$17, $$5 + 14 + 19 * $$16, 0, 185, 108, 19);
                 continue;
@@ -227,7 +223,7 @@ extends AbstractContainerScreen<EnchantmentMenu> {
 
     public void tickBook() {
         ItemStack $$0 = ((EnchantmentMenu)this.menu).getSlot(0).getItem();
-        if (!ItemStack.matches((ItemStack)$$0, (ItemStack)this.last)) {
+        if (!ItemStack.matches($$0, this.last)) {
             this.last = $$0;
             do {
                 this.flipT += (float)(this.random.nextInt(4) - this.random.nextInt(4));

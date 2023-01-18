@@ -24,6 +24,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ByIdMap;
@@ -97,7 +98,7 @@ extends Item {
             return;
         }
         if ($$4.contains(TAG_FLIGHT, 99)) {
-            $$2.add((Object)Component.translatable("item.minecraft.firework_rocket.flight").append(" ").append(String.valueOf((int)$$4.getByte(TAG_FLIGHT))).withStyle(ChatFormatting.GRAY));
+            $$2.add((Object)Component.translatable("item.minecraft.firework_rocket.flight").append(CommonComponents.SPACE).append(String.valueOf((int)$$4.getByte(TAG_FLIGHT))).withStyle(ChatFormatting.GRAY));
         }
         if (!($$5 = $$4.getList(TAG_EXPLOSIONS, 10)).isEmpty()) {
             for (int $$6 = 0; $$6 < $$5.size(); ++$$6) {

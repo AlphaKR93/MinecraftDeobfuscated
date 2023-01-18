@@ -170,6 +170,7 @@ Executor {
         }
         catch (Exception $$1) {
             LOGGER.error(LogUtils.FATAL_MARKER, "Error executing task on {}", (Object)this.name(), (Object)$$1);
+            throw $$1;
         }
     }
 

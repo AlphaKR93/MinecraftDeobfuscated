@@ -6,7 +6,6 @@
  *  java.lang.Object
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
- *  net.minecraft.world.item.ItemStack
  */
 package net.minecraft.world.entity;
 

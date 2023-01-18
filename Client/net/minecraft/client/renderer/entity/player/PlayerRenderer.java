@@ -33,6 +33,7 @@ import net.minecraft.client.renderer.entity.layers.ParrotOnShoulderLayer;
 import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.SpinAttackEffectLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -158,7 +159,7 @@ extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPla
         $$2.pushPose();
         if ($$5 < 100.0 && ($$7 = ($$6 = $$0.getScoreboard()).getDisplayObjective(2)) != null) {
             Score $$8 = $$6.getOrCreatePlayerScore($$0.getScoreboardName(), $$7);
-            super.renderNameTag($$0, Component.literal(Integer.toString((int)$$8.getScore())).append(" ").append($$7.getDisplayName()), $$2, $$3, $$4);
+            super.renderNameTag($$0, Component.literal(Integer.toString((int)$$8.getScore())).append(CommonComponents.SPACE).append($$7.getDisplayName()), $$2, $$3, $$4);
             Objects.requireNonNull((Object)this.getFont());
             $$2.translate(0.0f, 9.0f * 1.15f * 0.025f, 0.0f);
         }

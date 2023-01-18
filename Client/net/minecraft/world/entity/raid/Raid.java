@@ -21,7 +21,6 @@
  *  java.util.function.Predicate
  *  java.util.stream.Stream
  *  javax.annotation.Nullable
- *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world.entity.raid;
 

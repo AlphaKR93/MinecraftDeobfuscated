@@ -45,7 +45,7 @@ extends ConfirmScreen {
     }
 
     protected static MutableComponent confirmMessage(boolean $$0, String $$1) {
-        return ConfirmLinkScreen.confirmMessage($$0).append(" ").append(Component.literal($$1));
+        return ConfirmLinkScreen.confirmMessage($$0).append(CommonComponents.SPACE).append(Component.literal($$1));
     }
 
     protected static MutableComponent confirmMessage(boolean $$0) {

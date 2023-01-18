@@ -51,7 +51,6 @@ public class CubeMap {
         $$7.mulPose(Axis.XP.rotationDegrees(180.0f));
         RenderSystem.applyModelViewMatrix();
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexColorShader));
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.enableBlend();
         RenderSystem.disableCull();
         RenderSystem.depthMask(false);

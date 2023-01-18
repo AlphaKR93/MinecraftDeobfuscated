@@ -6,7 +6,6 @@
  *  java.lang.Override
  *  java.lang.String
  *  java.lang.Throwable
- *  net.minecraft.world.level.Level
  */
 package net.minecraft.world.entity.vehicle;
 

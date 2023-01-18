@@ -8,6 +8,7 @@
  *  java.lang.Override
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world.entity.animal;
 
@@ -280,12 +281,10 @@ extends Animal {
         return super.finalizeSpawn($$0, $$1, $$2, $$3, $$4);
     }
 
-    @Override
     public Vec3 getLeashOffset() {
         return new Vec3(0.0, 0.5f * this.getEyeHeight(), this.getBbWidth() * 0.4f);
     }
 
-    @Override
     public boolean isSteppingCarefully() {
         return this.isCrouching() || super.isSteppingCarefully();
     }

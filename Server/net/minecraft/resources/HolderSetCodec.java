@@ -12,7 +12,6 @@
  *  java.util.ArrayList
  *  java.util.List
  *  java.util.Optional
- *  java.util.function.Function
  */
 package net.minecraft.resources;
 
@@ -24,7 +23,6 @@ import com.mojang.serialization.DynamicOps;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderOwner;
@@ -43,12 +41,11 @@ implements Codec<HolderSet<E>> {
     private final Codec<Either<TagKey<E>, List<Holder<E>>>> registryAwareCodec;
 
     private static <E> Codec<List<Holder<E>>> homogenousList(Codec<Holder<E>> $$03, boolean $$1) {
-        Function $$2 = ExtraCodecs.ensureHomogenous(Holder::kind);
-        Codec $$3 = $$03.listOf().flatXmap($$2, $$2);
+        Codec $$2 = ExtraCodecs.validate($$03.listOf(), ExtraCodecs.ensureHomogenous(Holder::kind));
         if ($$1) {
-            return $$3;
+            return $$2;
         }
-        return Codec.either((Codec)$$3, $$03).xmap($$02 -> (List)$$02.map($$0 -> $$0, List::of), $$0 -> $$0.size() == 1 ? Either.right((Object)((Holder)$$0.get(0))) : Either.left((Object)$$0));
+        return Codec.either($$2, $$03).xmap($$02 -> (List)$$02.map($$0 -> $$0, List::of), $$0 -> $$0.size() == 1 ? Either.right((Object)((Holder)$$0.get(0))) : Either.left((Object)$$0));
     }
 
     public static <E> Codec<HolderSet<E>> create(ResourceKey<? extends Registry<E>> $$0, Codec<Holder<E>> $$1, boolean $$2) {

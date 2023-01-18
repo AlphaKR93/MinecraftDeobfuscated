@@ -38,6 +38,12 @@ implements ContainerEventHandler {
 
     @Override
     public void setFocused(@Nullable GuiEventListener $$0) {
+        if (this.focused != null) {
+            this.focused.setFocused(false);
+        }
+        if ($$0 != null) {
+            $$0.setFocused(true);
+        }
         this.focused = $$0;
     }
 }

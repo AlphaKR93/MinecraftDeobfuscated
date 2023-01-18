@@ -52,10 +52,7 @@ extends Screen {
         this.delayTicker = 0;
         this.exitButtons.clear();
         MutableComponent $$02 = this.hardcore ? Component.translatable("deathScreen.spectate") : Component.translatable("deathScreen.respawn");
-        this.exitButtons.add((Object)this.addRenderableWidget(Button.builder($$02, $$0 -> {
-            this.minecraft.player.respawn();
-            this.minecraft.setScreen(null);
-        }).bounds(this.width / 2 - 100, this.height / 4 + 72, 200, 20).build()));
+        this.exitButtons.add((Object)this.addRenderableWidget(Button.builder($$02, $$0 -> this.minecraft.player.respawn()).bounds(this.width / 2 - 100, this.height / 4 + 72, 200, 20).build()));
         this.exitToTitleButton = this.addRenderableWidget(Button.builder(Component.translatable("deathScreen.titleScreen"), $$0 -> this.minecraft.getReportingContext().draftReportHandled(this.minecraft, this, this::handleExitToTitleScreen, true)).bounds(this.width / 2 - 100, this.height / 4 + 96, 200, 20).build());
         this.exitButtons.add((Object)this.exitToTitleButton);
         for (Button $$1 : this.exitButtons) {
@@ -115,7 +112,6 @@ extends Screen {
         super.render($$0, $$1, $$2, $$3);
         if (this.exitToTitleButton != null && this.minecraft.getReportingContext().hasDraftReport()) {
             RenderSystem.setShaderTexture(0, AbstractWidget.WIDGETS_LOCATION);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             this.blit($$0, this.exitToTitleButton.getX() + this.exitToTitleButton.getWidth() - 17, this.exitToTitleButton.getY() + 3, 182, 24, 15, 15);
         }
     }

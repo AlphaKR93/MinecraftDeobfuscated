@@ -117,10 +117,10 @@ extends Feature<GeodeConfiguration> {
             double $$35 = 0.0;
             double $$36 = 0.0;
             for (Pair $$37 : $$7) {
-                $$35 += Mth.fastInvSqrt($$33.distSqr((Vec3i)$$37.getFirst()) + (double)((Integer)$$37.getSecond()).intValue()) + $$34;
+                $$35 += Mth.invSqrt($$33.distSqr((Vec3i)$$37.getFirst()) + (double)((Integer)$$37.getSecond()).intValue()) + $$34;
             }
             for (BlockPos $$38 : $$11) {
-                $$36 += Mth.fastInvSqrt($$33.distSqr($$38) + (double)$$15.crackPointOffset) + $$34;
+                $$36 += Mth.invSqrt($$33.distSqr($$38) + (double)$$15.crackPointOffset) + $$34;
             }
             if ($$35 < $$19) continue;
             if ($$21 && $$36 >= $$20 && $$35 < $$16) {

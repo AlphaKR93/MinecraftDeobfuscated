@@ -14,6 +14,7 @@
  *  io.netty.channel.ChannelInboundHandlerAdapter
  *  io.netty.channel.ChannelInitializer
  *  io.netty.channel.ChannelOption
+ *  io.netty.channel.ChannelPipeline
  *  io.netty.channel.EventLoopGroup
  *  io.netty.channel.epoll.Epoll
  *  io.netty.channel.epoll.EpollEventLoopGroup
@@ -55,6 +56,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
@@ -78,12 +80,8 @@ import javax.annotation.Nullable;
 import net.minecraft.CrashReport;
 import net.minecraft.ReportedException;
 import net.minecraft.network.Connection;
-import net.minecraft.network.PacketDecoder;
-import net.minecraft.network.PacketEncoder;
 import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.RateKickingConnection;
-import net.minecraft.network.Varint21FrameDecoder;
-import net.minecraft.network.Varint21LengthFieldPrepender;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.PacketFlow;
@@ -135,12 +133,13 @@ public class ServerConnectionListener {
                     catch (ChannelException channelException) {
                         // empty catch block
                     }
-                    $$0.pipeline().addLast("timeout", (ChannelHandler)new ReadTimeoutHandler(30)).addLast("legacy_query", (ChannelHandler)new LegacyQueryHandler(ServerConnectionListener.this)).addLast("splitter", (ChannelHandler)new Varint21FrameDecoder()).addLast("decoder", (ChannelHandler)new PacketDecoder(PacketFlow.SERVERBOUND)).addLast("prepender", (ChannelHandler)new Varint21LengthFieldPrepender()).addLast("encoder", (ChannelHandler)new PacketEncoder(PacketFlow.CLIENTBOUND));
-                    int $$1 = ServerConnectionListener.this.server.getRateLimitPacketsPerSecond();
-                    Connection $$2 = $$1 > 0 ? new RateKickingConnection($$1) : new Connection(PacketFlow.SERVERBOUND);
-                    ServerConnectionListener.this.connections.add((Object)$$2);
-                    $$0.pipeline().addLast("packet_handler", (ChannelHandler)$$2);
-                    $$2.setListener(new ServerHandshakePacketListenerImpl(ServerConnectionListener.this.server, $$2));
+                    ChannelPipeline $$1 = $$0.pipeline().addLast("timeout", (ChannelHandler)new ReadTimeoutHandler(30)).addLast("legacy_query", (ChannelHandler)new LegacyQueryHandler(ServerConnectionListener.this));
+                    Connection.configureSerialization($$1, PacketFlow.SERVERBOUND);
+                    int $$2 = ServerConnectionListener.this.server.getRateLimitPacketsPerSecond();
+                    Connection $$3 = $$2 > 0 ? new RateKickingConnection($$2) : new Connection(PacketFlow.SERVERBOUND);
+                    ServerConnectionListener.this.connections.add((Object)$$3);
+                    $$1.addLast("packet_handler", (ChannelHandler)$$3);
+                    $$3.setListener(new ServerHandshakePacketListenerImpl(ServerConnectionListener.this.server, $$3));
                 }
             }).group((EventLoopGroup)$$5.get()).localAddress($$0, $$1)).bind().syncUninterruptibly());
         }
@@ -160,7 +159,8 @@ public class ServerConnectionListener {
                     Connection $$1 = new Connection(PacketFlow.SERVERBOUND);
                     $$1.setListener(new MemoryServerHandshakePacketListenerImpl(ServerConnectionListener.this.server, $$1));
                     ServerConnectionListener.this.connections.add((Object)$$1);
-                    $$0.pipeline().addLast("packet_handler", (ChannelHandler)$$1);
+                    ChannelPipeline $$2 = $$0.pipeline();
+                    $$2.addLast("packet_handler", (ChannelHandler)$$1);
                 }
             }).group((EventLoopGroup)SERVER_EVENT_GROUP.get()).localAddress((SocketAddress)LocalAddress.ANY)).bind().syncUninterruptibly();
             this.channels.add((Object)$$0);

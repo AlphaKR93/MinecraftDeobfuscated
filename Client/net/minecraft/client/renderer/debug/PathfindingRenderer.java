@@ -78,10 +78,8 @@ implements DebugRenderer.SimpleDebugRenderer {
     public static void renderPath(Path $$0, float $$1, boolean $$2, boolean $$3, double $$4, double $$5, double $$6) {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.disableTexture();
         RenderSystem.lineWidth(6.0f);
         PathfindingRenderer.doRenderPath($$0, $$1, $$2, $$3, $$4, $$5, $$6);
-        RenderSystem.enableTexture();
         RenderSystem.disableBlend();
     }
 

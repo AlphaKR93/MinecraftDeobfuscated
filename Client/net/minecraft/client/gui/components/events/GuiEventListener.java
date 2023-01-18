@@ -3,8 +3,14 @@
  * 
  * Could not load the following classes:
  *  java.lang.Object
+ *  javax.annotation.Nullable
  */
 package net.minecraft.client.gui.components.events;
+
+import javax.annotation.Nullable;
+import net.minecraft.client.gui.ComponentPath;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
 
 public interface GuiEventListener {
     public static final long DOUBLE_CLICK_THRESHOLD_MS = 250L;
@@ -40,11 +46,28 @@ public interface GuiEventListener {
         return false;
     }
 
-    default public boolean changeFocus(boolean $$0) {
-        return false;
+    @Nullable
+    default public ComponentPath nextFocusPath(FocusNavigationEvent $$0) {
+        return null;
     }
 
     default public boolean isMouseOver(double $$0, double $$1) {
         return false;
+    }
+
+    public void setFocused(boolean var1);
+
+    public boolean isFocused();
+
+    @Nullable
+    default public ComponentPath getCurrentFocusPath() {
+        if (this.isFocused()) {
+            return ComponentPath.leaf(this);
+        }
+        return null;
+    }
+
+    default public ScreenRectangle getRectangle() {
+        return ScreenRectangle.empty();
     }
 }

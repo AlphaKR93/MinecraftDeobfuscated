@@ -34,7 +34,6 @@ extends Button {
     @Override
     public void renderButton(PoseStack $$0, int $$1, int $$2, float $$3) {
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, BookViewScreen.BOOK_LOCATION);
         int $$4 = 0;
         int $$5 = 192;

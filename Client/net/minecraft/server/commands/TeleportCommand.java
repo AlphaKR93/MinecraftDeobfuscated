@@ -47,15 +47,13 @@ import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.commands.arguments.coordinates.WorldCoordinates;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.level.TicketType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -70,7 +68,7 @@ public class TeleportCommand {
 
     private static int teleportToEntity(CommandSourceStack $$0, Collection<? extends Entity> $$1, Entity $$2) throws CommandSyntaxException {
         for (Entity $$3 : $$1) {
-            TeleportCommand.performTeleport($$0, $$3, (ServerLevel)$$2.level, $$2.getX(), $$2.getY(), $$2.getZ(), (Set<ClientboundPlayerPositionPacket.RelativeArgument>)EnumSet.noneOf(ClientboundPlayerPositionPacket.RelativeArgument.class), $$2.getYRot(), $$2.getXRot(), null);
+            TeleportCommand.performTeleport($$0, $$3, (ServerLevel)$$2.level, $$2.getX(), $$2.getY(), $$2.getZ(), (Set<RelativeMovement>)EnumSet.noneOf(RelativeMovement.class), $$2.getYRot(), $$2.getXRot(), null);
         }
         if ($$1.size() == 1) {
             $$0.sendSuccess(Component.translatable("commands.teleport.success.entity.single", ((Entity)$$1.iterator().next()).getDisplayName(), $$2.getDisplayName()), true);
@@ -83,33 +81,33 @@ public class TeleportCommand {
     private static int teleportToPos(CommandSourceStack $$0, Collection<? extends Entity> $$1, ServerLevel $$2, Coordinates $$3, @Nullable Coordinates $$4, @Nullable LookAt $$5) throws CommandSyntaxException {
         Vec3 $$6 = $$3.getPosition($$0);
         Vec2 $$7 = $$4 == null ? null : $$4.getRotation($$0);
-        EnumSet $$8 = EnumSet.noneOf(ClientboundPlayerPositionPacket.RelativeArgument.class);
+        EnumSet $$8 = EnumSet.noneOf(RelativeMovement.class);
         if ($$3.isXRelative()) {
-            $$8.add((Object)ClientboundPlayerPositionPacket.RelativeArgument.X);
+            $$8.add((Object)RelativeMovement.X);
         }
         if ($$3.isYRelative()) {
-            $$8.add((Object)ClientboundPlayerPositionPacket.RelativeArgument.Y);
+            $$8.add((Object)RelativeMovement.Y);
         }
         if ($$3.isZRelative()) {
-            $$8.add((Object)ClientboundPlayerPositionPacket.RelativeArgument.Z);
+            $$8.add((Object)RelativeMovement.Z);
         }
         if ($$4 == null) {
-            $$8.add((Object)ClientboundPlayerPositionPacket.RelativeArgument.X_ROT);
-            $$8.add((Object)ClientboundPlayerPositionPacket.RelativeArgument.Y_ROT);
+            $$8.add((Object)RelativeMovement.X_ROT);
+            $$8.add((Object)RelativeMovement.Y_ROT);
         } else {
             if ($$4.isXRelative()) {
-                $$8.add((Object)ClientboundPlayerPositionPacket.RelativeArgument.X_ROT);
+                $$8.add((Object)RelativeMovement.X_ROT);
             }
             if ($$4.isYRelative()) {
-                $$8.add((Object)ClientboundPlayerPositionPacket.RelativeArgument.Y_ROT);
+                $$8.add((Object)RelativeMovement.Y_ROT);
             }
         }
         for (Entity $$9 : $$1) {
             if ($$4 == null) {
-                TeleportCommand.performTeleport($$0, $$9, $$2, $$6.x, $$6.y, $$6.z, (Set<ClientboundPlayerPositionPacket.RelativeArgument>)$$8, $$9.getYRot(), $$9.getXRot(), $$5);
+                TeleportCommand.performTeleport($$0, $$9, $$2, $$6.x, $$6.y, $$6.z, (Set<RelativeMovement>)$$8, $$9.getYRot(), $$9.getXRot(), $$5);
                 continue;
             }
-            TeleportCommand.performTeleport($$0, $$9, $$2, $$6.x, $$6.y, $$6.z, (Set<ClientboundPlayerPositionPacket.RelativeArgument>)$$8, $$7.y, $$7.x, $$5);
+            TeleportCommand.performTeleport($$0, $$9, $$2, $$6.x, $$6.y, $$6.z, (Set<RelativeMovement>)$$8, $$7.y, $$7.x, $$5);
         }
         if ($$1.size() == 1) {
             $$0.sendSuccess(Component.translatable("commands.teleport.success.location.single", ((Entity)$$1.iterator().next()).getDisplayName(), TeleportCommand.formatDouble($$6.x), TeleportCommand.formatDouble($$6.y), TeleportCommand.formatDouble($$6.z)), true);
@@ -123,55 +121,27 @@ public class TeleportCommand {
         return String.format((Locale)Locale.ROOT, (String)"%f", (Object[])new Object[]{$$0});
     }
 
-    private static void performTeleport(CommandSourceStack $$0, Entity $$1, ServerLevel $$2, double $$3, double $$4, double $$5, Set<ClientboundPlayerPositionPacket.RelativeArgument> $$6, float $$7, float $$8, @Nullable LookAt $$9) throws CommandSyntaxException {
+    private static void performTeleport(CommandSourceStack $$0, Entity $$1, ServerLevel $$2, double $$3, double $$4, double $$5, Set<RelativeMovement> $$6, float $$7, float $$8, @Nullable LookAt $$9) throws CommandSyntaxException {
+        LivingEntity $$13;
+        float $$12;
         BlockPos $$10 = new BlockPos($$3, $$4, $$5);
         if (!Level.isInSpawnableBounds($$10)) {
             throw INVALID_POSITION.create();
         }
         float $$11 = Mth.wrapDegrees($$7);
-        float $$12 = Mth.wrapDegrees($$8);
-        if ($$1 instanceof ServerPlayer) {
-            ChunkPos $$13 = new ChunkPos(new BlockPos($$3, $$4, $$5));
-            $$2.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, $$13, 1, $$1.getId());
-            $$1.stopRiding();
-            if (((ServerPlayer)$$1).isSleeping()) {
-                ((ServerPlayer)$$1).stopSleepInBed(true, true);
-            }
-            if ($$2 == $$1.level) {
-                ((ServerPlayer)$$1).connection.teleport($$3, $$4, $$5, $$11, $$12, $$6);
-            } else {
-                ((ServerPlayer)$$1).teleportTo($$2, $$3, $$4, $$5, $$11, $$12);
-            }
-            $$1.setYHeadRot($$11);
-        } else {
-            float $$14 = Mth.clamp($$12, -90.0f, 90.0f);
-            if ($$2 == $$1.level) {
-                $$1.moveTo($$3, $$4, $$5, $$11, $$14);
-                $$1.setYHeadRot($$11);
-            } else {
-                $$1.unRide();
-                Entity $$15 = $$1;
-                $$1 = $$15.getType().create($$2);
-                if ($$1 != null) {
-                    $$1.restoreFrom($$15);
-                    $$1.moveTo($$3, $$4, $$5, $$11, $$14);
-                    $$1.setYHeadRot($$11);
-                    $$15.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);
-                    $$2.addDuringTeleport($$1);
-                } else {
-                    return;
-                }
-            }
+        if (!$$1.teleportTo($$2, $$3, $$4, $$5, $$6, $$11, $$12 = Mth.wrapDegrees($$8))) {
+            return;
         }
         if ($$9 != null) {
             $$9.perform($$0, $$1);
         }
-        if (!($$1 instanceof LivingEntity) || !((LivingEntity)$$1).isFallFlying()) {
+        if (!($$1 instanceof LivingEntity) || !($$13 = (LivingEntity)$$1).isFallFlying()) {
             $$1.setDeltaMovement($$1.getDeltaMovement().multiply(1.0, 0.0, 1.0));
             $$1.setOnGround(true);
         }
         if ($$1 instanceof PathfinderMob) {
-            ((PathfinderMob)$$1).getNavigation().stop();
+            PathfinderMob $$14 = (PathfinderMob)$$1;
+            $$14.getNavigation().stop();
         }
     }
 

@@ -9,7 +9,6 @@
  *  com.mojang.brigadier.exceptions.CommandSyntaxException
  *  com.mojang.brigadier.exceptions.SimpleCommandExceptionType
  *  java.lang.Object
- *  net.minecraft.world.entity.Mob
  */
 package net.minecraft.server.commands;
 

@@ -6,7 +6,6 @@
  *  java.lang.Object
  *  java.lang.Override
  *  javax.annotation.Nullable
- *  net.minecraft.server.level.ServerLevel
  */
 package net.minecraft.world.level.block;
 
@@ -176,7 +175,7 @@ extends FaceAttachedHorizontalDirectionalBlock {
         if (!$$0.getValue(POWERED).booleanValue()) {
             return;
         }
-        this.checkPressed($$0, (Level)$$1, $$2);
+        this.checkPressed($$0, $$1, $$2);
     }
 
     @Override

@@ -8,15 +8,14 @@
  *  java.lang.Integer
  *  java.lang.Object
  *  java.lang.String
- *  java.util.function.Function
  */
 package net.minecraft.util.valueproviders;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import java.util.function.Function;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.IntProviderType;
@@ -28,7 +27,7 @@ public abstract class IntProvider {
     public static final Codec<IntProvider> POSITIVE_CODEC = IntProvider.codec(1, Integer.MAX_VALUE);
 
     public static Codec<IntProvider> codec(int $$0, int $$1) {
-        Function $$22 = $$2 -> {
+        return ExtraCodecs.validate(CODEC, $$2 -> {
             if ($$2.getMinValue() < $$0) {
                 return DataResult.error((String)("Value provider too low: " + $$0 + " [" + $$2.getMinValue() + "-" + $$2.getMaxValue() + "]"));
             }
@@ -36,8 +35,7 @@ public abstract class IntProvider {
                 return DataResult.error((String)("Value provider too high: " + $$1 + " [" + $$2.getMinValue() + "-" + $$2.getMaxValue() + "]"));
             }
             return DataResult.success((Object)$$2);
-        };
-        return CODEC.flatXmap($$22, $$22);
+        });
     }
 
     public abstract int sample(RandomSource var1);

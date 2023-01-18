@@ -144,7 +144,6 @@ import net.minecraft.client.sounds.SoundEngine;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.client.tutorial.TutorialSteps;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -330,6 +329,8 @@ public class Options {
         }
         return Component.translatable("options.chat.delay", String.format((Locale)Locale.ROOT, (String)"%.1f", (Object[])new Object[]{$$1}));
     }, new OptionInstance.IntRange(0, 60).xmap($$0 -> (double)$$0 / 10.0, $$0 -> (int)($$0 * 10.0)), Codec.doubleRange((double)0.0, (double)6.0), 0.0, $$0 -> Minecraft.getInstance().getChatListener().setMessageDelay((double)$$0));
+    private static final Component ACCESSIBILITY_TOOLTIP_NOTIFICATION_DISPLAY_TIME = Component.translatable("options.notifications.display_time.tooltip");
+    private final OptionInstance<Double> notificationDisplayTime = new OptionInstance<Double>("options.notifications.display_time", OptionInstance.cachedConstantTooltip(ACCESSIBILITY_TOOLTIP_NOTIFICATION_DISPLAY_TIME), ($$0, $$1) -> Options.genericValueLabel($$0, Component.translatable("options.multiplier", $$1)), new OptionInstance.IntRange(5, 100).xmap($$0 -> (double)$$0 / 10.0, $$0 -> (int)($$0 * 10.0)), Codec.doubleRange((double)0.5, (double)10.0), 1.0, $$0 -> {});
     private final OptionInstance<Integer> mipmapLevels = new OptionInstance<Integer>("options.mipmapLevels", OptionInstance.noTooltip(), ($$0, $$1) -> {
         if ($$1 == 0) {
             return CommonComponents.optionStatus($$0, false);
@@ -353,7 +354,7 @@ public class Options {
         }
     }));
     public int glDebugVerbosity = 1;
-    private final OptionInstance<Boolean> autoJump = OptionInstance.createBoolean("options.autoJump", true);
+    private final OptionInstance<Boolean> autoJump = OptionInstance.createBoolean("options.autoJump", false);
     private final OptionInstance<Boolean> operatorItemsTab = OptionInstance.createBoolean("options.operatorItemsTab", false);
     private final OptionInstance<Boolean> autoSuggestions = OptionInstance.createBoolean("options.autoSuggestCommands", true);
     private final OptionInstance<Boolean> chatColors = OptionInstance.createBoolean("options.chat.color", true);
@@ -531,6 +532,7 @@ public class Options {
         $$1.reload();
         $$1.play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0f));
     });
+    public boolean onboardAccessibility = true;
     public boolean syncWrites;
 
     public OptionInstance<Boolean> darkMojangStudiosBackground() {
@@ -619,6 +621,10 @@ public class Options {
 
     public OptionInstance<Double> chatDelay() {
         return this.chatDelay;
+    }
+
+    public OptionInstance<Double> notificationDisplayTime() {
+        return this.notificationDisplayTime;
     }
 
     public OptionInstance<Integer> mipmapLevels() {
@@ -895,6 +901,7 @@ public class Options {
         $$0.process("chatHeightUnfocused", this.chatHeightUnfocused);
         $$0.process("chatScale", this.chatScale);
         $$0.process("chatWidth", this.chatWidth);
+        $$0.process("notificationDisplayTime", this.notificationDisplayTime);
         $$0.process("mipmapLevels", this.mipmapLevels);
         this.useNativeTransport = $$0.process("useNativeTransport", this.useNativeTransport);
         $$0.process("mainHand", this.mainHand);
@@ -915,6 +922,7 @@ public class Options {
         $$0.process("onlyShowSecureChat", this.onlyShowSecureChat);
         $$0.process("panoramaScrollSpeed", this.panoramaSpeed);
         $$0.process("telemetryOptInExtra", this.telemetryOptInExtra);
+        this.onboardAccessibility = $$0.process("onboardAccessibility", this.onboardAccessibility);
         for (KeyMapping keyMapping : this.keyMappings) {
             String $$3;
             String $$2 = keyMapping.saveString();
@@ -1056,12 +1064,12 @@ public class Options {
         catch (RuntimeException runtimeException) {
             // empty catch block
         }
-        return NbtUtils.update(this.minecraft.getFixerUpper(), DataFixTypes.OPTIONS, $$0, $$1);
+        return DataFixTypes.OPTIONS.updateToCurrentVersion(this.minecraft.getFixerUpper(), $$0, $$1);
     }
 
     public void save() {
         try (final PrintWriter $$0 = new PrintWriter((Writer)new OutputStreamWriter((OutputStream)new FileOutputStream(this.optionsFile), StandardCharsets.UTF_8));){
-            $$0.println("version:" + SharedConstants.getCurrentVersion().getWorldVersion());
+            $$0.println("version:" + SharedConstants.getCurrentVersion().getDataVersion().getVersion());
             this.processOptions(new FieldAccess(){
 
                 public void writePrefix(String $$02) {

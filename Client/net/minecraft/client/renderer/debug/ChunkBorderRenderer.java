@@ -43,7 +43,6 @@ implements DebugRenderer.SimpleDebugRenderer {
         BufferBuilder $$7 = $$6.getBuilder();
         double $$8 = (double)this.minecraft.level.getMinBuildHeight() - $$3;
         double $$9 = (double)this.minecraft.level.getMaxBuildHeight() - $$3;
-        RenderSystem.disableTexture();
         RenderSystem.disableBlend();
         ChunkPos $$10 = $$5.chunkPosition();
         double $$11 = (double)$$10.getMinBlockX() - $$2;
@@ -115,6 +114,5 @@ implements DebugRenderer.SimpleDebugRenderer {
         $$6.end();
         RenderSystem.lineWidth(1.0f);
         RenderSystem.enableBlend();
-        RenderSystem.enableTexture();
     }
 }

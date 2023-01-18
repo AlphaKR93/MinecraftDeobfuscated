@@ -21,6 +21,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 
@@ -70,7 +71,7 @@ extends HierarchicalModel<T> {
         this.root().getAllParts().forEach(ModelPart::resetPose);
         this.applyHeadRotation($$0, $$4, $$5, $$3);
         this.toggleInvisibleParts($$0);
-        float $$6 = (float)$$0.getDeltaMovement().horizontalDistanceSqr();
+        float $$6 = (float)((Entity)$$0).getDeltaMovement().horizontalDistanceSqr();
         float $$7 = Mth.clamp($$6 * 400.0f, 0.3f, 2.0f);
         this.animate(((Camel)$$0).walkAnimationState, CamelAnimation.CAMEL_WALK, $$3, $$7);
         this.animate(((Camel)$$0).sitAnimationState, CamelAnimation.CAMEL_SIT, $$3, 1.0f);
@@ -94,7 +95,7 @@ extends HierarchicalModel<T> {
 
     private void toggleInvisibleParts(T $$0) {
         boolean $$1 = ((AbstractHorse)$$0).isSaddled();
-        boolean $$2 = $$0.isVehicle();
+        boolean $$2 = ((Entity)$$0).isVehicle();
         for (ModelPart $$3 : this.saddleParts) {
             $$3.visible = $$1;
         }

@@ -205,11 +205,6 @@ extends RealmsScreen {
         }
 
         @Override
-        public boolean isFocused() {
-            return RealmsPendingInvitesScreen.this.getFocused() == this;
-        }
-
-        @Override
         public void renderBackground(PoseStack $$0) {
             RealmsPendingInvitesScreen.this.renderBackground($$0);
         }
@@ -260,10 +255,7 @@ extends RealmsScreen {
             RealmsPendingInvitesScreen.this.font.draw($$0, $$1.worldOwnerName, (float)($$2 + 38), (float)($$3 + 12), 0x6C6C6C);
             RealmsPendingInvitesScreen.this.font.draw($$0, RealmsUtil.convertToAgePresentationFromInstant($$1.date), (float)($$2 + 38), (float)($$3 + 24), 0x6C6C6C);
             RowButton.drawButtonsInRow($$0, this.rowButtons, RealmsPendingInvitesScreen.this.pendingInvitationSelectionList, $$2, $$3, $$4, $$5);
-            RealmsTextureManager.withBoundFace($$1.worldOwnerUuid, () -> {
-                RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-                PlayerFaceRenderer.draw($$0, $$2, $$3, 32);
-            });
+            RealmsTextureManager.withBoundFace($$1.worldOwnerUuid, () -> PlayerFaceRenderer.draw($$0, $$2, $$3, 32));
         }
 
         @Override
@@ -281,7 +273,6 @@ extends RealmsScreen {
             @Override
             protected void draw(PoseStack $$0, int $$1, int $$2, boolean $$3) {
                 RenderSystem.setShaderTexture(0, ACCEPT_ICON_LOCATION);
-                RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
                 float $$4 = $$3 ? 19.0f : 0.0f;
                 GuiComponent.blit($$0, $$1, $$2, $$4, 0.0f, 18, 18, 37, 18);
                 if ($$3) {
@@ -304,7 +295,6 @@ extends RealmsScreen {
             @Override
             protected void draw(PoseStack $$0, int $$1, int $$2, boolean $$3) {
                 RenderSystem.setShaderTexture(0, REJECT_ICON_LOCATION);
-                RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
                 float $$4 = $$3 ? 19.0f : 0.0f;
                 GuiComponent.blit($$0, $$1, $$2, $$4, 0.0f, 18, 18, 37, 18);
                 if ($$3) {

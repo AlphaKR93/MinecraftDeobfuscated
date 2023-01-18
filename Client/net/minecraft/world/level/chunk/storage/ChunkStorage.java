@@ -56,14 +56,14 @@ implements AutoCloseable {
 
     public CompoundTag upgradeChunkTag(ResourceKey<Level> $$0, Supplier<DimensionDataStorage> $$1, CompoundTag $$2, Optional<ResourceKey<Codec<? extends ChunkGenerator>>> $$3) {
         int $$4 = ChunkStorage.getVersion($$2);
-        if ($$4 < 1493 && ($$2 = NbtUtils.update(this.fixerUpper, DataFixTypes.CHUNK, $$2, $$4, 1493)).getCompound("Level").getBoolean("hasLegacyStructureData")) {
+        if ($$4 < 1493 && ($$2 = DataFixTypes.CHUNK.update(this.fixerUpper, $$2, $$4, 1493)).getCompound("Level").getBoolean("hasLegacyStructureData")) {
             LegacyStructureDataHandler $$5 = this.getLegacyStructureHandler($$0, $$1);
             $$2 = $$5.updateFromLegacy($$2);
         }
         ChunkStorage.injectDatafixingContext($$2, $$0, $$3);
-        $$2 = NbtUtils.update(this.fixerUpper, DataFixTypes.CHUNK, $$2, Math.max((int)1493, (int)$$4));
-        if ($$4 < SharedConstants.getCurrentVersion().getWorldVersion()) {
-            $$2.putInt("DataVersion", SharedConstants.getCurrentVersion().getWorldVersion());
+        $$2 = DataFixTypes.CHUNK.updateToCurrentVersion(this.fixerUpper, $$2, Math.max((int)1493, (int)$$4));
+        if ($$4 < SharedConstants.getCurrentVersion().getDataVersion().getVersion()) {
+            NbtUtils.addCurrentDataVersion($$2);
         }
         $$2.remove("__context");
         return $$2;
@@ -94,7 +94,7 @@ implements AutoCloseable {
     }
 
     public static int getVersion(CompoundTag $$0) {
-        return $$0.contains("DataVersion", 99) ? $$0.getInt("DataVersion") : -1;
+        return NbtUtils.getDataVersion($$0, -1);
     }
 
     public CompletableFuture<Optional<CompoundTag>> read(ChunkPos $$0) {

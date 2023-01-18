@@ -10,7 +10,6 @@
  *  java.util.HashMap
  *  java.util.List
  *  java.util.Map$Entry
- *  net.minecraft.world.item.ItemStack
  */
 package net.minecraft.world.level.block.piston;
 

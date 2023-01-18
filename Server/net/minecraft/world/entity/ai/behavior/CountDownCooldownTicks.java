@@ -8,7 +8,6 @@
  *  java.lang.Override
  *  java.util.Map
  *  java.util.Optional
- *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.entity.ai.behavior;
 

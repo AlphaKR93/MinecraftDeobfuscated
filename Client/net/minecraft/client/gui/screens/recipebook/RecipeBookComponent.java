@@ -129,9 +129,8 @@ RecipeShownListener {
         String $$2 = this.searchBox != null ? this.searchBox.getValue() : "";
         Font font = this.minecraft.font;
         Objects.requireNonNull((Object)this.minecraft.font);
-        this.searchBox = new EditBox(font, $$02 + 25, $$1 + 14, 80, 9 + 5, Component.translatable("itemGroup.search"));
+        this.searchBox = new EditBox(font, $$02 + 26, $$1 + 14, 79, 9 + 3, Component.translatable("itemGroup.search"));
         this.searchBox.setMaxLength(50);
-        this.searchBox.setBordered(false);
         this.searchBox.setVisible(true);
         this.searchBox.setTextColor(0xFFFFFF);
         this.searchBox.setValue($$2);
@@ -158,11 +157,6 @@ RecipeShownListener {
 
     private void updateFilterButtonTooltip() {
         this.filterButton.setTooltip(this.filterButton.isStateTriggered() ? Tooltip.create(this.getRecipeFilterName()) : Tooltip.create(ALL_RECIPES_TOOLTIP));
-    }
-
-    @Override
-    public boolean changeFocus(boolean $$0) {
-        return false;
     }
 
     protected void initFilterButtonTextures() {
@@ -278,7 +272,6 @@ RecipeShownListener {
         $$0.translate(0.0f, 0.0f, 100.0f);
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
         RenderSystem.setShaderTexture(0, RECIPE_BOOK_LOCATION);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         int $$4 = (this.width - 147) / 2 - this.xOffset;
         int $$5 = (this.height - 166) / 2;
         this.blit($$0, $$4, $$5, 1, 1, 147, 166);
@@ -402,7 +395,7 @@ RecipeShownListener {
         }
         if (this.minecraft.options.keyChat.matches($$0, $$1) && !this.searchBox.isFocused()) {
             this.ignoreTextInput = true;
-            this.searchBox.setFocus(true);
+            this.searchBox.setFocused(true);
             return true;
         }
         return false;
@@ -434,6 +427,15 @@ RecipeShownListener {
         return false;
     }
 
+    @Override
+    public void setFocused(boolean $$0) {
+    }
+
+    @Override
+    public boolean isFocused() {
+        return false;
+    }
+
     private void checkSearchStringUpdate() {
         String $$0 = this.searchBox.getValue().toLowerCase(Locale.ROOT);
         this.pirateSpeechForThePeople($$0);
@@ -446,12 +448,13 @@ RecipeShownListener {
     private void pirateSpeechForThePeople(String $$0) {
         if ("excitedze".equals((Object)$$0)) {
             LanguageManager $$1 = this.minecraft.getLanguageManager();
-            LanguageInfo $$2 = $$1.getLanguage("en_pt");
-            if ($$1.getSelected().compareTo($$2) == 0) {
+            String $$2 = "en_pt";
+            LanguageInfo $$3 = $$1.getLanguage("en_pt");
+            if ($$3 == null || $$1.getSelected().equals((Object)"en_pt")) {
                 return;
             }
-            $$1.setSelected($$2);
-            this.minecraft.options.languageCode = $$2.getCode();
+            $$1.setSelected("en_pt");
+            this.minecraft.options.languageCode = "en_pt";
             this.minecraft.reloadResourcePacks();
             this.minecraft.options.save();
         }

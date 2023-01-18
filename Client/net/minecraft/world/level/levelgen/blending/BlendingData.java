@@ -206,7 +206,7 @@ public class BlendingData {
             $$4[$$7] = ($$6 + $$8 + $$9) / 15.0;
             $$6 = $$9;
         }
-        int $$10 = this.getCellYIndex(Mth.intFloorDiv($$3, 8));
+        int $$10 = this.getCellYIndex(Mth.floorDiv($$3, 8));
         if ($$10 >= 0 && $$10 < $$4.length - 1) {
             double $$11 = ((double)$$3 + 0.5) % 8.0 / 8.0;
             double $$12 = (1.0 - $$11) / $$11;

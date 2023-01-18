@@ -44,7 +44,6 @@ extends Button {
         Icon $$6;
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
         RenderSystem.setShaderTexture(0, Button.WIDGETS_LOCATION);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         if (!this.active) {
             Icon $$4 = this.locked ? Icon.LOCKED_DISABLED : Icon.UNLOCKED_DISABLED;
         } else if (this.isHoveredOrFocused()) {

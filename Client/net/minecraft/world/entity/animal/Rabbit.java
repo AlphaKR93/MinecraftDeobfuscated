@@ -76,7 +76,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarrotBlock;
@@ -391,10 +390,10 @@ implements VariantHolder<Variant> {
     private static Variant getRandomRabbitVariant(LevelAccessor $$0, BlockPos $$1) {
         Holder $$2 = $$0.getBiome($$1);
         int $$3 = $$0.getRandom().nextInt(100);
-        if (((Biome)$$2.value()).getPrecipitation() == Biome.Precipitation.SNOW) {
+        if ($$2.is(BiomeTags.SPAWNS_WHITE_RABBITS)) {
             return $$3 < 80 ? Variant.WHITE : Variant.WHITE_SPLOTCHED;
         }
-        if ($$2.is(BiomeTags.ONLY_ALLOWS_SNOW_AND_GOLD_RABBITS)) {
+        if ($$2.is(BiomeTags.SPAWNS_GOLD_RABBITS)) {
             return Variant.GOLD;
         }
         return $$3 < 50 ? Variant.BROWN : ($$3 < 90 ? Variant.SALT : Variant.BLACK);

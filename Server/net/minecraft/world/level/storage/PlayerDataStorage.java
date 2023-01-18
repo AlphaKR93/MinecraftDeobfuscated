@@ -65,8 +65,8 @@ public class PlayerDataStorage {
             LOGGER.warn("Failed to load player data for {}", (Object)$$0.getName().getString());
         }
         if ($$1 != null) {
-            int $$4 = $$1.contains("DataVersion", 3) ? $$1.getInt("DataVersion") : -1;
-            $$0.load(NbtUtils.update(this.fixerUpper, DataFixTypes.PLAYER, $$1, $$4));
+            int $$4 = NbtUtils.getDataVersion($$1, -1);
+            $$0.load(DataFixTypes.PLAYER.updateToCurrentVersion(this.fixerUpper, $$1, $$4));
         }
         return $$1;
     }

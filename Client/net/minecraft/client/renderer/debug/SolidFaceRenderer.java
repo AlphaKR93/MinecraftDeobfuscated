@@ -42,7 +42,6 @@ implements DebugRenderer.SimpleDebugRenderer {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.lineWidth(2.0f);
-        RenderSystem.disableTexture();
         RenderSystem.depthMask(false);
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionColorShader));
         BlockPos $$6 = new BlockPos($$2, $$3, $$4);
@@ -124,7 +123,6 @@ implements DebugRenderer.SimpleDebugRenderer {
             }
         }
         RenderSystem.depthMask(true);
-        RenderSystem.enableTexture();
         RenderSystem.disableBlend();
     }
 }

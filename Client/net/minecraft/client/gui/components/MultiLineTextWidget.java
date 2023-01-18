@@ -23,7 +23,7 @@ extends AbstractWidget {
     private final int lineHeight;
     private final boolean centered;
 
-    private MultiLineTextWidget(MultiLineLabel $$0, Font $$1, Component $$2, boolean $$3) {
+    protected MultiLineTextWidget(MultiLineLabel $$0, Font $$1, Component $$2, boolean $$3) {
         int n = $$0.getWidth();
         int n2 = $$0.getLineCount();
         Objects.requireNonNull((Object)$$1);

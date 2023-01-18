@@ -6,7 +6,6 @@
  *  java.lang.Override
  *  java.lang.String
  *  javax.annotation.Nullable
- *  net.minecraft.world.item.ItemStack
  */
 package net.minecraft.world.level.block.entity;
 
@@ -218,7 +217,7 @@ MenuProvider {
     @Override
     public void load(CompoundTag $$0) {
         super.load($$0);
-        this.book = $$0.contains("Book", 10) ? this.resolveBook(ItemStack.of((CompoundTag)$$0.getCompound("Book")), null) : ItemStack.EMPTY;
+        this.book = $$0.contains("Book", 10) ? this.resolveBook(ItemStack.of($$0.getCompound("Book")), null) : ItemStack.EMPTY;
         this.pageCount = WrittenBookItem.getPageCount(this.book);
         this.page = Mth.clamp($$0.getInt("Page"), 0, this.pageCount - 1);
     }

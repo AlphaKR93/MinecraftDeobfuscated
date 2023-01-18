@@ -6,12 +6,10 @@
  *  java.lang.Object
  *  java.lang.Override
  *  java.util.EnumSet
- *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.entity.ai.goal;
 
 import java.util.EnumSet;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -45,7 +43,7 @@ extends Goal {
         if ($$0 == null) {
             return true;
         }
-        if (this.mob.distanceToSqr((Entity)$$0) < 144.0 && $$0.getLastHurtByMob() != null) {
+        if (this.mob.distanceToSqr($$0) < 144.0 && $$0.getLastHurtByMob() != null) {
             return false;
         }
         return this.mob.isOrderedToSit();

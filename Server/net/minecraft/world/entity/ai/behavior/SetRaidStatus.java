@@ -3,7 +3,6 @@
  * 
  * Could not load the following classes:
  *  java.lang.Object
- *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.entity.ai.behavior;
 
@@ -20,7 +19,7 @@ public class SetRaidStatus {
             if ($$0.random.nextInt(20) != 0) {
                 return false;
             }
-            Brain $$3 = $$1.getBrain();
+            Brain<?> $$3 = $$1.getBrain();
             Raid $$4 = $$0.getRaidAt($$1.blockPosition());
             if ($$4 != null) {
                 if (!$$4.hasFirstWaveSpawned() || $$4.isBetweenWaves()) {

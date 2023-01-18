@@ -9,7 +9,6 @@
  *  java.lang.Override
  *  java.util.EnumSet
  *  javax.annotation.Nullable
- *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.entity.monster;
 
@@ -26,7 +25,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -76,14 +74,17 @@ extends Monster {
         this.xpReward = 3;
     }
 
+    @Override
     protected float getStandingEyeHeight(Pose $$0, EntityDimensions $$1) {
         return $$1.height - 0.28125f;
     }
 
+    @Override
     public boolean isFlapping() {
         return this.tickCount % TICKS_PER_FLAP == 0;
     }
 
+    @Override
     public void move(MoverType $$0, Vec3 $$1) {
         super.move($$0, $$1);
         this.checkInsideBlocks();
@@ -205,6 +206,7 @@ extends Monster {
         return SoundEvents.VEX_HURT;
     }
 
+    @Override
     public float getLightLevelDependentMagicValue() {
         return 1.0f;
     }
@@ -224,6 +226,7 @@ extends Monster {
         this.setDropChance(EquipmentSlot.MAINHAND, 0.0f);
     }
 
+    @Override
     public double getMyRidingOffset() {
         return 0.4;
     }
@@ -270,7 +273,7 @@ extends Monster {
         public boolean canUse() {
             LivingEntity $$0 = Vex.this.getTarget();
             if ($$0 != null && $$0.isAlive() && !Vex.this.getMoveControl().hasWanted() && Vex.this.random.nextInt(VexChargeAttackGoal.reducedTickDelay(7)) == 0) {
-                return Vex.this.distanceToSqr((Entity)$$0) > 4.0;
+                return Vex.this.distanceToSqr($$0) > 4.0;
             }
             return false;
         }
@@ -308,10 +311,10 @@ extends Monster {
                 return;
             }
             if (Vex.this.getBoundingBox().intersects($$0.getBoundingBox())) {
-                Vex.this.doHurtTarget((Entity)$$0);
+                Vex.this.doHurtTarget($$0);
                 Vex.this.setIsCharging(false);
             } else {
-                double $$1 = Vex.this.distanceToSqr((Entity)$$0);
+                double $$1 = Vex.this.distanceToSqr($$0);
                 if ($$1 < 9.0) {
                     Vec3 $$2 = $$0.getEyePosition();
                     Vex.this.moveControl.setWantedPosition($$2.x, $$2.y, $$2.z, 1.0);

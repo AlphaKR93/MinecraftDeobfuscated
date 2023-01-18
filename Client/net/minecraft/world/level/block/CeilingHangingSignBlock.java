@@ -106,7 +106,7 @@ extends SignBlock {
                 $$7 = false;
             }
         }
-        int $$10 = !$$7 ? RotationSegment.convertToSegment($$6) : RotationSegment.convertToSegment($$0.getRotation());
+        int $$10 = !$$7 ? RotationSegment.convertToSegment($$6.getOpposite()) : RotationSegment.convertToSegment($$0.getRotation() + 180.0f);
         return (BlockState)((BlockState)((BlockState)this.defaultBlockState().setValue(ATTACHED, $$7)).setValue(ROTATION, $$10)).setValue(WATERLOGGED, $$2.getType() == Fluids.WATER);
     }
 

@@ -453,7 +453,6 @@ extends GuiComponent {
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionColorShader));
         BufferBuilder $$18 = Tesselator.getInstance().getBuilder();
         RenderSystem.enableBlend();
-        RenderSystem.disableTexture();
         RenderSystem.defaultBlendFunc();
         $$18.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         Matrix4f $$19 = Transformation.identity().getMatrix();
@@ -473,7 +472,6 @@ extends GuiComponent {
             $$8 = $$1.wrapIndex($$8 + 1);
         }
         BufferUploader.drawWithShader($$18.end());
-        RenderSystem.enableTexture();
         RenderSystem.disableBlend();
         if ($$4) {
             DebugScreenOverlay.fill($$0, $$2 + 1, $$17 - 30 + 1, $$2 + 14, $$17 - 30 + 10, -1873784752);

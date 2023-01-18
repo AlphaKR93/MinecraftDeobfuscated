@@ -290,6 +290,10 @@ extends Monster {
         return ((float)this.clientSideAttackTime + $$0) / (float)this.getAttackDuration();
     }
 
+    public float getClientSideAttackTime() {
+        return this.clientSideAttackTime;
+    }
+
     @Override
     public boolean checkSpawnObstruction(LevelReader $$0) {
         return $$0.isUnobstructed(this);

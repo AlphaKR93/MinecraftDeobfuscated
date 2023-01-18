@@ -50,19 +50,19 @@ extends Behavior<PathfinderMob> {
     }
 
     @Override
-    protected void stop(ServerLevel $$0, PathfinderMob $$1, long $$2) {
+    protected void tick(ServerLevel $$0, PathfinderMob $$1, long $$2) {
         $$1.getBrain().setMemory(MemoryModuleType.IS_PANICKING, true);
         $$1.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
     }
 
     @Override
-    protected void stop(ServerLevel $$0, PathfinderMob $$1, long $$2) {
+    protected void tick(ServerLevel $$0, PathfinderMob $$1, long $$2) {
         Brain<?> $$3 = $$1.getBrain();
         $$3.eraseMemory(MemoryModuleType.IS_PANICKING);
     }
 
     @Override
-    protected void stop(ServerLevel $$0, PathfinderMob $$1, long $$2) {
+    protected void tick(ServerLevel $$0, PathfinderMob $$1, long $$2) {
         Vec3 $$3;
         if ($$1.getNavigation().isDone() && ($$3 = this.getPanicPos($$1, $$0)) != null) {
             $$1.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget($$3, this.speedMultiplier, 0));

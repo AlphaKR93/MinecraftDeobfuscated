@@ -41,6 +41,7 @@ import net.minecraft.commands.arguments.coordinates.LocalCoordinates;
 import net.minecraft.commands.arguments.coordinates.WorldCoordinates;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 
 public class BlockPosArgument
@@ -55,18 +56,27 @@ implements ArgumentType<Coordinates> {
     }
 
     public static BlockPos getLoadedBlockPos(CommandContext<CommandSourceStack> $$0, String $$1) throws CommandSyntaxException {
-        BlockPos $$2 = ((Coordinates)$$0.getArgument($$1, Coordinates.class)).getBlockPos((CommandSourceStack)$$0.getSource());
-        if (!((CommandSourceStack)$$0.getSource()).getLevel().hasChunkAt($$2)) {
+        ServerLevel $$2 = ((CommandSourceStack)$$0.getSource()).getLevel();
+        return BlockPosArgument.getLoadedBlockPos($$0, $$2, $$1);
+    }
+
+    public static BlockPos getLoadedBlockPos(CommandContext<CommandSourceStack> $$0, ServerLevel $$1, String $$2) throws CommandSyntaxException {
+        BlockPos $$3 = BlockPosArgument.getBlockPos($$0, $$2);
+        if (!$$1.hasChunkAt($$3)) {
             throw ERROR_NOT_LOADED.create();
         }
-        if (!((CommandSourceStack)$$0.getSource()).getLevel().isInWorldBounds($$2)) {
+        if (!$$1.isInWorldBounds($$3)) {
             throw ERROR_OUT_OF_WORLD.create();
         }
-        return $$2;
+        return $$3;
+    }
+
+    public static BlockPos getBlockPos(CommandContext<CommandSourceStack> $$0, String $$1) {
+        return ((Coordinates)$$0.getArgument($$1, Coordinates.class)).getBlockPos((CommandSourceStack)$$0.getSource());
     }
 
     public static BlockPos getSpawnablePos(CommandContext<CommandSourceStack> $$0, String $$1) throws CommandSyntaxException {
-        BlockPos $$2 = ((Coordinates)$$0.getArgument($$1, Coordinates.class)).getBlockPos((CommandSourceStack)$$0.getSource());
+        BlockPos $$2 = BlockPosArgument.getBlockPos($$0, $$1);
         if (!Level.isInSpawnableBounds($$2)) {
             throw ERROR_OUT_OF_BOUNDS.create();
         }

@@ -10,6 +10,7 @@ package net.minecraft.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.LavaSlimeModel;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.core.BlockPos;
@@ -33,6 +34,12 @@ extends MobRenderer<MagmaCube, LavaSlimeModel<MagmaCube>> {
     @Override
     public ResourceLocation getTextureLocation(MagmaCube $$0) {
         return MAGMACUBE_LOCATION;
+    }
+
+    @Override
+    public void render(MagmaCube $$0, float $$1, float $$2, PoseStack $$3, MultiBufferSource $$4, int $$5) {
+        this.shadowRadius = 0.25f * (float)$$0.getSize();
+        super.render($$0, $$1, $$2, $$3, $$4, $$5);
     }
 
     @Override

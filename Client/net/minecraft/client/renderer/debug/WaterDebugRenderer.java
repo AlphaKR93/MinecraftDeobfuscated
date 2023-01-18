@@ -34,7 +34,6 @@ implements DebugRenderer.SimpleDebugRenderer {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShaderColor(0.0f, 1.0f, 0.0f, 0.75f);
-        RenderSystem.disableTexture();
         RenderSystem.lineWidth(6.0f);
         for (BlockPos $$7 : BlockPos.betweenClosed($$5.offset(-10, -10, -10), $$5.offset(10, 10, 10))) {
             FluidState $$8 = $$6.getFluidState($$7);
@@ -47,7 +46,7 @@ implements DebugRenderer.SimpleDebugRenderer {
             if (!$$11.is(FluidTags.WATER)) continue;
             DebugRenderer.renderFloatingText(String.valueOf((int)$$11.getAmount()), (double)$$10.getX() + 0.5, (float)$$10.getY() + $$11.getHeight($$6, $$10), (double)$$10.getZ() + 0.5, -16777216);
         }
-        RenderSystem.enableTexture();
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.disableBlend();
     }
 }

@@ -124,8 +124,8 @@ DensityFunction.FunctionContext {
         this.cellWidth = $$4.getCellWidth();
         this.cellHeight = $$4.getCellHeight();
         this.cellCountXZ = $$0;
-        this.cellCountY = Mth.intFloorDiv($$4.height(), this.cellHeight);
-        this.cellNoiseMinY = Mth.intFloorDiv($$4.minY(), this.cellHeight);
+        this.cellCountY = Mth.floorDiv($$4.height(), this.cellHeight);
+        this.cellNoiseMinY = Mth.floorDiv($$4.minY(), this.cellHeight);
         this.firstCellX = Math.floorDiv((int)$$2, (int)this.cellWidth);
         this.firstCellZ = Math.floorDiv((int)$$3, (int)this.cellWidth);
         this.interpolators = Lists.newArrayList();
