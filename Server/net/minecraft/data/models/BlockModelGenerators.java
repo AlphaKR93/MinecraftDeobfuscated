@@ -33,7 +33,6 @@
  *  java.util.stream.Collectors
  *  java.util.stream.IntStream
  *  javax.annotation.Nullable
- *  net.minecraft.world.level.block.Blocks
  */
 package net.minecraft.data.models;
 

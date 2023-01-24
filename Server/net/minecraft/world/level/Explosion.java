@@ -188,7 +188,7 @@ public class Explosion {
         List $$25 = this.level.getEntities(this.source, new AABB($$19, $$21, $$23, $$20, $$22, $$24));
         Vec3 $$26 = new Vec3(this.x, this.y, this.z);
         for (int $$27 = 0; $$27 < $$25.size(); ++$$27) {
-            Player $$37;
+            Player $$38;
             double $$32;
             double $$31;
             double $$30;
@@ -204,11 +204,12 @@ public class Explosion {
             $$28.hurt(this.getDamageSource(), (int)(($$35 * $$35 + $$35) / 2.0 * 7.0 * (double)$$18 + 1.0));
             double $$36 = $$35;
             if ($$28 instanceof LivingEntity) {
-                $$36 = ProtectionEnchantment.getExplosionKnockbackAfterDampener((LivingEntity)$$28, $$35);
+                LivingEntity $$37 = (LivingEntity)$$28;
+                $$36 = ProtectionEnchantment.getExplosionKnockbackAfterDampener($$37, $$35);
             }
             $$28.setDeltaMovement($$28.getDeltaMovement().add($$30 * $$36, $$31 * $$36, $$32 * $$36));
-            if (!($$28 instanceof Player) || ($$37 = (Player)$$28).isSpectator() || $$37.isCreative() && $$37.getAbilities().flying) continue;
-            this.hitPlayers.put((Object)$$37, (Object)new Vec3($$30 * $$35, $$31 * $$35, $$32 * $$35));
+            if (!($$28 instanceof Player) || ($$38 = (Player)$$28).isSpectator() || $$38.isCreative() && $$38.getAbilities().flying) continue;
+            this.hitPlayers.put((Object)$$38, (Object)new Vec3($$30 * $$35, $$31 * $$35, $$32 * $$35));
         }
     }
 

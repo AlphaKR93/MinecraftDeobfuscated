@@ -56,11 +56,17 @@ public abstract class EntityLootSubProvider
 implements LootTableSubProvider {
     protected static final EntityPredicate.Builder ENTITY_ON_FIRE = EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setOnFire(true).build());
     private static final Set<EntityType<?>> SPECIAL_LOOT_TABLE_TYPES = ImmutableSet.of(EntityType.PLAYER, EntityType.ARMOR_STAND, EntityType.IRON_GOLEM, EntityType.SNOW_GOLEM, EntityType.VILLAGER);
-    private final FeatureFlagSet enabledFeatures;
+    private final FeatureFlagSet allowed;
+    private final FeatureFlagSet required;
     private final Map<EntityType<?>, Map<ResourceLocation, LootTable.Builder>> map = Maps.newHashMap();
 
     protected EntityLootSubProvider(FeatureFlagSet $$0) {
-        this.enabledFeatures = $$0;
+        this($$0, $$0);
+    }
+
+    protected EntityLootSubProvider(FeatureFlagSet $$0, FeatureFlagSet $$1) {
+        this.allowed = $$0;
+        this.required = $$1;
     }
 
     protected static LootTable.Builder createSheepTable(ItemLike $$0) {
@@ -101,13 +107,13 @@ implements LootTableSubProvider {
 
     private /* synthetic */ void lambda$generate$1(Set $$0, BiConsumer $$1, Holder.Reference $$2) {
         EntityType $$32 = (EntityType)$$2.value();
-        if (!$$32.isEnabled(this.enabledFeatures)) {
+        if (!$$32.isEnabled(this.allowed)) {
             return;
         }
         if (EntityLootSubProvider.canHaveLootTable($$32)) {
             Map $$42 = (Map)this.map.remove((Object)$$32);
             ResourceLocation $$5 = $$32.getDefaultLootTable();
-            if (!($$5.equals(BuiltInLootTables.EMPTY) || $$42 != null && $$42.containsKey((Object)$$5))) {
+            if (!($$5.equals(BuiltInLootTables.EMPTY) || !$$32.isEnabled(this.required) || $$42 != null && $$42.containsKey((Object)$$5))) {
                 throw new IllegalStateException(String.format((Locale)Locale.ROOT, (String)"Missing loottable '%s' for '%s'", (Object[])new Object[]{$$5, $$2.key().location()}));
             }
             if ($$42 != null) {

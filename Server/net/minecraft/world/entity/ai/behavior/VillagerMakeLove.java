@@ -55,7 +55,7 @@ extends Behavior<Villager> {
     }
 
     @Override
-    protected void start(ServerLevel $$0, Villager $$1, long $$2) {
+    protected void stop(ServerLevel $$0, Villager $$1, long $$2) {
         AgeableMob $$3 = (AgeableMob)$$1.getBrain().getMemory(MemoryModuleType.BREED_TARGET).get();
         BehaviorUtils.lockGazeAndWalkToEachOther($$1, $$3, 0.5f);
         $$0.broadcastEntityEvent($$3, (byte)18);
@@ -98,7 +98,7 @@ extends Behavior<Villager> {
     }
 
     @Override
-    protected void start(ServerLevel $$0, Villager $$1, long $$2) {
+    protected void stop(ServerLevel $$0, Villager $$1, long $$2) {
         $$1.getBrain().eraseMemory(MemoryModuleType.BREED_TARGET);
     }
 

@@ -9,6 +9,7 @@
  *  java.util.List
  *  java.util.Set
  *  java.util.function.Predicate
+ *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.entity.ai.sensing;
 

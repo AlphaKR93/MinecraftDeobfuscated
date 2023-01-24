@@ -7,6 +7,7 @@
  */
 package net.minecraft.world.item.crafting;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -57,16 +58,16 @@ extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer $$0) {
-        ItemStack $$1 = new ItemStack(Items.SUSPICIOUS_STEW, 1);
-        for (int $$2 = 0; $$2 < $$0.getContainerSize(); ++$$2) {
-            SuspiciousEffectHolder $$4;
-            ItemStack $$3 = $$0.getItem($$2);
-            if ($$3.isEmpty() || ($$4 = SuspiciousEffectHolder.tryGet($$3.getItem())) == null) continue;
-            SuspiciousStewItem.saveMobEffect($$1, $$4.getSuspiciousEffect(), $$4.getEffectDuration());
+    public ItemStack assemble(CraftingContainer $$0, RegistryAccess $$1) {
+        ItemStack $$2 = new ItemStack(Items.SUSPICIOUS_STEW, 1);
+        for (int $$3 = 0; $$3 < $$0.getContainerSize(); ++$$3) {
+            SuspiciousEffectHolder $$5;
+            ItemStack $$4 = $$0.getItem($$3);
+            if ($$4.isEmpty() || ($$5 = SuspiciousEffectHolder.tryGet($$4.getItem())) == null) continue;
+            SuspiciousStewItem.saveMobEffect($$2, $$5.getSuspiciousEffect(), $$5.getEffectDuration());
             break;
         }
-        return $$1;
+        return $$2;
     }
 
     @Override

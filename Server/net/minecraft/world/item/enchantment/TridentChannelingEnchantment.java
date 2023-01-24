@@ -26,9 +26,4 @@ extends Enchantment {
     public int getMaxCost(int $$0) {
         return 50;
     }
-
-    @Override
-    public int getMaxLevel() {
-        return 1;
-    }
 }

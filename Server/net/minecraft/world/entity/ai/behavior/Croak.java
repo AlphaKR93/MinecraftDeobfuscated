@@ -39,7 +39,7 @@ extends Behavior<Frog> {
     }
 
     @Override
-    protected void tick(ServerLevel $$0, Frog $$1, long $$2) {
+    protected void stop(ServerLevel $$0, Frog $$1, long $$2) {
         if ($$1.isInWaterOrBubble() || $$1.isInLava()) {
             return;
         }
@@ -48,12 +48,12 @@ extends Behavior<Frog> {
     }
 
     @Override
-    protected void tick(ServerLevel $$0, Frog $$1, long $$2) {
+    protected void start(ServerLevel $$0, Frog $$1, long $$2) {
         $$1.setPose(Pose.STANDING);
     }
 
     @Override
-    protected void tick(ServerLevel $$0, Frog $$1, long $$2) {
+    protected void start(ServerLevel $$0, Frog $$1, long $$2) {
         ++this.croakCounter;
     }
 }

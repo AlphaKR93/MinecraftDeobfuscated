@@ -871,14 +871,14 @@ extends RecipeProvider {
         VanillaRecipeProvider.stonecutterResultFromBase($$0, RecipeCategory.BUILDING_BLOCKS, Blocks.DEEPSLATE_TILE_SLAB, Blocks.DEEPSLATE_TILES, 2);
         VanillaRecipeProvider.stonecutterResultFromBase($$0, RecipeCategory.BUILDING_BLOCKS, Blocks.DEEPSLATE_TILE_STAIRS, Blocks.DEEPSLATE_TILES);
         VanillaRecipeProvider.stonecutterResultFromBase($$0, RecipeCategory.DECORATIONS, Blocks.DEEPSLATE_TILE_WALL, Blocks.DEEPSLATE_TILES);
-        VanillaRecipeProvider.netheriteSmithing($$0, Items.DIAMOND_CHESTPLATE, RecipeCategory.COMBAT, Items.NETHERITE_CHESTPLATE);
-        VanillaRecipeProvider.netheriteSmithing($$0, Items.DIAMOND_LEGGINGS, RecipeCategory.COMBAT, Items.NETHERITE_LEGGINGS);
-        VanillaRecipeProvider.netheriteSmithing($$0, Items.DIAMOND_HELMET, RecipeCategory.COMBAT, Items.NETHERITE_HELMET);
-        VanillaRecipeProvider.netheriteSmithing($$0, Items.DIAMOND_BOOTS, RecipeCategory.COMBAT, Items.NETHERITE_BOOTS);
-        VanillaRecipeProvider.netheriteSmithing($$0, Items.DIAMOND_SWORD, RecipeCategory.COMBAT, Items.NETHERITE_SWORD);
-        VanillaRecipeProvider.netheriteSmithing($$0, Items.DIAMOND_AXE, RecipeCategory.TOOLS, Items.NETHERITE_AXE);
-        VanillaRecipeProvider.netheriteSmithing($$0, Items.DIAMOND_PICKAXE, RecipeCategory.TOOLS, Items.NETHERITE_PICKAXE);
-        VanillaRecipeProvider.netheriteSmithing($$0, Items.DIAMOND_HOE, RecipeCategory.TOOLS, Items.NETHERITE_HOE);
-        VanillaRecipeProvider.netheriteSmithing($$0, Items.DIAMOND_SHOVEL, RecipeCategory.TOOLS, Items.NETHERITE_SHOVEL);
+        VanillaRecipeProvider.legacyNetheriteSmithing($$0, Items.DIAMOND_CHESTPLATE, RecipeCategory.COMBAT, Items.NETHERITE_CHESTPLATE);
+        VanillaRecipeProvider.legacyNetheriteSmithing($$0, Items.DIAMOND_LEGGINGS, RecipeCategory.COMBAT, Items.NETHERITE_LEGGINGS);
+        VanillaRecipeProvider.legacyNetheriteSmithing($$0, Items.DIAMOND_HELMET, RecipeCategory.COMBAT, Items.NETHERITE_HELMET);
+        VanillaRecipeProvider.legacyNetheriteSmithing($$0, Items.DIAMOND_BOOTS, RecipeCategory.COMBAT, Items.NETHERITE_BOOTS);
+        VanillaRecipeProvider.legacyNetheriteSmithing($$0, Items.DIAMOND_SWORD, RecipeCategory.COMBAT, Items.NETHERITE_SWORD);
+        VanillaRecipeProvider.legacyNetheriteSmithing($$0, Items.DIAMOND_AXE, RecipeCategory.TOOLS, Items.NETHERITE_AXE);
+        VanillaRecipeProvider.legacyNetheriteSmithing($$0, Items.DIAMOND_PICKAXE, RecipeCategory.TOOLS, Items.NETHERITE_PICKAXE);
+        VanillaRecipeProvider.legacyNetheriteSmithing($$0, Items.DIAMOND_HOE, RecipeCategory.TOOLS, Items.NETHERITE_HOE);
+        VanillaRecipeProvider.legacyNetheriteSmithing($$0, Items.DIAMOND_SHOVEL, RecipeCategory.TOOLS, Items.NETHERITE_SHOVEL);
     }
 }

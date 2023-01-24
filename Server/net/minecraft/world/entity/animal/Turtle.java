@@ -9,7 +9,6 @@
  *  java.lang.Override
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
- *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.entity.animal;
 
@@ -33,7 +32,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LightningBolt;
@@ -210,14 +208,17 @@ extends Animal {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 30.0).add(Attributes.MOVEMENT_SPEED, 0.25);
     }
 
+    @Override
     public boolean isPushedByFluid() {
         return false;
     }
 
+    @Override
     public boolean canBreatheUnderwater() {
         return true;
     }
 
+    @Override
     public MobType getMobType() {
         return MobType.WATER;
     }
@@ -236,14 +237,17 @@ extends Animal {
         return super.getAmbientSound();
     }
 
+    @Override
     protected void playSwimSound(float $$0) {
         super.playSwimSound($$0 * 1.5f);
     }
 
+    @Override
     protected SoundEvent getSwimSound() {
         return SoundEvents.TURTLE_SWIM;
     }
 
+    @Override
     @Nullable
     protected SoundEvent getHurtSound(DamageSource $$0) {
         if (this.isBaby()) {
@@ -252,6 +256,7 @@ extends Animal {
         return SoundEvents.TURTLE_HURT;
     }
 
+    @Override
     @Nullable
     protected SoundEvent getDeathSound() {
         if (this.isBaby()) {
@@ -260,6 +265,7 @@ extends Animal {
         return SoundEvents.TURTLE_DEATH;
     }
 
+    @Override
     protected void playStepSound(BlockPos $$0, BlockState $$1) {
         SoundEvent $$2 = this.isBaby() ? SoundEvents.TURTLE_SHAMBLE_BABY : SoundEvents.TURTLE_SHAMBLE;
         this.playSound($$2, 0.15f, 1.0f);
@@ -270,10 +276,12 @@ extends Animal {
         return super.canFallInLove() && !this.hasEgg();
     }
 
+    @Override
     protected float nextStep() {
         return this.moveDist + 0.15f;
     }
 
+    @Override
     public float getScale() {
         return this.isBaby() ? 0.3f : 1.0f;
     }
@@ -322,6 +330,7 @@ extends Animal {
         }
     }
 
+    @Override
     public void travel(Vec3 $$0) {
         if (this.isEffectiveAi() && this.isInWater()) {
             this.moveRelative(0.1f, $$0);
@@ -340,6 +349,7 @@ extends Animal {
         return false;
     }
 
+    @Override
     public void thunderHit(ServerLevel $$0, LightningBolt $$1) {
         this.hurt(DamageSource.LIGHTNING_BOLT, Float.MAX_VALUE);
     }
@@ -399,7 +409,7 @@ extends Animal {
             if (!this.shouldPanic()) {
                 return false;
             }
-            BlockPos $$0 = this.lookForWater(this.mob.level, (Entity)((Object)this.mob), 7);
+            BlockPos $$0 = this.lookForWater(this.mob.level, this.mob, 7);
             if ($$0 != null) {
                 this.posX = $$0.getX();
                 this.posY = $$0.getY();
@@ -477,7 +487,7 @@ extends Animal {
                     this.turtle.setLayingEgg(true);
                 } else if (this.turtle.layEggCounter > this.adjustedTickDelay(200)) {
                     Level $$1 = this.turtle.level;
-                    $$1.playSound((Player)null, $$0, SoundEvents.TURTLE_LAY_EGG, SoundSource.BLOCKS, 0.3f, 0.9f + $$1.random.nextFloat() * 0.2f);
+                    $$1.playSound(null, $$0, SoundEvents.TURTLE_LAY_EGG, SoundSource.BLOCKS, 0.3f, 0.9f + $$1.random.nextFloat() * 0.2f);
                     $$1.setBlock((BlockPos)this.blockPos.above(), (BlockState)Blocks.TURTLE_EGG.defaultBlockState().setValue(TurtleEggBlock.EGGS, this.turtle.random.nextInt(4) + 1), 3);
                     this.turtle.setHasEgg(false);
                     this.turtle.setLayingEgg(false);

@@ -4,6 +4,7 @@
  * Could not load the following classes:
  *  java.lang.Object
  *  java.lang.Override
+ *  net.minecraft.world.item.ItemStack
  */
 package net.minecraft.core.dispenser;
 

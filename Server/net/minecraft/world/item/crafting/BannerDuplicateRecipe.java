@@ -8,6 +8,7 @@
 package net.minecraft.world.item.crafting;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.BannerItem;
@@ -65,14 +66,14 @@ extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer $$0) {
-        for (int $$1 = 0; $$1 < $$0.getContainerSize(); ++$$1) {
-            int $$3;
-            ItemStack $$2 = $$0.getItem($$1);
-            if ($$2.isEmpty() || ($$3 = BannerBlockEntity.getPatternCount($$2)) <= 0 || $$3 > 6) continue;
-            ItemStack $$4 = $$2.copy();
-            $$4.setCount(1);
-            return $$4;
+    public ItemStack assemble(CraftingContainer $$0, RegistryAccess $$1) {
+        for (int $$2 = 0; $$2 < $$0.getContainerSize(); ++$$2) {
+            int $$4;
+            ItemStack $$3 = $$0.getItem($$2);
+            if ($$3.isEmpty() || ($$4 = BannerBlockEntity.getPatternCount($$3)) <= 0 || $$4 > 6) continue;
+            ItemStack $$5 = $$3.copy();
+            $$5.setCount(1);
+            return $$5;
         }
         return ItemStack.EMPTY;
     }

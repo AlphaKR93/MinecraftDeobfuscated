@@ -110,6 +110,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.TraceableEntity;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -400,7 +401,7 @@ public class ExecuteCommand {
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> createRelationOperations(CommandNode<CommandSourceStack> $$02, LiteralArgumentBuilder<CommandSourceStack> $$1) {
-        return (LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)$$1.then(Commands.literal("owner").fork($$02, ExecuteCommand.expandOneToOneEntityRelation((Function<Entity, Optional<Entity>>)((Function)$$0 -> {
+        return (LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)$$1.then(Commands.literal("owner").fork($$02, ExecuteCommand.expandOneToOneEntityRelation((Function<Entity, Optional<Entity>>)((Function)$$0 -> {
             Optional optional;
             if ($$0 instanceof TamableAnimal) {
                 TamableAnimal $$1 = (TamableAnimal)$$0;
@@ -436,7 +437,16 @@ public class ExecuteCommand {
                 optional = Optional.empty();
             }
             return optional;
-        }))))).then(Commands.literal("vehicle").fork($$02, ExecuteCommand.expandOneToOneEntityRelation((Function<Entity, Optional<Entity>>)((Function)$$0 -> Optional.ofNullable((Object)$$0.getVehicle())))))).then(Commands.literal("controller").fork($$02, ExecuteCommand.expandOneToOneEntityRelation((Function<Entity, Optional<Entity>>)((Function)$$0 -> Optional.ofNullable((Object)$$0.getControllingPassenger())))))).then(Commands.literal("passengers").fork($$02, ExecuteCommand.expandOneToManyEntityRelation((Function<Entity, Stream<Entity>>)((Function)$$0 -> $$0.getPassengers().stream()))));
+        }))))).then(Commands.literal("vehicle").fork($$02, ExecuteCommand.expandOneToOneEntityRelation((Function<Entity, Optional<Entity>>)((Function)$$0 -> Optional.ofNullable((Object)$$0.getVehicle())))))).then(Commands.literal("controller").fork($$02, ExecuteCommand.expandOneToOneEntityRelation((Function<Entity, Optional<Entity>>)((Function)$$0 -> Optional.ofNullable((Object)$$0.getControllingPassenger())))))).then(Commands.literal("origin").fork($$02, ExecuteCommand.expandOneToOneEntityRelation((Function<Entity, Optional<Entity>>)((Function)$$0 -> {
+            Optional optional;
+            if ($$0 instanceof TraceableEntity) {
+                TraceableEntity $$1 = (TraceableEntity)((Object)$$0);
+                optional = Optional.ofNullable((Object)$$1.getOwner());
+            } else {
+                optional = Optional.empty();
+            }
+            return optional;
+        }))))).then(Commands.literal("passengers").fork($$02, ExecuteCommand.expandOneToManyEntityRelation((Function<Entity, Stream<Entity>>)((Function)$$0 -> $$0.getPassengers().stream()))));
     }
 
     @FunctionalInterface

@@ -14,10 +14,10 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.advancements.AdvancementProvider;
 import net.minecraft.data.advancements.AdvancementSubProvider;
-import net.minecraft.data.advancements.packs.UpdateOneTwentyAdvancements;
+import net.minecraft.data.advancements.packs.UpdateOneTwentyHusbandryAdvancements;
 
 public class UpdateOneTwentyVanillaAdvancementProvider {
     public static AdvancementProvider create(PackOutput $$0, CompletableFuture<HolderLookup.Provider> $$1) {
-        return new AdvancementProvider($$0, $$1, (List<AdvancementSubProvider>)List.of((Object)new UpdateOneTwentyAdvancements()));
+        return new AdvancementProvider($$0, $$1, (List<AdvancementSubProvider>)List.of((Object)new UpdateOneTwentyHusbandryAdvancements()));
     }
 }

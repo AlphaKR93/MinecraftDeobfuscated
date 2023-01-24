@@ -31,7 +31,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
-public class UpgradeRecipeBuilder {
+public class SmithingTransformRecipeBuilder {
+    private final Ingredient template;
     private final Ingredient base;
     private final Ingredient addition;
     private final RecipeCategory category;
@@ -39,19 +40,20 @@ public class UpgradeRecipeBuilder {
     private final Advancement.Builder advancement = Advancement.Builder.advancement();
     private final RecipeSerializer<?> type;
 
-    public UpgradeRecipeBuilder(RecipeSerializer<?> $$0, Ingredient $$1, Ingredient $$2, RecipeCategory $$3, Item $$4) {
-        this.category = $$3;
+    public SmithingTransformRecipeBuilder(RecipeSerializer<?> $$0, Ingredient $$1, Ingredient $$2, Ingredient $$3, RecipeCategory $$4, Item $$5) {
+        this.category = $$4;
         this.type = $$0;
-        this.base = $$1;
-        this.addition = $$2;
-        this.result = $$4;
+        this.template = $$1;
+        this.base = $$2;
+        this.addition = $$3;
+        this.result = $$5;
     }
 
-    public static UpgradeRecipeBuilder smithing(Ingredient $$0, Ingredient $$1, RecipeCategory $$2, Item $$3) {
-        return new UpgradeRecipeBuilder(RecipeSerializer.SMITHING, $$0, $$1, $$2, $$3);
+    public static SmithingTransformRecipeBuilder smithing(Ingredient $$0, Ingredient $$1, Ingredient $$2, RecipeCategory $$3, Item $$4) {
+        return new SmithingTransformRecipeBuilder(RecipeSerializer.SMITHING_TRANSFORM, $$0, $$1, $$2, $$3, $$4);
     }
 
-    public UpgradeRecipeBuilder unlocks(String $$0, CriterionTriggerInstance $$1) {
+    public SmithingTransformRecipeBuilder unlocks(String $$0, CriterionTriggerInstance $$1) {
         this.advancement.addCriterion($$0, $$1);
         return this;
     }
@@ -63,7 +65,7 @@ public class UpgradeRecipeBuilder {
     public void save(Consumer<FinishedRecipe> $$0, ResourceLocation $$1) {
         this.ensureValid($$1);
         this.advancement.parent(RecipeBuilder.ROOT_RECIPE_ADVANCEMENT).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked($$1)).rewards(AdvancementRewards.Builder.recipe($$1)).requirements(RequirementsStrategy.OR);
-        $$0.accept((Object)new Result($$1, this.type, this.base, this.addition, this.result, this.advancement, $$1.withPrefix("recipes/" + this.category.getFolderName() + "/")));
+        $$0.accept((Object)new Result($$1, this.type, this.template, this.base, this.addition, this.result, this.advancement, $$1.withPrefix("recipes/" + this.category.getFolderName() + "/")));
     }
 
     private void ensureValid(ResourceLocation $$0) {
@@ -72,28 +74,11 @@ public class UpgradeRecipeBuilder {
         }
     }
 
-    public static class Result
-    implements FinishedRecipe {
-        private final ResourceLocation id;
-        private final Ingredient base;
-        private final Ingredient addition;
-        private final Item result;
-        private final Advancement.Builder advancement;
-        private final ResourceLocation advancementId;
-        private final RecipeSerializer<?> type;
-
-        public Result(ResourceLocation $$0, RecipeSerializer<?> $$1, Ingredient $$2, Ingredient $$3, Item $$4, Advancement.Builder $$5, ResourceLocation $$6) {
-            this.id = $$0;
-            this.type = $$1;
-            this.base = $$2;
-            this.addition = $$3;
-            this.result = $$4;
-            this.advancement = $$5;
-            this.advancementId = $$6;
-        }
-
+    public record Result(ResourceLocation id, RecipeSerializer<?> type, Ingredient template, Ingredient base, Ingredient addition, Item result, Advancement.Builder advancement, ResourceLocation advancementId) implements FinishedRecipe
+    {
         @Override
         public void serializeRecipeData(JsonObject $$0) {
+            $$0.add("template", this.template.toJson());
             $$0.add("base", this.base.toJson());
             $$0.add("addition", this.addition.toJson());
             JsonObject $$1 = new JsonObject();

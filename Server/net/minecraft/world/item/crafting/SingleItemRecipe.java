@@ -13,6 +13,7 @@ package net.minecraft.world.item.crafting;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -63,7 +64,7 @@ implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess $$0) {
         return this.result;
     }
 
@@ -80,7 +81,7 @@ implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container $$0) {
+    public ItemStack assemble(Container $$0, RegistryAccess $$1) {
         return this.result.copy();
     }
 

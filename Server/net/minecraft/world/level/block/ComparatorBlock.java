@@ -8,6 +8,7 @@
  *  java.lang.Override
  *  java.util.List
  *  javax.annotation.Nullable
+ *  net.minecraft.world.level.BlockGetter
  */
 package net.minecraft.world.level.block;
 

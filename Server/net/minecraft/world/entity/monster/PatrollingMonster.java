@@ -8,6 +8,7 @@
  *  java.util.EnumSet
  *  java.util.List
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world.entity.monster;
 
@@ -74,7 +75,6 @@ extends Monster {
         this.patrolling = $$0.getBoolean("Patrolling");
     }
 
-    @Override
     public double getMyRidingOffset() {
         return -0.45;
     }
@@ -169,7 +169,7 @@ extends Monster {
         @Override
         public boolean canUse() {
             boolean $$0 = ((PatrollingMonster)this.mob).level.getGameTime() < this.cooldownUntil;
-            return ((PatrollingMonster)this.mob).isPatrolling() && ((Mob)this.mob).getTarget() == null && !((Entity)this.mob).isVehicle() && ((PatrollingMonster)this.mob).hasPatrolTarget() && !$$0;
+            return ((PatrollingMonster)this.mob).isPatrolling() && ((Mob)((Object)this.mob)).getTarget() == null && !this.mob.isVehicle() && ((PatrollingMonster)this.mob).hasPatrolTarget() && !$$0;
         }
 
         @Override
@@ -183,14 +183,14 @@ extends Monster {
         @Override
         public void tick() {
             boolean $$0 = ((PatrollingMonster)this.mob).isPatrolLeader();
-            PathNavigation $$1 = ((Mob)this.mob).getNavigation();
+            PathNavigation $$1 = ((Mob)((Object)this.mob)).getNavigation();
             if ($$1.isDone()) {
                 List<PatrollingMonster> $$2 = this.findPatrolCompanions();
                 if (((PatrollingMonster)this.mob).isPatrolling() && $$2.isEmpty()) {
                     ((PatrollingMonster)this.mob).setPatrolling(false);
-                } else if (!$$0 || !((PatrollingMonster)this.mob).getPatrolTarget().closerToCenterThan(((Entity)this.mob).position(), 10.0)) {
+                } else if (!$$0 || !((PatrollingMonster)this.mob).getPatrolTarget().closerToCenterThan(this.mob.position(), 10.0)) {
                     Vec3 $$3 = Vec3.atBottomCenterOf(((PatrollingMonster)this.mob).getPatrolTarget());
-                    Vec3 $$4 = ((Entity)this.mob).position();
+                    Vec3 $$4 = this.mob.position();
                     Vec3 $$5 = $$4.subtract($$3);
                     $$3 = $$5.yRot(90.0f).scale(0.4).add($$3);
                     Vec3 $$6 = $$3.subtract($$4).normalize().scale(10.0).add($$4);
@@ -210,13 +210,13 @@ extends Monster {
         }
 
         private List<PatrollingMonster> findPatrolCompanions() {
-            return ((PatrollingMonster)this.mob).level.getEntitiesOfClass(PatrollingMonster.class, ((Entity)this.mob).getBoundingBox().inflate(16.0), $$0 -> $$0.canJoinPatrol() && !$$0.is((Entity)this.mob));
+            return ((PatrollingMonster)this.mob).level.getEntitiesOfClass(PatrollingMonster.class, this.mob.getBoundingBox().inflate(16.0), $$0 -> $$0.canJoinPatrol() && !$$0.is((Entity)this.mob));
         }
 
         private boolean moveRandomly() {
-            RandomSource $$0 = ((LivingEntity)this.mob).getRandom();
-            BlockPos $$1 = ((PatrollingMonster)this.mob).level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ((Entity)this.mob).blockPosition().offset(-8 + $$0.nextInt(16), 0, -8 + $$0.nextInt(16)));
-            return ((Mob)this.mob).getNavigation().moveTo($$1.getX(), $$1.getY(), $$1.getZ(), this.speedModifier);
+            RandomSource $$0 = ((LivingEntity)((Object)this.mob)).getRandom();
+            BlockPos $$1 = ((PatrollingMonster)this.mob).level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, this.mob.blockPosition().offset(-8 + $$0.nextInt(16), 0, -8 + $$0.nextInt(16)));
+            return ((Mob)((Object)this.mob)).getNavigation().moveTo($$1.getX(), $$1.getY(), $$1.getZ(), this.speedModifier);
         }
     }
 }

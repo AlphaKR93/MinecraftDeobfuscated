@@ -20,6 +20,7 @@
  *  java.util.Map$Entry
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.advancements.critereon;
 

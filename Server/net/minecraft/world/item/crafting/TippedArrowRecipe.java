@@ -7,6 +7,7 @@
  */
 package net.minecraft.world.item.crafting;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -42,15 +43,15 @@ extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer $$0) {
-        ItemStack $$1 = $$0.getItem(1 + $$0.getWidth());
-        if (!$$1.is(Items.LINGERING_POTION)) {
+    public ItemStack assemble(CraftingContainer $$0, RegistryAccess $$1) {
+        ItemStack $$2 = $$0.getItem(1 + $$0.getWidth());
+        if (!$$2.is(Items.LINGERING_POTION)) {
             return ItemStack.EMPTY;
         }
-        ItemStack $$2 = new ItemStack(Items.TIPPED_ARROW, 8);
-        PotionUtils.setPotion($$2, PotionUtils.getPotion($$1));
-        PotionUtils.setCustomEffects($$2, PotionUtils.getCustomEffects($$1));
-        return $$2;
+        ItemStack $$3 = new ItemStack(Items.TIPPED_ARROW, 8);
+        PotionUtils.setPotion($$3, PotionUtils.getPotion($$2));
+        PotionUtils.setCustomEffects($$3, PotionUtils.getCustomEffects($$2));
+        return $$3;
     }
 
     @Override

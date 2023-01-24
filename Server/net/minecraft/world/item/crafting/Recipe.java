@@ -4,10 +4,12 @@
  * Could not load the following classes:
  *  java.lang.Object
  *  java.lang.String
+ *  net.minecraft.world.level.Level
  */
 package net.minecraft.world.item.crafting;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
@@ -21,11 +23,11 @@ import net.minecraft.world.level.block.Blocks;
 public interface Recipe<C extends Container> {
     public boolean matches(C var1, Level var2);
 
-    public ItemStack assemble(C var1);
+    public ItemStack assemble(C var1, RegistryAccess var2);
 
     public boolean canCraftInDimensions(int var1, int var2);
 
-    public ItemStack getResultItem();
+    public ItemStack getResultItem(RegistryAccess var1);
 
     default public NonNullList<ItemStack> getRemainingItems(C $$0) {
         NonNullList<ItemStack> $$1 = NonNullList.withSize($$0.getContainerSize(), ItemStack.EMPTY);

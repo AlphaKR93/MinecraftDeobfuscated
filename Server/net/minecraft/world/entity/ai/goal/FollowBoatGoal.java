@@ -6,7 +6,6 @@
  *  java.lang.Override
  *  java.util.List
  *  javax.annotation.Nullable
- *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world.entity.ai.goal;
 

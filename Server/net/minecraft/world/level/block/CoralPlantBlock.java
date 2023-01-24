@@ -4,6 +4,7 @@
  * Could not load the following classes:
  *  java.lang.Object
  *  java.lang.Override
+ *  net.minecraft.core.BlockPos
  */
 package net.minecraft.world.level.block;
 

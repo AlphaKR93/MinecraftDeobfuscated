@@ -8,7 +8,6 @@
  *  java.lang.String
  *  java.util.Optional
  *  java.util.concurrent.ConcurrentMap
- *  net.minecraft.resources.ResourceLocation
  */
 package net.minecraft.resources;
 
@@ -51,7 +50,7 @@ public class ResourceKey<T> {
     }
 
     public boolean isFor(ResourceKey<? extends Registry<?>> $$0) {
-        return this.registryName.equals((Object)$$0.location());
+        return this.registryName.equals($$0.location());
     }
 
     public <E> Optional<ResourceKey<E>> cast(ResourceKey<? extends Registry<E>> $$0) {

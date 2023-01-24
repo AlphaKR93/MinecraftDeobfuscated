@@ -10,6 +10,7 @@ package net.minecraft.network.protocol.game;
 
 import javax.annotation.Nullable;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -54,7 +55,7 @@ implements Packet<ClientGamePacketListener> {
         this.effectAmplifier = $$02.readByte();
         this.effectDurationTicks = $$02.readVarInt();
         this.flags = $$02.readByte();
-        this.factorData = (MobEffectInstance.FactorData)$$02.readNullable($$0 -> $$0.readWithCodec(MobEffectInstance.FactorData.CODEC));
+        this.factorData = (MobEffectInstance.FactorData)$$02.readNullable($$0 -> $$0.readWithCodec(NbtOps.INSTANCE, MobEffectInstance.FactorData.CODEC));
     }
 
     @Override
@@ -64,7 +65,7 @@ implements Packet<ClientGamePacketListener> {
         $$02.writeByte(this.effectAmplifier);
         $$02.writeVarInt(this.effectDurationTicks);
         $$02.writeByte(this.flags);
-        $$02.writeNullable(this.factorData, ($$0, $$1) -> $$0.writeWithCodec(MobEffectInstance.FactorData.CODEC, $$1));
+        $$02.writeNullable(this.factorData, ($$0, $$1) -> $$0.writeWithCodec(NbtOps.INSTANCE, MobEffectInstance.FactorData.CODEC, $$1));
     }
 
     @Override

@@ -40,6 +40,7 @@
  *  java.util.List
  *  java.util.concurrent.TimeUnit
  *  javax.annotation.Nullable
+ *  net.minecraft.server.MinecraftServer
  *  org.slf4j.Logger
  */
 package net.minecraft.server.network;

@@ -9,6 +9,7 @@
 package net.minecraft.world.item.crafting;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +47,7 @@ implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container $$0) {
+    public ItemStack assemble(Container $$0, RegistryAccess $$1) {
         return this.result.copy();
     }
 
@@ -67,7 +68,7 @@ implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess $$0) {
         return this.result;
     }
 

@@ -60,7 +60,7 @@ public class GiveCommand {
                     ItemEntity $$11 = $$6.drop($$9, false);
                     if ($$11 == null) continue;
                     $$11.setNoPickUpDelay();
-                    $$11.setOwner($$6.getUUID());
+                    $$11.setTarget($$6.getUUID());
                     continue;
                 }
                 $$9.setCount(1);

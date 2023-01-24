@@ -5,6 +5,7 @@
  *  java.lang.Object
  *  java.lang.Override
  *  java.util.Optional
+ *  net.minecraft.world.level.Level
  */
 package net.minecraft.world.level.block;
 
@@ -12,6 +13,7 @@ import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -22,6 +24,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
@@ -46,7 +50,7 @@ extends Block {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext $$0) {
-        return BaseFireBlock.getState($$0.getLevel(), $$0.getClickedPos());
+        return BaseFireBlock.getState((BlockGetter)$$0.getLevel(), $$0.getClickedPos());
     }
 
     public static BlockState getState(BlockGetter $$0, BlockPos $$1) {
@@ -72,12 +76,12 @@ extends Block {
                 if ($$3.nextInt(24) == 0) {
                     $$1.playLocalSound((double)$$2.getX() + 0.5, (double)$$2.getY() + 0.5, (double)$$2.getZ() + 0.5, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 1.0f + $$3.nextFloat(), $$3.nextFloat() * 0.7f + 0.3f, false);
                 }
-                if (!this.canBurn($$5 = $$1.getBlockState((BlockPos)($$4 = $$2.below()))) && !$$5.isFaceSturdy($$1, (BlockPos)$$4, Direction.UP)) break block11;
+                if (!this.canBurn($$5 = $$1.getBlockState((BlockPos)($$4 = $$2.below()))) && !$$5.isFaceSturdy((BlockGetter)$$1, (BlockPos)$$4, Direction.UP)) break block11;
                 for (int $$6 = 0; $$6 < 3; ++$$6) {
                     double $$7 = (double)$$2.getX() + $$3.nextDouble();
                     double $$8 = (double)$$2.getY() + $$3.nextDouble() * 0.5 + 0.5;
                     double $$9 = (double)$$2.getZ() + $$3.nextDouble();
-                    $$1.addParticle(ParticleTypes.LARGE_SMOKE, $$7, $$8, $$9, 0.0, 0.0, 0.0);
+                    $$1.addParticle((ParticleOptions)ParticleTypes.LARGE_SMOKE, $$7, $$8, $$9, 0.0, 0.0, 0.0);
                 }
                 break block12;
             }
@@ -86,7 +90,7 @@ extends Block {
                     double $$11 = (double)$$2.getX() + $$3.nextDouble() * (double)0.1f;
                     double $$12 = (double)$$2.getY() + $$3.nextDouble();
                     double $$13 = (double)$$2.getZ() + $$3.nextDouble();
-                    $$1.addParticle(ParticleTypes.LARGE_SMOKE, $$11, $$12, $$13, 0.0, 0.0, 0.0);
+                    $$1.addParticle((ParticleOptions)ParticleTypes.LARGE_SMOKE, $$11, $$12, $$13, 0.0, 0.0, 0.0);
                 }
             }
             if (this.canBurn($$1.getBlockState((BlockPos)$$2.east()))) {
@@ -94,7 +98,7 @@ extends Block {
                     double $$15 = (double)($$2.getX() + 1) - $$3.nextDouble() * (double)0.1f;
                     double $$16 = (double)$$2.getY() + $$3.nextDouble();
                     double $$17 = (double)$$2.getZ() + $$3.nextDouble();
-                    $$1.addParticle(ParticleTypes.LARGE_SMOKE, $$15, $$16, $$17, 0.0, 0.0, 0.0);
+                    $$1.addParticle((ParticleOptions)ParticleTypes.LARGE_SMOKE, $$15, $$16, $$17, 0.0, 0.0, 0.0);
                 }
             }
             if (this.canBurn($$1.getBlockState((BlockPos)$$2.north()))) {
@@ -102,7 +106,7 @@ extends Block {
                     double $$19 = (double)$$2.getX() + $$3.nextDouble();
                     double $$20 = (double)$$2.getY() + $$3.nextDouble();
                     double $$21 = (double)$$2.getZ() + $$3.nextDouble() * (double)0.1f;
-                    $$1.addParticle(ParticleTypes.LARGE_SMOKE, $$19, $$20, $$21, 0.0, 0.0, 0.0);
+                    $$1.addParticle((ParticleOptions)ParticleTypes.LARGE_SMOKE, $$19, $$20, $$21, 0.0, 0.0, 0.0);
                 }
             }
             if (this.canBurn($$1.getBlockState((BlockPos)$$2.south()))) {
@@ -110,7 +114,7 @@ extends Block {
                     double $$23 = (double)$$2.getX() + $$3.nextDouble();
                     double $$24 = (double)$$2.getY() + $$3.nextDouble();
                     double $$25 = (double)($$2.getZ() + 1) - $$3.nextDouble() * (double)0.1f;
-                    $$1.addParticle(ParticleTypes.LARGE_SMOKE, $$23, $$24, $$25, 0.0, 0.0, 0.0);
+                    $$1.addParticle((ParticleOptions)ParticleTypes.LARGE_SMOKE, $$23, $$24, $$25, 0.0, 0.0, 0.0);
                 }
             }
             if (!this.canBurn($$1.getBlockState((BlockPos)$$2.above()))) break block12;
@@ -118,7 +122,7 @@ extends Block {
                 double $$27 = (double)$$2.getX() + $$3.nextDouble();
                 double $$28 = (double)($$2.getY() + 1) - $$3.nextDouble() * (double)0.1f;
                 double $$29 = (double)$$2.getZ() + $$3.nextDouble();
-                $$1.addParticle(ParticleTypes.LARGE_SMOKE, $$27, $$28, $$29, 0.0, 0.0, 0.0);
+                $$1.addParticle((ParticleOptions)ParticleTypes.LARGE_SMOKE, $$27, $$28, $$29, 0.0, 0.0, 0.0);
             }
         }
     }
@@ -143,11 +147,11 @@ extends Block {
         if ($$3.is($$0.getBlock())) {
             return;
         }
-        if (BaseFireBlock.inPortalDimension($$1) && ($$5 = PortalShape.findEmptyPortalShape($$1, $$2, Direction.Axis.X)).isPresent()) {
+        if (BaseFireBlock.inPortalDimension($$1) && ($$5 = PortalShape.findEmptyPortalShape((LevelAccessor)$$1, $$2, Direction.Axis.X)).isPresent()) {
             ((PortalShape)$$5.get()).createPortalBlocks();
             return;
         }
-        if (!$$0.canSurvive($$1, $$2)) {
+        if (!$$0.canSurvive((LevelReader)$$1, $$2)) {
             $$1.removeBlock($$2, false);
         }
     }
@@ -173,7 +177,7 @@ extends Block {
         if (!$$3.isAir()) {
             return false;
         }
-        return BaseFireBlock.getState($$0, $$1).canSurvive($$0, $$1) || BaseFireBlock.isPortal($$0, $$1, $$2);
+        return BaseFireBlock.getState((BlockGetter)$$0, $$1).canSurvive((LevelReader)$$0, $$1) || BaseFireBlock.isPortal($$0, $$1, $$2);
     }
 
     private static boolean isPortal(Level $$0, BlockPos $$1, Direction $$2) {
@@ -183,7 +187,7 @@ extends Block {
         BlockPos.MutableBlockPos $$3 = $$1.mutable();
         boolean $$4 = false;
         for (Direction $$5 : Direction.values()) {
-            if (!$$0.getBlockState($$3.set($$1).move($$5)).is(Blocks.OBSIDIAN)) continue;
+            if (!$$0.getBlockState((BlockPos)$$3.set($$1).move($$5)).is(Blocks.OBSIDIAN)) continue;
             $$4 = true;
             break;
         }
@@ -191,6 +195,6 @@ extends Block {
             return false;
         }
         Direction.Axis $$6 = $$2.getAxis().isHorizontal() ? $$2.getCounterClockWise().getAxis() : Direction.Plane.HORIZONTAL.getRandomAxis($$0.random);
-        return PortalShape.findEmptyPortalShape($$0, $$1, $$6).isPresent();
+        return PortalShape.findEmptyPortalShape((LevelAccessor)$$0, $$1, $$6).isPresent();
     }
 }

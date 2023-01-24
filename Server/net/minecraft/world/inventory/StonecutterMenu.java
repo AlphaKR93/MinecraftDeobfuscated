@@ -162,7 +162,7 @@ extends AbstractContainerMenu {
     void setupResultSlot() {
         if (!this.recipes.isEmpty() && this.isValidRecipeIndex(this.selectedRecipeIndex.get())) {
             StonecutterRecipe $$0 = (StonecutterRecipe)this.recipes.get(this.selectedRecipeIndex.get());
-            ItemStack $$1 = $$0.assemble(this.container);
+            ItemStack $$1 = $$0.assemble(this.container, this.level.registryAccess());
             if ($$1.isItemEnabled(this.level.enabledFeatures())) {
                 this.resultContainer.setRecipeUsed($$0);
                 this.resultSlot.set($$1);

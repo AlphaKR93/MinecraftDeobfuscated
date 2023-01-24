@@ -72,7 +72,7 @@ public class AdvancementRewards {
                 ItemEntity $$5 = $$0.drop($$4, false);
                 if ($$5 == null) continue;
                 $$5.setNoPickUpDelay();
-                $$5.setOwner($$0.getUUID());
+                $$5.setTarget($$0.getUUID());
             }
         }
         if ($$22) {

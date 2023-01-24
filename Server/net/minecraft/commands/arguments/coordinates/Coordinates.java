@@ -3,6 +3,7 @@
  * 
  * Could not load the following classes:
  *  java.lang.Object
+ *  net.minecraft.commands.CommandSourceStack
  */
 package net.minecraft.commands.arguments.coordinates;
 

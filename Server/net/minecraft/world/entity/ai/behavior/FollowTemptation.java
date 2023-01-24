@@ -69,12 +69,12 @@ extends Behavior<PathfinderMob> {
     }
 
     @Override
-    protected void start(ServerLevel $$0, PathfinderMob $$1, long $$2) {
+    protected void tick(ServerLevel $$0, PathfinderMob $$1, long $$2) {
         $$1.getBrain().setMemory(MemoryModuleType.IS_TEMPTED, true);
     }
 
     @Override
-    protected void start(ServerLevel $$0, PathfinderMob $$1, long $$2) {
+    protected void tick(ServerLevel $$0, PathfinderMob $$1, long $$2) {
         Brain<?> $$3 = $$1.getBrain();
         $$3.setMemory(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS, 100);
         $$3.setMemory(MemoryModuleType.IS_TEMPTED, false);
@@ -83,7 +83,7 @@ extends Behavior<PathfinderMob> {
     }
 
     @Override
-    protected void start(ServerLevel $$0, PathfinderMob $$1, long $$2) {
+    protected void tick(ServerLevel $$0, PathfinderMob $$1, long $$2) {
         Player $$3 = (Player)this.getTemptingPlayer($$1).get();
         Brain<?> $$4 = $$1.getBrain();
         $$4.setMemory(MemoryModuleType.LOOK_TARGET, new EntityTracker($$3, true));

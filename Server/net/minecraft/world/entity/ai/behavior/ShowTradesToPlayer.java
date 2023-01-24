@@ -64,7 +64,7 @@ extends Behavior<Villager> {
     }
 
     @Override
-    public void start(ServerLevel $$0, Villager $$1, long $$2) {
+    public void stop(ServerLevel $$0, Villager $$1, long $$2) {
         super.start($$0, $$1, $$2);
         this.lookAtTarget($$1);
         this.cycleCounter = 0;
@@ -86,7 +86,7 @@ extends Behavior<Villager> {
     }
 
     @Override
-    public void start(ServerLevel $$0, Villager $$1, long $$2) {
+    public void stop(ServerLevel $$0, Villager $$1, long $$2) {
         super.stop($$0, $$1, $$2);
         $$1.getBrain().eraseMemory(MemoryModuleType.INTERACTION_TARGET);
         ShowTradesToPlayer.clearHeldItem($$1);

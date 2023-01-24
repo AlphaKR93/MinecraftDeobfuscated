@@ -39,6 +39,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -286,7 +287,7 @@ StackedContentsCompatible {
                 $$10 = null;
             }
             int $$11 = $$3.getMaxStackSize();
-            if (!$$3.isLit() && AbstractFurnaceBlockEntity.canBurn($$10, $$3.items, $$11)) {
+            if (!$$3.isLit() && AbstractFurnaceBlockEntity.canBurn($$0.registryAccess(), $$10, $$3.items, $$11)) {
                 $$3.litDuration = $$3.litTime = $$3.getBurnDuration($$6);
                 if ($$3.isLit()) {
                     $$5 = true;
@@ -300,12 +301,12 @@ StackedContentsCompatible {
                     }
                 }
             }
-            if ($$3.isLit() && AbstractFurnaceBlockEntity.canBurn($$10, $$3.items, $$11)) {
+            if ($$3.isLit() && AbstractFurnaceBlockEntity.canBurn($$0.registryAccess(), $$10, $$3.items, $$11)) {
                 ++$$3.cookingProgress;
                 if ($$3.cookingProgress == $$3.cookingTotalTime) {
                     $$3.cookingProgress = 0;
                     $$3.cookingTotalTime = AbstractFurnaceBlockEntity.getTotalCookTime($$0, $$3);
-                    if (AbstractFurnaceBlockEntity.burn($$10, $$3.items, $$11)) {
+                    if (AbstractFurnaceBlockEntity.burn($$0.registryAccess(), $$10, $$3.items, $$11)) {
                         $$3.setRecipeUsed($$10);
                     }
                     $$5 = true;
@@ -326,43 +327,43 @@ StackedContentsCompatible {
         }
     }
 
-    private static boolean canBurn(@Nullable Recipe<?> $$0, NonNullList<ItemStack> $$1, int $$2) {
-        if ($$1.get(0).isEmpty() || $$0 == null) {
+    private static boolean canBurn(RegistryAccess $$0, @Nullable Recipe<?> $$1, NonNullList<ItemStack> $$2, int $$3) {
+        if ($$2.get(0).isEmpty() || $$1 == null) {
             return false;
         }
-        ItemStack $$3 = $$0.getResultItem();
-        if ($$3.isEmpty()) {
-            return false;
-        }
-        ItemStack $$4 = $$1.get(2);
+        ItemStack $$4 = $$1.getResultItem($$0);
         if ($$4.isEmpty()) {
-            return true;
-        }
-        if (!$$4.sameItem($$3)) {
             return false;
         }
-        if ($$4.getCount() < $$2 && $$4.getCount() < $$4.getMaxStackSize()) {
+        ItemStack $$5 = $$2.get(2);
+        if ($$5.isEmpty()) {
             return true;
         }
-        return $$4.getCount() < $$3.getMaxStackSize();
+        if (!$$5.sameItem($$4)) {
+            return false;
+        }
+        if ($$5.getCount() < $$3 && $$5.getCount() < $$5.getMaxStackSize()) {
+            return true;
+        }
+        return $$5.getCount() < $$4.getMaxStackSize();
     }
 
-    private static boolean burn(@Nullable Recipe<?> $$0, NonNullList<ItemStack> $$1, int $$2) {
-        if ($$0 == null || !AbstractFurnaceBlockEntity.canBurn($$0, $$1, $$2)) {
+    private static boolean burn(RegistryAccess $$0, @Nullable Recipe<?> $$1, NonNullList<ItemStack> $$2, int $$3) {
+        if ($$1 == null || !AbstractFurnaceBlockEntity.canBurn($$0, $$1, $$2, $$3)) {
             return false;
         }
-        ItemStack $$3 = $$1.get(0);
-        ItemStack $$4 = $$0.getResultItem();
-        ItemStack $$5 = $$1.get(2);
-        if ($$5.isEmpty()) {
-            $$1.set(2, $$4.copy());
-        } else if ($$5.is($$4.getItem())) {
-            $$5.grow(1);
+        ItemStack $$4 = $$2.get(0);
+        ItemStack $$5 = $$1.getResultItem($$0);
+        ItemStack $$6 = $$2.get(2);
+        if ($$6.isEmpty()) {
+            $$2.set(2, $$5.copy());
+        } else if ($$6.is($$5.getItem())) {
+            $$6.grow(1);
         }
-        if ($$3.is(Blocks.WET_SPONGE.asItem()) && !$$1.get(1).isEmpty() && $$1.get(1).is(Items.BUCKET)) {
-            $$1.set(1, new ItemStack(Items.WATER_BUCKET));
+        if ($$4.is(Blocks.WET_SPONGE.asItem()) && !$$2.get(1).isEmpty() && $$2.get(1).is(Items.BUCKET)) {
+            $$2.set(1, new ItemStack(Items.WATER_BUCKET));
         }
-        $$3.shrink(1);
+        $$4.shrink(1);
         return true;
     }
 

@@ -29,11 +29,6 @@ extends Enchantment {
     }
 
     @Override
-    public int getMaxLevel() {
-        return 1;
-    }
-
-    @Override
     public boolean checkCompatibility(Enchantment $$0) {
         return super.checkCompatibility($$0) && $$0 != Enchantments.PIERCING;
     }

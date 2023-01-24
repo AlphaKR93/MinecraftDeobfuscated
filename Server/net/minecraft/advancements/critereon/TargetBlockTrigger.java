@@ -5,7 +5,6 @@
  *  com.google.gson.JsonObject
  *  java.lang.Object
  *  java.lang.Override
- *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.advancements.critereon;
 

@@ -26,10 +26,12 @@
  *  java.util.List
  *  java.util.Map
  *  java.util.Optional
+ *  java.util.Set
  *  java.util.UUID
  *  java.util.function.Function
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
+ *  net.minecraft.server.MinecraftServer
  *  org.slf4j.Logger
  */
 package net.minecraft.server.players;
@@ -54,6 +56,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -216,7 +219,7 @@ public abstract class PlayerList {
         GameRules $$14 = $$10.getGameRules();
         boolean $$15 = $$14.getBoolean(GameRules.RULE_DO_IMMEDIATE_RESPAWN);
         boolean $$16 = $$14.getBoolean(GameRules.RULE_REDUCEDDEBUGINFO);
-        $$13.send(new ClientboundLoginPacket($$12.getId(), $$122.isHardcore(), $$12.gameMode.getGameModeForPlayer(), $$12.gameMode.getPreviousGameModeForPlayer(), this.server.levelKeys(), this.synchronizedRegistries, $$10.dimensionTypeId(), $$10.dimension(), BiomeManager.obfuscateSeed($$10.getSeed()), this.getMaxPlayers(), this.viewDistance, this.simulationDistance, $$16, !$$15, $$10.isDebug(), $$10.isFlat(), $$12.getLastDeathLocation()));
+        $$13.send(new ClientboundLoginPacket($$12.getId(), $$122.isHardcore(), $$12.gameMode.getGameModeForPlayer(), $$12.gameMode.getPreviousGameModeForPlayer(), (Set<ResourceKey<Level>>)this.server.levelKeys(), this.synchronizedRegistries, $$10.dimensionTypeId(), $$10.dimension(), BiomeManager.obfuscateSeed($$10.getSeed()), this.getMaxPlayers(), this.viewDistance, this.simulationDistance, $$16, !$$15, $$10.isDebug(), $$10.isFlat(), $$12.getLastDeathLocation()));
         $$13.send(new ClientboundUpdateEnabledFeaturesPacket(FeatureFlags.REGISTRY.toNames($$10.enabledFeatures())));
         $$13.send(new ClientboundCustomPayloadPacket(ClientboundCustomPayloadPacket.BRAND, new FriendlyByteBuf(Unpooled.buffer()).writeUtf(this.getServer().getServerModName())));
         $$13.send(new ClientboundChangeDifficultyPacket($$122.getDifficulty(), $$122.isDifficultyLocked()));

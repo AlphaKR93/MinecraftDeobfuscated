@@ -9,7 +9,6 @@
  *  java.lang.String
  *  java.util.Optional
  *  javax.annotation.Nullable
- *  net.minecraft.world.item.ItemStack
  *  org.slf4j.Logger
  */
 package net.minecraft.world.item;
@@ -37,7 +36,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Vanishable;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import org.slf4j.Logger;
@@ -116,7 +114,7 @@ implements Vanishable {
             if ($$5) {
                 this.addLodestoneTags($$2.dimension(), $$1, $$4.getOrCreateTag());
             } else {
-                ItemStack $$6 = new ItemStack((ItemLike)Items.COMPASS, 1);
+                ItemStack $$6 = new ItemStack(Items.COMPASS, 1);
                 CompoundTag $$7 = $$4.hasTag() ? $$4.getTag().copy() : new CompoundTag();
                 $$6.setTag($$7);
                 if (!$$3.getAbilities().instabuild) {

@@ -9,7 +9,6 @@
  *  java.util.EnumSet
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
- *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.entity.ai.goal.target;
 

@@ -12,6 +12,7 @@
  *  java.util.Iterator
  *  java.util.LinkedHashSet
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.entity.monster;
 
@@ -162,7 +163,7 @@ Saddleable {
     public void equipSaddle(@Nullable SoundSource $$0) {
         this.steering.setSaddle(true);
         if ($$0 != null) {
-            this.level.playSound(null, this, SoundEvents.STRIDER_SADDLE, $$0, 0.5f, 1.0f);
+            this.level.playSound(null, (Entity)((Object)this), SoundEvents.STRIDER_SADDLE, $$0, 0.5f, 1.0f);
         }
     }
 
@@ -187,17 +188,15 @@ Saddleable {
 
     public boolean isSuffocating() {
         if (this.getVehicle() instanceof Strider) {
-            return ((Strider)this.getVehicle()).isSuffocating();
+            return ((Strider)((Object)this.getVehicle())).isSuffocating();
         }
         return this.entityData.get(DATA_SUFFOCATING);
     }
 
-    @Override
     public boolean canStandOnFluid(FluidState $$0) {
         return $$0.is(FluidTags.LAVA);
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         float $$0 = Math.min((float)0.25f, (float)this.animationSpeed);
         float $$1 = this.animationPosition;
@@ -206,10 +205,9 @@ Saddleable {
 
     @Override
     public boolean checkSpawnObstruction(LevelReader $$0) {
-        return $$0.isUnobstructed(this);
+        return $$0.isUnobstructed((Entity)((Object)this));
     }
 
-    @Override
     @Nullable
     public Entity getControllingPassenger() {
         Entity $$0 = this.getFirstPassenger();
@@ -218,15 +216,14 @@ Saddleable {
 
     private boolean canBeControlledBy(Entity $$0) {
         if ($$0 instanceof Player) {
-            Player $$1 = (Player)$$0;
+            Player $$1 = (Player)((Object)$$0);
             return $$1.getMainHandItem().is(Items.WARPED_FUNGUS_ON_A_STICK) || $$1.getOffhandItem().is(Items.WARPED_FUNGUS_ON_A_STICK);
         }
         return false;
     }
 
-    @Override
     public Vec3 getDismountLocationForPassenger(LivingEntity $$0) {
-        Iterator $$1 = new Iterator[]{Strider.getCollisionHorizontalEscapeVector(this.getBbWidth(), $$0.getBbWidth(), $$0.getYRot()), Strider.getCollisionHorizontalEscapeVector(this.getBbWidth(), $$0.getBbWidth(), $$0.getYRot() - 22.5f), Strider.getCollisionHorizontalEscapeVector(this.getBbWidth(), $$0.getBbWidth(), $$0.getYRot() + 22.5f), Strider.getCollisionHorizontalEscapeVector(this.getBbWidth(), $$0.getBbWidth(), $$0.getYRot() - 45.0f), Strider.getCollisionHorizontalEscapeVector(this.getBbWidth(), $$0.getBbWidth(), $$0.getYRot() + 45.0f)};
+        Iterator $$1 = new Iterator[]{Strider.getCollisionHorizontalEscapeVector((double)this.getBbWidth(), (double)$$0.getBbWidth(), (float)$$0.getYRot()), Strider.getCollisionHorizontalEscapeVector((double)this.getBbWidth(), (double)$$0.getBbWidth(), (float)($$0.getYRot() - 22.5f)), Strider.getCollisionHorizontalEscapeVector((double)this.getBbWidth(), (double)$$0.getBbWidth(), (float)($$0.getYRot() + 22.5f)), Strider.getCollisionHorizontalEscapeVector((double)this.getBbWidth(), (double)$$0.getBbWidth(), (float)($$0.getYRot() - 45.0f)), Strider.getCollisionHorizontalEscapeVector((double)this.getBbWidth(), (double)$$0.getBbWidth(), (float)($$0.getYRot() + 45.0f))};
         LinkedHashSet $$2 = Sets.newLinkedHashSet();
         double $$3 = this.getBoundingBox().maxY;
         double $$4 = this.getBoundingBox().minY - 0.5;
@@ -252,7 +249,6 @@ Saddleable {
         return new Vec3(this.getX(), this.getBoundingBox().maxY, this.getZ());
     }
 
-    @Override
     public void travel(Vec3 $$0) {
         this.setSpeed(this.getMoveSpeed());
         this.travel(this, this.steering, $$0);
@@ -272,12 +268,10 @@ Saddleable {
         super.travel($$0);
     }
 
-    @Override
     protected float nextStep() {
         return this.moveDist + 0.6f;
     }
 
-    @Override
     protected void playStepSound(BlockPos $$0, BlockState $$1) {
         this.playSound(this.isInLava() ? SoundEvents.STRIDER_STEP_LAVA : SoundEvents.STRIDER_STEP, 1.0f, 1.0f);
     }
@@ -287,7 +281,6 @@ Saddleable {
         return this.steering.boost(this.getRandom());
     }
 
-    @Override
     protected void checkFallDamage(double $$0, boolean $$1, BlockState $$2, BlockPos $$3) {
         this.checkInsideBlocks();
         if (this.isInLava()) {
@@ -330,7 +323,7 @@ Saddleable {
 
     private void floatStrider() {
         if (this.isInLava()) {
-            CollisionContext $$0 = CollisionContext.of(this);
+            CollisionContext $$0 = CollisionContext.of((Entity)((Object)this));
             if (!$$0.isAbove(LiquidBlock.STABLE_SHAPE, this.blockPosition(), true) || this.level.getFluidState((BlockPos)this.blockPosition().above()).is(FluidTags.LAVA)) {
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.5).add(0.0, 0.05, 0.0));
             } else {
@@ -351,27 +344,22 @@ Saddleable {
         return SoundEvents.STRIDER_AMBIENT;
     }
 
-    @Override
     protected SoundEvent getHurtSound(DamageSource $$0) {
         return SoundEvents.STRIDER_HURT;
     }
 
-    @Override
     protected SoundEvent getDeathSound() {
         return SoundEvents.STRIDER_DEATH;
     }
 
-    @Override
     protected boolean canAddPassenger(Entity $$0) {
         return !this.isVehicle() && !this.isEyeInFluid(FluidTags.LAVA);
     }
 
-    @Override
     public boolean isSensitiveToWater() {
         return true;
     }
 
-    @Override
     public boolean isOnFire() {
         return false;
     }
@@ -400,7 +388,6 @@ Saddleable {
         return FOOD_ITEMS.test($$0);
     }
 
-    @Override
     protected void dropEquipment() {
         super.dropEquipment();
         if (this.isSaddled()) {
@@ -413,7 +400,7 @@ Saddleable {
         boolean $$2 = this.isFood($$0.getItemInHand($$1));
         if (!$$2 && this.isSaddled() && !this.isVehicle() && !$$0.isSecondaryUseActive()) {
             if (!this.level.isClientSide) {
-                $$0.startRiding(this);
+                $$0.startRiding((Entity)((Object)this));
             }
             return InteractionResult.sidedSuccess(this.level.isClientSide);
         }
@@ -431,7 +418,6 @@ Saddleable {
         return $$3;
     }
 
-    @Override
     public Vec3 getLeashOffset() {
         return new Vec3(0.0, 0.6f * this.getEyeHeight(), this.getBbWidth() * 0.4f);
     }
@@ -465,7 +451,7 @@ Saddleable {
     private SpawnGroupData spawnJockey(ServerLevelAccessor $$0, DifficultyInstance $$1, Mob $$2, @Nullable SpawnGroupData $$3) {
         $$2.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0f);
         $$2.finalizeSpawn($$0, $$1, MobSpawnType.JOCKEY, $$3, null);
-        $$2.startRiding(this, true);
+        $$2.startRiding((Entity)((Object)this), true);
         return new AgeableMob.AgeableMobGroupData(0.0f);
     }
 

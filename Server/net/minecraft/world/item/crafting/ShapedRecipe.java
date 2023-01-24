@@ -39,6 +39,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -94,7 +95,7 @@ implements CraftingRecipe {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess $$0) {
         return this.result;
     }
 
@@ -139,8 +140,8 @@ implements CraftingRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer $$0) {
-        return this.getResultItem().copy();
+    public ItemStack assemble(CraftingContainer $$0, RegistryAccess $$1) {
+        return this.getResultItem($$1).copy();
     }
 
     public int getWidth() {

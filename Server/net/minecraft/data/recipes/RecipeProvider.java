@@ -8,6 +8,7 @@
  *  com.google.gson.JsonElement
  *  com.google.gson.JsonObject
  *  java.lang.Character
+ *  java.lang.Deprecated
  *  java.lang.IllegalStateException
  *  java.lang.Object
  *  java.lang.Override
@@ -52,13 +53,15 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.LegacyUpgradeRecipeBuilder;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.data.recipes.SingleItemRecipeBuilder;
-import net.minecraft.data.recipes.UpgradeRecipeBuilder;
+import net.minecraft.data.recipes.SmithingTransformRecipeBuilder;
+import net.minecraft.data.recipes.SmithingTrimRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -124,8 +127,17 @@ implements DataProvider {
         }
     }
 
+    @Deprecated
+    protected static void legacyNetheriteSmithing(Consumer<FinishedRecipe> $$0, Item $$1, RecipeCategory $$2, Item $$3) {
+        LegacyUpgradeRecipeBuilder.smithing(Ingredient.of($$1), Ingredient.of(Items.NETHERITE_INGOT), $$2, $$3).unlocks("has_netherite_ingot", RecipeProvider.has(Items.NETHERITE_INGOT)).save($$0, RecipeProvider.getItemName($$3) + "_smithing");
+    }
+
     protected static void netheriteSmithing(Consumer<FinishedRecipe> $$0, Item $$1, RecipeCategory $$2, Item $$3) {
-        UpgradeRecipeBuilder.smithing(Ingredient.of($$1), Ingredient.of(Items.NETHERITE_INGOT), $$2, $$3).unlocks("has_netherite_ingot", RecipeProvider.has(Items.NETHERITE_INGOT)).save($$0, RecipeProvider.getItemName($$3) + "_smithing");
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE), Ingredient.of($$1), Ingredient.of(Items.NETHERITE_INGOT), $$2, $$3).unlocks("has_netherite_ingot", RecipeProvider.has(Items.NETHERITE_INGOT)).save($$0, RecipeProvider.getItemName($$3) + "_smithing");
+    }
+
+    protected static void trimSmithing(Consumer<FinishedRecipe> $$0, Item $$1) {
+        SmithingTrimRecipeBuilder.smithingTrim(Ingredient.of($$1), Ingredient.of(ItemTags.TRIMMABLE_ARMOR), Ingredient.of(ItemTags.TRIM_MATERIALS), RecipeCategory.MISC).unlocks("has_smithing_trim_template", RecipeProvider.has($$1)).save($$0, RecipeProvider.getItemName($$1) + "_smithing_trim");
     }
 
     protected static void twoByTwoPacker(Consumer<FinishedRecipe> $$0, RecipeCategory $$1, ItemLike $$2, ItemLike $$3) {
@@ -321,6 +333,14 @@ implements DataProvider {
     private static void nineBlockStorageRecipes(Consumer<FinishedRecipe> $$0, RecipeCategory $$1, ItemLike $$2, RecipeCategory $$3, ItemLike $$4, String $$5, @Nullable String $$6, String $$7, @Nullable String $$8) {
         ShapelessRecipeBuilder.shapeless($$1, $$2, 9).requires($$4).group($$8).unlockedBy(RecipeProvider.getHasName($$4), RecipeProvider.has($$4)).save($$0, new ResourceLocation($$7));
         ShapedRecipeBuilder.shaped($$3, $$4).define(Character.valueOf((char)'#'), $$2).pattern("###").pattern("###").pattern("###").group($$6).unlockedBy(RecipeProvider.getHasName($$2), RecipeProvider.has($$2)).save($$0, new ResourceLocation($$5));
+    }
+
+    protected static void copySmithingTemplate(Consumer<FinishedRecipe> $$0, ItemLike $$1, TagKey<Item> $$2) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, $$1, 2).define(Character.valueOf((char)'#'), Items.DIAMOND).define(Character.valueOf((char)'C'), $$2).define(Character.valueOf((char)'S'), $$1).pattern("#S#").pattern("#C#").pattern("###").unlockedBy(RecipeProvider.getHasName($$1), RecipeProvider.has($$1)).save($$0);
+    }
+
+    protected static void copySmithingTemplate(Consumer<FinishedRecipe> $$0, ItemLike $$1, ItemLike $$2) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, $$1, 2).define(Character.valueOf((char)'#'), Items.DIAMOND).define(Character.valueOf((char)'C'), $$2).define(Character.valueOf((char)'S'), $$1).pattern("#S#").pattern("#C#").pattern("###").unlockedBy(RecipeProvider.getHasName($$1), RecipeProvider.has($$1)).save($$0);
     }
 
     protected static void cookRecipes(Consumer<FinishedRecipe> $$0, String $$1, RecipeSerializer<? extends AbstractCookingRecipe> $$2, int $$3) {
