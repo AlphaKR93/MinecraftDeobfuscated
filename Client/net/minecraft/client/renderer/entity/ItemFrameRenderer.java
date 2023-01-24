@@ -107,7 +107,7 @@ extends EntityRenderer<T> {
             } else {
                 int $$18 = this.getLightVal($$0, 0xF000F0, $$5);
                 $$3.scale(0.5f, 0.5f, 0.5f);
-                this.itemRenderer.renderStatic($$10, ItemTransforms.TransformType.FIXED, $$18, OverlayTexture.NO_OVERLAY, $$3, $$4, ((Entity)$$0).getId());
+                this.itemRenderer.renderStatic($$10, ItemTransforms.TransformType.FIXED, $$18, OverlayTexture.NO_OVERLAY, $$3, $$4, ((ItemFrame)$$0).level, ((Entity)$$0).getId());
             }
         }
         $$3.popPose();

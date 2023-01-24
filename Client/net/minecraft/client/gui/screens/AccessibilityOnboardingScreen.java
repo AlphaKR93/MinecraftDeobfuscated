@@ -14,6 +14,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.text2speech.Narrator;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.AccessibilityOnboardingTextWidget;
@@ -36,6 +37,7 @@ extends Screen {
     private final PanoramaRenderer panorama = new PanoramaRenderer(TitleScreen.CUBE_MAP);
     private final LogoRenderer logoRenderer;
     private final Options options;
+    private final boolean narratorAvailable;
     private boolean hasNarrated;
     private float timer;
     @Nullable
@@ -45,6 +47,7 @@ extends Screen {
         super(Component.translatable("accessibility.onboarding.screen.title"));
         this.options = $$0;
         this.logoRenderer = new LogoRenderer(true);
+        this.narratorAvailable = Minecraft.getInstance().getNarrator().isActive();
     }
 
     @Override
@@ -58,8 +61,11 @@ extends Screen {
         this.textWidget = new AccessibilityOnboardingTextWidget(this.font, this.title, this.width);
         $$2.addChild(this.textWidget, $$2.newCellSettings().padding(16));
         AbstractWidget $$3 = this.options.narrator().createButton(this.options, 0, 0, 150);
+        $$3.active = this.narratorAvailable;
         $$2.addChild($$3);
-        this.setInitialFocus($$3);
+        if (this.narratorAvailable) {
+            this.setInitialFocus($$3);
+        }
         $$2.addChild(Button.builder(Component.translatable("options.accessibility.title"), $$0 -> this.minecraft.setScreen(new AccessibilityOptionsScreen(new TitleScreen(true), this.minecraft.options))).build());
         $$02.addChild(Button.builder(CommonComponents.GUI_CONTINUE, $$0 -> this.minecraft.setScreen(new TitleScreen(true, this.logoRenderer))).build(), $$02.newChildLayoutSettings().alignVerticallyBottom().padding(8));
         $$02.arrangeElements();
@@ -90,7 +96,7 @@ extends Screen {
     }
 
     private void handleInitialNarrationDelay() {
-        if (!this.hasNarrated) {
+        if (!this.hasNarrated && this.narratorAvailable) {
             if (this.timer < 40.0f) {
                 this.timer += 1.0f;
             } else {

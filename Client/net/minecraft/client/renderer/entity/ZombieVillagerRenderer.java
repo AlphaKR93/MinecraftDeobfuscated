@@ -22,7 +22,7 @@ extends HumanoidMobRenderer<ZombieVillager, ZombieVillagerModel<ZombieVillager>>
 
     public ZombieVillagerRenderer(EntityRendererProvider.Context $$0) {
         super($$0, new ZombieVillagerModel($$0.bakeLayer(ModelLayers.ZOMBIE_VILLAGER)), 0.5f);
-        this.addLayer(new HumanoidArmorLayer(this, new ZombieVillagerModel($$0.bakeLayer(ModelLayers.ZOMBIE_VILLAGER_INNER_ARMOR)), new ZombieVillagerModel($$0.bakeLayer(ModelLayers.ZOMBIE_VILLAGER_OUTER_ARMOR))));
+        this.addLayer(new HumanoidArmorLayer(this, new ZombieVillagerModel($$0.bakeLayer(ModelLayers.ZOMBIE_VILLAGER_INNER_ARMOR)), new ZombieVillagerModel($$0.bakeLayer(ModelLayers.ZOMBIE_VILLAGER_OUTER_ARMOR)), $$0.getModelManager()));
         this.addLayer(new VillagerProfessionLayer<ZombieVillager, ZombieVillagerModel<ZombieVillager>>(this, $$0.getResourceManager(), "zombie_villager"));
     }
 

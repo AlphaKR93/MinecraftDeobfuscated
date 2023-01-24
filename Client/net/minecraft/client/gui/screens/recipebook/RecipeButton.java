@@ -101,7 +101,7 @@ extends AbstractWidget {
         this.blit($$0, this.getX(), this.getY(), $$5, $$6, this.width, this.height);
         List<Recipe<?>> $$10 = this.getOrderedRecipes();
         this.currentIndex = Mth.floor(this.time / 30.0f) % $$10.size();
-        ItemStack $$11 = ((Recipe)$$10.get(this.currentIndex)).getResultItem();
+        ItemStack $$11 = ((Recipe)$$10.get(this.currentIndex)).getResultItem(this.collection.registryAccess());
         int $$12 = 4;
         if (this.collection.hasSingleResultItem() && this.getOrderedRecipes().size() > 1) {
             $$4.getItemRenderer().renderAndDecorateItem($$11, this.getX() + $$12 + 1, this.getY() + $$12 + 1, 0, 10);
@@ -132,7 +132,7 @@ extends AbstractWidget {
     }
 
     public List<Component> getTooltipText(Screen $$0) {
-        ItemStack $$1 = ((Recipe)this.getOrderedRecipes().get(this.currentIndex)).getResultItem();
+        ItemStack $$1 = ((Recipe)this.getOrderedRecipes().get(this.currentIndex)).getResultItem(this.collection.registryAccess());
         ArrayList $$2 = Lists.newArrayList($$0.getTooltipFromItem($$1));
         if (this.collection.getRecipes(this.book.isFiltering(this.menu)).size() > 1) {
             $$2.add((Object)MORE_RECIPES_TOOLTIP);
@@ -142,7 +142,7 @@ extends AbstractWidget {
 
     @Override
     public void updateWidgetNarration(NarrationElementOutput $$0) {
-        ItemStack $$1 = ((Recipe)this.getOrderedRecipes().get(this.currentIndex)).getResultItem();
+        ItemStack $$1 = ((Recipe)this.getOrderedRecipes().get(this.currentIndex)).getResultItem(this.collection.registryAccess());
         $$0.add(NarratedElementType.TITLE, (Component)Component.translatable("narration.recipe", $$1.getHoverName()));
         if (this.collection.getRecipes(this.book.isFiltering(this.menu)).size() > 1) {
             $$0.add(NarratedElementType.USAGE, Component.translatable("narration.button.usage.hovered"), Component.translatable("narration.recipe.usage.more"));

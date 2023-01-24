@@ -1239,6 +1239,7 @@ AutoCloseable {
         $$21.endBatch(Sheets.translucentCullBlockSheet());
         $$21.endBatch(Sheets.bannerSheet());
         $$21.endBatch(Sheets.shieldSheet());
+        $$21.endBatch(Sheets.armorTrimsSheet());
         $$21.endBatch(RenderType.armorGlint());
         $$21.endBatch(RenderType.armorEntityGlint());
         $$21.endBatch(RenderType.glint());

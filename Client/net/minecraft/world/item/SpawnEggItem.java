@@ -11,7 +11,6 @@
  *  java.util.Objects
  *  java.util.Optional
  *  javax.annotation.Nullable
- *  net.minecraft.world.level.Level
  */
 package net.minecraft.world.item;
 
@@ -40,7 +39,6 @@ import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -86,11 +84,11 @@ extends Item {
             $$7.setEntityId($$8, $$1.getRandom());
             $$6.setChanged();
             $$1.sendBlockUpdated($$3, $$5, $$5, 3);
-            $$1.gameEvent((Entity)$$0.getPlayer(), GameEvent.BLOCK_CHANGE, $$3);
+            $$1.gameEvent($$0.getPlayer(), GameEvent.BLOCK_CHANGE, $$3);
             $$2.shrink(1);
             return InteractionResult.CONSUME;
         }
-        if ($$5.getCollisionShape((BlockGetter)$$1, $$3).isEmpty()) {
+        if ($$5.getCollisionShape($$1, $$3).isEmpty()) {
             BlockPos $$9 = $$3;
         } else {
             $$10 = $$3.relative($$4);
@@ -98,7 +96,7 @@ extends Item {
         EntityType<?> $$11 = this.getType($$2.getTag());
         if ($$11.spawn((ServerLevel)$$1, $$2, $$0.getPlayer(), (BlockPos)$$10, MobSpawnType.SPAWN_EGG, true, !Objects.equals((Object)$$3, (Object)$$10) && $$4 == Direction.UP) != null) {
             $$2.shrink(1);
-            $$1.gameEvent((Entity)$$0.getPlayer(), GameEvent.ENTITY_PLACE, $$3);
+            $$1.gameEvent($$0.getPlayer(), GameEvent.ENTITY_PLACE, $$3);
         }
         return InteractionResult.CONSUME;
     }
@@ -130,7 +128,7 @@ extends Item {
             $$3.shrink(1);
         }
         $$1.awardStat(Stats.ITEM_USED.get(this));
-        $$0.gameEvent((Entity)$$1, GameEvent.ENTITY_PLACE, ((Entity)$$8).position());
+        $$0.gameEvent($$1, GameEvent.ENTITY_PLACE, ((Entity)$$8).position());
         return InteractionResultHolder.consume($$3);
     }
 

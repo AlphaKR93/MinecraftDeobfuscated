@@ -14,6 +14,7 @@ package net.minecraft.world.item.crafting;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.DyeItem;
@@ -58,25 +59,25 @@ extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer $$0) {
-        ArrayList $$1 = Lists.newArrayList();
-        ItemStack $$2 = null;
-        for (int $$3 = 0; $$3 < $$0.getContainerSize(); ++$$3) {
-            ItemStack $$4 = $$0.getItem($$3);
-            Item $$5 = $$4.getItem();
-            if ($$5 instanceof DyeItem) {
-                $$1.add((Object)((DyeItem)$$5).getDyeColor().getFireworkColor());
+    public ItemStack assemble(CraftingContainer $$0, RegistryAccess $$1) {
+        ArrayList $$2 = Lists.newArrayList();
+        ItemStack $$3 = null;
+        for (int $$4 = 0; $$4 < $$0.getContainerSize(); ++$$4) {
+            ItemStack $$5 = $$0.getItem($$4);
+            Item $$6 = $$5.getItem();
+            if ($$6 instanceof DyeItem) {
+                $$2.add((Object)((DyeItem)$$6).getDyeColor().getFireworkColor());
                 continue;
             }
-            if (!STAR_INGREDIENT.test($$4)) continue;
-            $$2 = $$4.copy();
-            $$2.setCount(1);
+            if (!STAR_INGREDIENT.test($$5)) continue;
+            $$3 = $$5.copy();
+            $$3.setCount(1);
         }
-        if ($$2 == null || $$1.isEmpty()) {
+        if ($$3 == null || $$2.isEmpty()) {
             return ItemStack.EMPTY;
         }
-        $$2.getOrCreateTagElement("Explosion").putIntArray("FadeColors", (List<Integer>)$$1);
-        return $$2;
+        $$3.getOrCreateTagElement("Explosion").putIntArray("FadeColors", (List<Integer>)$$2);
+        return $$3;
     }
 
     @Override

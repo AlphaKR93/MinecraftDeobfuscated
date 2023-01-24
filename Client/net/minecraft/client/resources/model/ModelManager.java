@@ -81,7 +81,7 @@ public class ModelManager
 implements PreparableReloadListener,
 AutoCloseable {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final Map<ResourceLocation, ResourceLocation> VANILLA_ATLASES = Map.of((Object)Sheets.BANNER_SHEET, (Object)new ResourceLocation("banner_patterns"), (Object)Sheets.BED_SHEET, (Object)new ResourceLocation("beds"), (Object)Sheets.CHEST_SHEET, (Object)new ResourceLocation("chests"), (Object)Sheets.SHIELD_SHEET, (Object)new ResourceLocation("shield_patterns"), (Object)Sheets.SIGN_SHEET, (Object)new ResourceLocation("signs"), (Object)Sheets.SHULKER_SHEET, (Object)new ResourceLocation("shulker_boxes"), (Object)TextureAtlas.LOCATION_BLOCKS, (Object)new ResourceLocation("blocks"));
+    private static final Map<ResourceLocation, ResourceLocation> VANILLA_ATLASES = Map.of((Object)Sheets.BANNER_SHEET, (Object)new ResourceLocation("banner_patterns"), (Object)Sheets.BED_SHEET, (Object)new ResourceLocation("beds"), (Object)Sheets.CHEST_SHEET, (Object)new ResourceLocation("chests"), (Object)Sheets.SHIELD_SHEET, (Object)new ResourceLocation("shield_patterns"), (Object)Sheets.SIGN_SHEET, (Object)new ResourceLocation("signs"), (Object)Sheets.SHULKER_SHEET, (Object)new ResourceLocation("shulker_boxes"), (Object)Sheets.ARMOR_TRIMS_SHEET, (Object)new ResourceLocation("armor_trims"), (Object)TextureAtlas.LOCATION_BLOCKS, (Object)new ResourceLocation("blocks"));
     private Map<ResourceLocation, BakedModel> bakedRegistry;
     private final AtlasSet atlases;
     private final BlockModelShaper blockModelShaper;

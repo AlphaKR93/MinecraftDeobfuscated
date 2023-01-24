@@ -133,7 +133,7 @@ implements VibrationListener.VibrationListenerConfig {
             ServerPlayer $$4 = (ServerPlayer)entity;
             return $$4;
         }
-        if ($$0 instanceof ItemEntity && (entity = ($$5 = (ItemEntity)$$0).getThrowingEntity()) instanceof ServerPlayer) {
+        if ($$0 instanceof ItemEntity && (entity = ($$5 = (ItemEntity)$$0).getOwner()) instanceof ServerPlayer) {
             ServerPlayer $$6 = (ServerPlayer)entity;
             return $$6;
         }

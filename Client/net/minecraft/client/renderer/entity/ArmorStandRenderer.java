@@ -32,7 +32,7 @@ extends LivingEntityRenderer<ArmorStand, ArmorStandArmorModel> {
 
     public ArmorStandRenderer(EntityRendererProvider.Context $$0) {
         super($$0, new ArmorStandModel($$0.bakeLayer(ModelLayers.ARMOR_STAND)), 0.0f);
-        this.addLayer(new HumanoidArmorLayer<ArmorStand, ArmorStandArmorModel, ArmorStandArmorModel>(this, new ArmorStandArmorModel($$0.bakeLayer(ModelLayers.ARMOR_STAND_INNER_ARMOR)), new ArmorStandArmorModel($$0.bakeLayer(ModelLayers.ARMOR_STAND_OUTER_ARMOR))));
+        this.addLayer(new HumanoidArmorLayer<ArmorStand, ArmorStandArmorModel, ArmorStandArmorModel>(this, new ArmorStandArmorModel($$0.bakeLayer(ModelLayers.ARMOR_STAND_INNER_ARMOR)), new ArmorStandArmorModel($$0.bakeLayer(ModelLayers.ARMOR_STAND_OUTER_ARMOR)), $$0.getModelManager()));
         this.addLayer(new ItemInHandLayer<ArmorStand, ArmorStandArmorModel>(this, $$0.getItemInHandRenderer()));
         this.addLayer(new ElytraLayer<ArmorStand, ArmorStandArmorModel>(this, $$0.getModelSet()));
         this.addLayer(new CustomHeadLayer<ArmorStand, ArmorStandArmorModel>(this, $$0.getModelSet(), $$0.getItemInHandRenderer()));

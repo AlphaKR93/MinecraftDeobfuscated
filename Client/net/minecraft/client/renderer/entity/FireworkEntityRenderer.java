@@ -38,7 +38,7 @@ extends EntityRenderer<FireworkRocketEntity> {
             $$3.mulPose(Axis.YP.rotationDegrees(180.0f));
             $$3.mulPose(Axis.XP.rotationDegrees(90.0f));
         }
-        this.itemRenderer.renderStatic($$0.getItem(), ItemTransforms.TransformType.GROUND, $$5, OverlayTexture.NO_OVERLAY, $$3, $$4, $$0.getId());
+        this.itemRenderer.renderStatic($$0.getItem(), ItemTransforms.TransformType.GROUND, $$5, OverlayTexture.NO_OVERLAY, $$3, $$4, $$0.level, $$0.getId());
         $$3.popPose();
         super.render($$0, $$1, $$2, $$3, $$4, $$5);
     }

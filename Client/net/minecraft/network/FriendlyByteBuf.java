@@ -123,7 +123,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -172,15 +171,15 @@ extends ByteBuf {
     }
 
     @Deprecated
-    public <T> T readWithCodec(Codec<T> $$0) {
-        CompoundTag $$12 = this.readAnySizeNbt();
-        return Util.getOrThrow($$0.parse((DynamicOps)NbtOps.INSTANCE, (Object)$$12), $$1 -> new DecoderException("Failed to decode: " + $$1 + " " + $$12));
+    public <T> T readWithCodec(DynamicOps<Tag> $$0, Codec<T> $$12) {
+        CompoundTag $$2 = this.readAnySizeNbt();
+        return Util.getOrThrow($$12.parse($$0, (Object)$$2), $$1 -> new DecoderException("Failed to decode: " + $$1 + " " + $$2));
     }
 
     @Deprecated
-    public <T> void writeWithCodec(Codec<T> $$0, T $$12) {
-        Tag $$2 = (Tag)Util.getOrThrow($$0.encodeStart((DynamicOps)NbtOps.INSTANCE, $$12), $$1 -> new EncoderException("Failed to encode: " + $$1 + " " + $$12));
-        this.writeNbt((CompoundTag)$$2);
+    public <T> void writeWithCodec(DynamicOps<Tag> $$0, Codec<T> $$12, T $$2) {
+        Tag $$3 = (Tag)Util.getOrThrow($$12.encodeStart($$0, $$2), $$1 -> new EncoderException("Failed to encode: " + $$1 + " " + $$2));
+        this.writeNbt((CompoundTag)$$3);
     }
 
     public <T> void writeId(IdMap<T> $$0, T $$1) {

@@ -1387,16 +1387,16 @@ implements WorldGenLevel {
         }
 
         @Override
-        public void onCreated(Entity $$0) {
+        public void onSectionChange(Entity $$0) {
         }
 
         @Override
-        public void onTrackingEnd(Entity $$0) {
+        public void onDestroyed(Entity $$0) {
             ServerLevel.this.getScoreboard().entityRemoved($$0);
         }
 
         @Override
-        public void onTickingStart(Entity $$0) {
+        public void onTrackingStart(Entity $$0) {
             ServerLevel.this.entityTickList.add($$0);
         }
 
@@ -1406,7 +1406,7 @@ implements WorldGenLevel {
         }
 
         @Override
-        public void onTickingStart(Entity $$0) {
+        public void onTrackingStart(Entity $$0) {
             ServerLevel.this.getChunkSource().addEntity($$0);
             if ($$0 instanceof ServerPlayer) {
                 ServerPlayer $$1 = (ServerPlayer)$$0;
@@ -1431,7 +1431,7 @@ implements WorldGenLevel {
         }
 
         @Override
-        public void onTrackingEnd(Entity $$0) {
+        public void onDestroyed(Entity $$0) {
             ServerLevel.this.getChunkSource().removeEntity($$0);
             if ($$0 instanceof ServerPlayer) {
                 ServerPlayer $$1 = (ServerPlayer)$$0;
@@ -1456,7 +1456,7 @@ implements WorldGenLevel {
         }
 
         @Override
-        public void onCreated(Entity $$0) {
+        public void onSectionChange(Entity $$0) {
             $$0.updateDynamicGameEventListener(DynamicGameEventListener::move);
         }
     }

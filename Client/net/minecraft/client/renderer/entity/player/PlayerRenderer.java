@@ -53,7 +53,7 @@ public class PlayerRenderer
 extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
     public PlayerRenderer(EntityRendererProvider.Context $$0, boolean $$1) {
         super($$0, new PlayerModel($$0.bakeLayer($$1 ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), $$1), 0.5f);
-        this.addLayer(new HumanoidArmorLayer(this, new HumanoidModel($$0.bakeLayer($$1 ? ModelLayers.PLAYER_SLIM_INNER_ARMOR : ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel($$0.bakeLayer($$1 ? ModelLayers.PLAYER_SLIM_OUTER_ARMOR : ModelLayers.PLAYER_OUTER_ARMOR))));
+        this.addLayer(new HumanoidArmorLayer(this, new HumanoidModel($$0.bakeLayer($$1 ? ModelLayers.PLAYER_SLIM_INNER_ARMOR : ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel($$0.bakeLayer($$1 ? ModelLayers.PLAYER_SLIM_OUTER_ARMOR : ModelLayers.PLAYER_OUTER_ARMOR)), $$0.getModelManager()));
         this.addLayer(new PlayerItemInHandLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>(this, $$0.getItemInHandRenderer()));
         this.addLayer(new ArrowLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>($$0, this));
         this.addLayer(new Deadmau5EarsLayer(this));

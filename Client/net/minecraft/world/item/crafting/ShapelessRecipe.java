@@ -17,6 +17,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import java.util.Iterator;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -67,7 +68,7 @@ implements CraftingRecipe {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess $$0) {
         return this.result;
     }
 
@@ -90,7 +91,7 @@ implements CraftingRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer $$0) {
+    public ItemStack assemble(CraftingContainer $$0, RegistryAccess $$1) {
         return this.result.copy();
     }
 

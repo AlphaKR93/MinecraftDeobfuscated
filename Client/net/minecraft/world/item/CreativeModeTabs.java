@@ -1343,6 +1343,18 @@ public class CreativeModeTabs {
         $$1.accept(Items.MOJANG_BANNER_PATTERN);
         $$1.accept(Items.GLOBE_BANNER_PATTERN);
         $$1.accept(Items.PIGLIN_BANNER_PATTERN);
+        $$1.accept(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE);
+        $$1.accept(Items.SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE);
+        $$1.accept(Items.DUNE_ARMOR_TRIM_SMITHING_TEMPLATE);
+        $$1.accept(Items.COAST_ARMOR_TRIM_SMITHING_TEMPLATE);
+        $$1.accept(Items.WILD_ARMOR_TRIM_SMITHING_TEMPLATE);
+        $$1.accept(Items.WARD_ARMOR_TRIM_SMITHING_TEMPLATE);
+        $$1.accept(Items.EYE_ARMOR_TRIM_SMITHING_TEMPLATE);
+        $$1.accept(Items.VEX_ARMOR_TRIM_SMITHING_TEMPLATE);
+        $$1.accept(Items.TIDE_ARMOR_TRIM_SMITHING_TEMPLATE);
+        $$1.accept(Items.SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE);
+        $$1.accept(Items.RIB_ARMOR_TRIM_SMITHING_TEMPLATE);
+        $$1.accept(Items.SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE);
         $$1.accept(Items.EXPERIENCE_BOTTLE);
         EnumSet $$3 = EnumSet.allOf(EnchantmentCategory.class);
         CreativeModeTabs.generateEnchantmentBookTypesOnlyMaxLevel($$1, (Set<EnchantmentCategory>)$$3, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);

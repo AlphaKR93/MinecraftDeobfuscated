@@ -83,20 +83,22 @@ implements ResourceManagerReloadListener {
     private static final ModelResourceLocation SPYGLASS_MODEL = ModelResourceLocation.vanilla("spyglass", "inventory");
     public static final ModelResourceLocation SPYGLASS_IN_HAND_MODEL = ModelResourceLocation.vanilla("spyglass_in_hand", "inventory");
     public float blitOffset;
+    private final Minecraft minecraft;
     private final ItemModelShaper itemModelShaper;
     private final TextureManager textureManager;
     private final ItemColors itemColors;
     private final BlockEntityWithoutLevelRenderer blockEntityRenderer;
 
-    public ItemRenderer(TextureManager $$0, ModelManager $$1, ItemColors $$2, BlockEntityWithoutLevelRenderer $$3) {
-        this.textureManager = $$0;
-        this.itemModelShaper = new ItemModelShaper($$1);
-        this.blockEntityRenderer = $$3;
-        for (Item $$4 : BuiltInRegistries.ITEM) {
-            if (IGNORED.contains((Object)$$4)) continue;
-            this.itemModelShaper.register($$4, new ModelResourceLocation(BuiltInRegistries.ITEM.getKey($$4), "inventory"));
+    public ItemRenderer(Minecraft $$0, TextureManager $$1, ModelManager $$2, ItemColors $$3, BlockEntityWithoutLevelRenderer $$4) {
+        this.minecraft = $$0;
+        this.textureManager = $$1;
+        this.itemModelShaper = new ItemModelShaper($$2);
+        this.blockEntityRenderer = $$4;
+        for (Item $$5 : BuiltInRegistries.ITEM) {
+            if (IGNORED.contains((Object)$$5)) continue;
+            this.itemModelShaper.register($$5, new ModelResourceLocation(BuiltInRegistries.ITEM.getKey($$5), "inventory"));
         }
-        this.itemColors = $$2;
+        this.itemColors = $$3;
     }
 
     public ItemModelShaper getItemModelShaper() {
@@ -227,8 +229,8 @@ implements ResourceManagerReloadListener {
         return $$8 == null ? this.itemModelShaper.getModelManager().getMissingModel() : $$8;
     }
 
-    public void renderStatic(ItemStack $$0, ItemTransforms.TransformType $$1, int $$2, int $$3, PoseStack $$4, MultiBufferSource $$5, int $$6) {
-        this.renderStatic(null, $$0, $$1, false, $$4, $$5, null, $$2, $$3, $$6);
+    public void renderStatic(ItemStack $$0, ItemTransforms.TransformType $$1, int $$2, int $$3, PoseStack $$4, MultiBufferSource $$5, @Nullable Level $$6, int $$7) {
+        this.renderStatic(null, $$0, $$1, false, $$4, $$5, $$6, $$2, $$3, $$7);
     }
 
     public void renderStatic(@Nullable LivingEntity $$0, ItemStack $$1, ItemTransforms.TransformType $$2, boolean $$3, PoseStack $$4, MultiBufferSource $$5, @Nullable Level $$6, int $$7, int $$8, int $$9) {
@@ -257,7 +259,7 @@ implements ResourceManagerReloadListener {
         $$4.scale(16.0f, 16.0f, 16.0f);
         RenderSystem.applyModelViewMatrix();
         PoseStack $$5 = new PoseStack();
-        MultiBufferSource.BufferSource $$6 = Minecraft.getInstance().renderBuffers().bufferSource();
+        MultiBufferSource.BufferSource $$6 = this.minecraft.renderBuffers().bufferSource();
         boolean bl = $$7 = !$$3.usesBlockLight();
         if ($$7) {
             Lighting.setupForFlatItems();
@@ -273,48 +275,48 @@ implements ResourceManagerReloadListener {
     }
 
     public void renderAndDecorateItem(ItemStack $$0, int $$1, int $$2) {
-        this.tryRenderGuiItem(Minecraft.getInstance().player, $$0, $$1, $$2, 0);
+        this.tryRenderGuiItem(this.minecraft.player, this.minecraft.level, $$0, $$1, $$2, 0);
     }
 
     public void renderAndDecorateItem(ItemStack $$0, int $$1, int $$2, int $$3) {
-        this.tryRenderGuiItem(Minecraft.getInstance().player, $$0, $$1, $$2, $$3);
+        this.tryRenderGuiItem(this.minecraft.player, this.minecraft.level, $$0, $$1, $$2, $$3);
     }
 
     public void renderAndDecorateItem(ItemStack $$0, int $$1, int $$2, int $$3, int $$4) {
-        this.tryRenderGuiItem(Minecraft.getInstance().player, $$0, $$1, $$2, $$3, $$4);
+        this.tryRenderGuiItem(this.minecraft.player, this.minecraft.level, $$0, $$1, $$2, $$3, $$4);
     }
 
     public void renderAndDecorateFakeItem(ItemStack $$0, int $$1, int $$2) {
-        this.tryRenderGuiItem(null, $$0, $$1, $$2, 0);
+        this.tryRenderGuiItem(null, this.minecraft.level, $$0, $$1, $$2, 0);
     }
 
     public void renderAndDecorateItem(LivingEntity $$0, ItemStack $$1, int $$2, int $$3, int $$4) {
-        this.tryRenderGuiItem($$0, $$1, $$2, $$3, $$4);
+        this.tryRenderGuiItem($$0, $$0.level, $$1, $$2, $$3, $$4);
     }
 
-    private void tryRenderGuiItem(@Nullable LivingEntity $$0, ItemStack $$1, int $$2, int $$3, int $$4) {
-        this.tryRenderGuiItem($$0, $$1, $$2, $$3, $$4, 0);
+    private void tryRenderGuiItem(@Nullable LivingEntity $$0, @Nullable Level $$1, ItemStack $$2, int $$3, int $$4, int $$5) {
+        this.tryRenderGuiItem($$0, $$1, $$2, $$3, $$4, $$5, 0);
     }
 
-    private void tryRenderGuiItem(@Nullable LivingEntity $$0, ItemStack $$1, int $$2, int $$3, int $$4, int $$5) {
-        if ($$1.isEmpty()) {
+    private void tryRenderGuiItem(@Nullable LivingEntity $$0, @Nullable Level $$1, ItemStack $$2, int $$3, int $$4, int $$5, int $$6) {
+        if ($$2.isEmpty()) {
             return;
         }
-        BakedModel $$6 = this.getModel($$1, null, $$0, $$4);
-        this.blitOffset = $$6.isGui3d() ? this.blitOffset + 50.0f + (float)$$5 : this.blitOffset + 50.0f;
+        BakedModel $$7 = this.getModel($$2, $$1, $$0, $$5);
+        this.blitOffset = $$7.isGui3d() ? this.blitOffset + 50.0f + (float)$$6 : this.blitOffset + 50.0f;
         try {
-            this.renderGuiItem($$1, $$2, $$3, $$6);
+            this.renderGuiItem($$2, $$3, $$4, $$7);
         }
-        catch (Throwable $$7) {
-            CrashReport $$8 = CrashReport.forThrowable($$7, "Rendering item");
-            CrashReportCategory $$9 = $$8.addCategory("Item being rendered");
-            $$9.setDetail("Item Type", () -> String.valueOf((Object)$$1.getItem()));
-            $$9.setDetail("Item Damage", () -> String.valueOf((int)$$1.getDamageValue()));
-            $$9.setDetail("Item NBT", () -> String.valueOf((Object)$$1.getTag()));
-            $$9.setDetail("Item Foil", () -> String.valueOf((boolean)$$1.hasFoil()));
-            throw new ReportedException($$8);
+        catch (Throwable $$8) {
+            CrashReport $$9 = CrashReport.forThrowable($$8, "Rendering item");
+            CrashReportCategory $$10 = $$9.addCategory("Item being rendered");
+            $$10.setDetail("Item Type", () -> String.valueOf((Object)$$2.getItem()));
+            $$10.setDetail("Item Damage", () -> String.valueOf((int)$$2.getDamageValue()));
+            $$10.setDetail("Item NBT", () -> String.valueOf((Object)$$2.getTag()));
+            $$10.setDetail("Item Foil", () -> String.valueOf((boolean)$$2.hasFoil()));
+            throw new ReportedException($$9);
         }
-        this.blitOffset = $$6.isGui3d() ? this.blitOffset - 50.0f - (float)$$5 : this.blitOffset - 50.0f;
+        this.blitOffset = $$7.isGui3d() ? this.blitOffset - 50.0f - (float)$$6 : this.blitOffset - 50.0f;
     }
 
     public void renderGuiItemDecorations(Font $$0, ItemStack $$1, int $$2, int $$3) {
@@ -345,7 +347,7 @@ implements ResourceManagerReloadListener {
             GuiComponent.fill($$5, $$10, $$11, $$10 + $$8, $$11 + 1, $$9 | 0xFF000000);
             RenderSystem.enableDepthTest();
         }
-        float f = $$13 = ($$12 = Minecraft.getInstance().player) == null ? 0.0f : $$12.getCooldowns().getCooldownPercent($$1.getItem(), Minecraft.getInstance().getFrameTime());
+        float f = $$13 = ($$12 = this.minecraft.player) == null ? 0.0f : $$12.getCooldowns().getCooldownPercent($$1.getItem(), this.minecraft.getFrameTime());
         if ($$13 > 0.0f) {
             RenderSystem.disableDepthTest();
             int $$14 = $$3 + Mth.floor(16.0f * (1.0f - $$13));

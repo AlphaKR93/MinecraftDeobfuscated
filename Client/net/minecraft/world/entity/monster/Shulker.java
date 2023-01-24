@@ -16,6 +16,7 @@
  *  java.util.UUID
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
+ *  net.minecraft.world.level.Level
  *  org.joml.Vector3f
  *  org.joml.Vector3fc
  */
@@ -253,7 +254,7 @@ Enemy {
         if ($$3 <= 0.0f) {
             return;
         }
-        List<Entity> $$4 = this.level.getEntities(this, Shulker.getProgressDeltaAabb($$2, $$1, $$02).move(this.getX() - 0.5, this.getY(), this.getZ() - 0.5), (Predicate<? super Entity>)EntitySelector.NO_SPECTATORS.and($$0 -> !$$0.isPassengerOfSameVehicle(this)));
+        List $$4 = this.level.getEntities((Entity)this, Shulker.getProgressDeltaAabb($$2, $$1, $$02).move(this.getX() - 0.5, this.getY(), this.getZ() - 0.5), EntitySelector.NO_SPECTATORS.and($$0 -> !$$0.isPassengerOfSameVehicle(this)));
         for (Entity $$5 : $$4) {
             if ($$5 instanceof Shulker || $$5.noPhysics) continue;
             $$5.move(MoverType.SHULKER, new Vec3($$3 * (float)$$2.getStepX(), $$3 * (float)$$2.getStepY(), $$3 * (float)$$2.getStepZ()));
@@ -365,11 +366,11 @@ Enemy {
             return false;
         }
         Direction $$2 = $$1.getOpposite();
-        if (!this.level.loadedAndEntityCanStandOnFace((BlockPos)$$0.relative($$1), this, $$2)) {
+        if (!this.level.loadedAndEntityCanStandOnFace((BlockPos)$$0.relative($$1), (Entity)this, $$2)) {
             return false;
         }
         AABB $$3 = Shulker.getProgressAabb($$2, 1.0f).move($$0).deflate(1.0E-6);
-        return this.level.noCollision(this, $$3);
+        return this.level.noCollision((Entity)this, $$3);
     }
 
     private boolean isPositionBlocked(BlockPos $$0) {
@@ -389,7 +390,7 @@ Enemy {
         for (int $$1 = 0; $$1 < 5; ++$$1) {
             Direction $$3;
             BlockPos $$2 = $$0.offset(Mth.randomBetweenInclusive(this.random, -8, 8), Mth.randomBetweenInclusive(this.random, -8, 8), Mth.randomBetweenInclusive(this.random, -8, 8));
-            if ($$2.getY() <= this.level.getMinBuildHeight() || !this.level.isEmptyBlock($$2) || !this.level.getWorldBorder().isWithinBounds($$2) || !this.level.noCollision(this, new AABB($$2).deflate(1.0E-6)) || ($$3 = this.findAttachableSurface($$2)) == null) continue;
+            if ($$2.getY() <= this.level.getMinBuildHeight() || !this.level.isEmptyBlock($$2) || !this.level.getWorldBorder().isWithinBounds($$2) || !this.level.noCollision((Entity)this, new AABB($$2).deflate(1.0E-6)) || ($$3 = this.findAttachableSurface($$2)) == null) continue;
             this.unRide();
             this.setAttachFace($$3);
             this.playSound(SoundEvents.SHULKER_TELEPORT, 1.0f, 1.0f);
@@ -446,7 +447,7 @@ Enemy {
         if ($$4 != null) {
             $$4.setVariant(this.getVariant());
             $$4.moveTo($$0);
-            this.level.addFreshEntity($$4);
+            this.level.addFreshEntity((Entity)$$4);
         }
     }
 
@@ -637,7 +638,7 @@ Enemy {
             if ($$1 < 400.0) {
                 if (this.attackTime <= 0) {
                     this.attackTime = 20 + Shulker.this.random.nextInt(10) * 20 / 2;
-                    Shulker.this.level.addFreshEntity(new ShulkerBullet(Shulker.this.level, Shulker.this, $$0, Shulker.this.getAttachFace().getAxis()));
+                    Shulker.this.level.addFreshEntity((Entity)new ShulkerBullet(Shulker.this.level, Shulker.this, $$0, Shulker.this.getAttachFace().getAxis()));
                     Shulker.this.playSound(SoundEvents.SHULKER_SHOOT, 2.0f, (Shulker.this.random.nextFloat() - Shulker.this.random.nextFloat()) * 0.2f + 1.0f);
                 }
             } else {

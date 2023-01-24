@@ -49,6 +49,7 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.TraceableEntity;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
@@ -57,7 +58,8 @@ import net.minecraft.world.level.material.PushReaction;
 import org.slf4j.Logger;
 
 public class AreaEffectCloud
-extends Entity {
+extends Entity
+implements TraceableEntity {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final int TIME_BETWEEN_APPLICATIONS = 5;
     private static final EntityDataAccessor<Float> DATA_RADIUS = SynchedEntityData.defineId(AreaEffectCloud.class, EntityDataSerializers.FLOAT);
@@ -326,6 +328,7 @@ extends Entity {
         this.ownerUUID = $$0 == null ? null : $$0.getUUID();
     }
 
+    @Override
     @Nullable
     public LivingEntity getOwner() {
         Entity $$0;

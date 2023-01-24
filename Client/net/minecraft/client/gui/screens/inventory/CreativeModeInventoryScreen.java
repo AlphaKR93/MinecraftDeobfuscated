@@ -656,7 +656,7 @@ extends EffectRenderingInventoryScreen<ItemPickerMenu> {
         }
         this.renderTabButton($$0, selectedTab);
         if (selectedTab.getType() == CreativeModeTab.Type.INVENTORY) {
-            InventoryScreen.renderEntityInInventory(this.leftPos + 88, this.topPos + 45, 20, this.leftPos + 88 - $$2, this.topPos + 45 - 30 - $$3, this.minecraft.player);
+            InventoryScreen.renderEntityInInventoryFollowsMouse(this.leftPos + 88, this.topPos + 45, 20, this.leftPos + 88 - $$2, this.topPos + 45 - 30 - $$3, this.minecraft.player);
         }
     }
 

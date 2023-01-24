@@ -41,7 +41,7 @@ public class ClearInventoryCommands {
     private static final DynamicCommandExceptionType ERROR_MULTIPLE = new DynamicCommandExceptionType($$0 -> Component.translatable("clear.failed.multiple", $$0));
 
     public static void register(CommandDispatcher<CommandSourceStack> $$03, CommandBuildContext $$1) {
-        $$03.register((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)Commands.literal("clear").requires($$0 -> $$0.hasPermission(2))).executes($$02 -> ClearInventoryCommands.clearInventory((CommandSourceStack)$$02.getSource(), (Collection<ServerPlayer>)Collections.singleton((Object)((CommandSourceStack)$$02.getSource()).getPlayerOrException()), (Predicate<ItemStack>)((Predicate)$$0 -> true), -1))).then(((RequiredArgumentBuilder)Commands.argument("targets", EntityArgument.players()).executes($$02 -> ClearInventoryCommands.clearInventory((CommandSourceStack)$$02.getSource(), EntityArgument.getPlayers((CommandContext<CommandSourceStack>)$$02, "targets"), (Predicate<ItemStack>)((Predicate)$$0 -> true), -1))).then(((RequiredArgumentBuilder)Commands.argument("item", ItemPredicateArgument.itemPredicate($$1)).executes($$0 -> ClearInventoryCommands.clearInventory((CommandSourceStack)$$0.getSource(), EntityArgument.getPlayers((CommandContext<CommandSourceStack>)$$0, "targets"), ItemPredicateArgument.getItemPredicate((CommandContext<CommandSourceStack>)$$0, "item"), -1))).then(Commands.argument("maxCount", IntegerArgumentType.integer((int)0)).executes($$0 -> ClearInventoryCommands.clearInventory((CommandSourceStack)$$0.getSource(), EntityArgument.getPlayers((CommandContext<CommandSourceStack>)$$0, "targets"), ItemPredicateArgument.getItemPredicate((CommandContext<CommandSourceStack>)$$0, "item"), IntegerArgumentType.getInteger((CommandContext)$$0, (String)"maxCount")))))));
+        $$03.register((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)Commands.literal("clear").requires($$0 -> $$0.hasPermission(2))).executes($$02 -> ClearInventoryCommands.clearInventory((CommandSourceStack)$$02.getSource(), (Collection<ServerPlayer>)Collections.singleton((Object)((Object)((CommandSourceStack)$$02.getSource()).getPlayerOrException())), (Predicate<ItemStack>)((Predicate)$$0 -> true), -1))).then(((RequiredArgumentBuilder)Commands.argument("targets", EntityArgument.players()).executes($$02 -> ClearInventoryCommands.clearInventory((CommandSourceStack)$$02.getSource(), EntityArgument.getPlayers((CommandContext<CommandSourceStack>)$$02, "targets"), (Predicate<ItemStack>)((Predicate)$$0 -> true), -1))).then(((RequiredArgumentBuilder)Commands.argument("item", ItemPredicateArgument.itemPredicate($$1)).executes($$0 -> ClearInventoryCommands.clearInventory((CommandSourceStack)$$0.getSource(), EntityArgument.getPlayers((CommandContext<CommandSourceStack>)$$0, "targets"), ItemPredicateArgument.getItemPredicate((CommandContext<CommandSourceStack>)$$0, "item"), -1))).then(Commands.argument("maxCount", IntegerArgumentType.integer((int)0)).executes($$0 -> ClearInventoryCommands.clearInventory((CommandSourceStack)$$0.getSource(), EntityArgument.getPlayers((CommandContext<CommandSourceStack>)$$0, "targets"), ItemPredicateArgument.getItemPredicate((CommandContext<CommandSourceStack>)$$0, "item"), IntegerArgumentType.getInteger((CommandContext)$$0, (String)"maxCount")))))));
     }
 
     private static int clearInventory(CommandSourceStack $$0, Collection<ServerPlayer> $$1, Predicate<ItemStack> $$2, int $$3) throws CommandSyntaxException {
@@ -53,18 +53,18 @@ public class ClearInventoryCommands {
         }
         if ($$4 == 0) {
             if ($$1.size() == 1) {
-                throw ERROR_SINGLE.create((Object)((ServerPlayer)$$1.iterator().next()).getName());
+                throw ERROR_SINGLE.create((Object)((ServerPlayer)((Object)$$1.iterator().next())).getName());
             }
             throw ERROR_MULTIPLE.create((Object)$$1.size());
         }
         if ($$3 == 0) {
             if ($$1.size() == 1) {
-                $$0.sendSuccess(Component.translatable("commands.clear.test.single", $$4, ((ServerPlayer)$$1.iterator().next()).getDisplayName()), true);
+                $$0.sendSuccess(Component.translatable("commands.clear.test.single", $$4, ((ServerPlayer)((Object)$$1.iterator().next())).getDisplayName()), true);
             } else {
                 $$0.sendSuccess(Component.translatable("commands.clear.test.multiple", $$4, $$1.size()), true);
             }
         } else if ($$1.size() == 1) {
-            $$0.sendSuccess(Component.translatable("commands.clear.success.single", $$4, ((ServerPlayer)$$1.iterator().next()).getDisplayName()), true);
+            $$0.sendSuccess(Component.translatable("commands.clear.success.single", $$4, ((ServerPlayer)((Object)$$1.iterator().next())).getDisplayName()), true);
         } else {
             $$0.sendSuccess(Component.translatable("commands.clear.success.multiple", $$4, $$1.size()), true);
         }

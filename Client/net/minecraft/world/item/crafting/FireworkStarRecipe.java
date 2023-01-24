@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.Util;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -104,32 +105,32 @@ extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer $$0) {
-        ItemStack $$1 = new ItemStack(Items.FIREWORK_STAR);
-        CompoundTag $$2 = $$1.getOrCreateTagElement("Explosion");
-        FireworkRocketItem.Shape $$3 = FireworkRocketItem.Shape.SMALL_BALL;
-        ArrayList $$4 = Lists.newArrayList();
-        for (int $$5 = 0; $$5 < $$0.getContainerSize(); ++$$5) {
-            ItemStack $$6 = $$0.getItem($$5);
-            if ($$6.isEmpty()) continue;
-            if (SHAPE_INGREDIENT.test($$6)) {
-                $$3 = (FireworkRocketItem.Shape)((Object)SHAPE_BY_ITEM.get((Object)$$6.getItem()));
+    public ItemStack assemble(CraftingContainer $$0, RegistryAccess $$1) {
+        ItemStack $$2 = new ItemStack(Items.FIREWORK_STAR);
+        CompoundTag $$3 = $$2.getOrCreateTagElement("Explosion");
+        FireworkRocketItem.Shape $$4 = FireworkRocketItem.Shape.SMALL_BALL;
+        ArrayList $$5 = Lists.newArrayList();
+        for (int $$6 = 0; $$6 < $$0.getContainerSize(); ++$$6) {
+            ItemStack $$7 = $$0.getItem($$6);
+            if ($$7.isEmpty()) continue;
+            if (SHAPE_INGREDIENT.test($$7)) {
+                $$4 = (FireworkRocketItem.Shape)((Object)SHAPE_BY_ITEM.get((Object)$$7.getItem()));
                 continue;
             }
-            if (FLICKER_INGREDIENT.test($$6)) {
-                $$2.putBoolean("Flicker", true);
+            if (FLICKER_INGREDIENT.test($$7)) {
+                $$3.putBoolean("Flicker", true);
                 continue;
             }
-            if (TRAIL_INGREDIENT.test($$6)) {
-                $$2.putBoolean("Trail", true);
+            if (TRAIL_INGREDIENT.test($$7)) {
+                $$3.putBoolean("Trail", true);
                 continue;
             }
-            if (!($$6.getItem() instanceof DyeItem)) continue;
-            $$4.add((Object)((DyeItem)$$6.getItem()).getDyeColor().getFireworkColor());
+            if (!($$7.getItem() instanceof DyeItem)) continue;
+            $$5.add((Object)((DyeItem)$$7.getItem()).getDyeColor().getFireworkColor());
         }
-        $$2.putIntArray("Colors", (List<Integer>)$$4);
-        $$2.putByte("Type", (byte)$$3.getId());
-        return $$1;
+        $$3.putIntArray("Colors", (List<Integer>)$$5);
+        $$3.putByte("Type", (byte)$$4.getId());
+        return $$2;
     }
 
     @Override
@@ -138,7 +139,7 @@ extends CustomRecipe {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess $$0) {
         return new ItemStack(Items.FIREWORK_STAR);
     }
 

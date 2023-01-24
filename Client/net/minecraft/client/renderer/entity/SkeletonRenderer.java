@@ -26,7 +26,7 @@ extends HumanoidMobRenderer<AbstractSkeleton, SkeletonModel<AbstractSkeleton>> {
 
     public SkeletonRenderer(EntityRendererProvider.Context $$0, ModelLayerLocation $$1, ModelLayerLocation $$2, ModelLayerLocation $$3) {
         super($$0, new SkeletonModel($$0.bakeLayer($$1)), 0.5f);
-        this.addLayer(new HumanoidArmorLayer(this, new SkeletonModel($$0.bakeLayer($$2)), new SkeletonModel($$0.bakeLayer($$3))));
+        this.addLayer(new HumanoidArmorLayer(this, new SkeletonModel($$0.bakeLayer($$2)), new SkeletonModel($$0.bakeLayer($$3)), $$0.getModelManager()));
     }
 
     @Override

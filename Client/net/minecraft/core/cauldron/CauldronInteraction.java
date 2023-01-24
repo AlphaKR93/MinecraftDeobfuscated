@@ -119,7 +119,7 @@ public interface CauldronInteraction {
                 $$3.awardStat(Stats.USE_CAULDRON);
                 $$3.awardStat(Stats.ITEM_USED.get($$6));
                 $$1.setBlockAndUpdate($$2, Blocks.WATER_CAULDRON.defaultBlockState());
-                $$1.playSound((Player)null, $$2, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
+                $$1.playSound(null, $$2, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
                 $$1.gameEvent(null, GameEvent.FLUID_PLACE, $$2);
             }
             return InteractionResult.sidedSuccess($$1.isClientSide);
@@ -133,7 +133,7 @@ public interface CauldronInteraction {
                 $$3.awardStat(Stats.USE_CAULDRON);
                 $$3.awardStat(Stats.ITEM_USED.get($$6));
                 LayeredCauldronBlock.lowerFillLevel($$0, $$1, $$2);
-                $$1.playSound((Player)null, $$2, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0f, 1.0f);
+                $$1.playSound(null, $$2, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0f, 1.0f);
                 $$1.gameEvent(null, GameEvent.FLUID_PICKUP, $$2);
             }
             return InteractionResult.sidedSuccess($$1.isClientSide);
@@ -147,7 +147,7 @@ public interface CauldronInteraction {
                 $$3.awardStat(Stats.USE_CAULDRON);
                 $$3.awardStat(Stats.ITEM_USED.get($$5.getItem()));
                 $$1.setBlockAndUpdate($$2, (BlockState)$$0.cycle(LayeredCauldronBlock.LEVEL));
-                $$1.playSound((Player)null, $$2, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
+                $$1.playSound(null, $$2, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
                 $$1.gameEvent(null, GameEvent.FLUID_PLACE, $$2);
             }
             return InteractionResult.sidedSuccess($$1.isClientSide);
@@ -211,7 +211,7 @@ public interface CauldronInteraction {
             $$3.awardStat(Stats.USE_CAULDRON);
             $$3.awardStat(Stats.ITEM_USED.get($$9));
             $$1.setBlockAndUpdate($$2, Blocks.CAULDRON.defaultBlockState());
-            $$1.playSound((Player)null, $$2, $$8, SoundSource.BLOCKS, 1.0f, 1.0f);
+            $$1.playSound(null, $$2, $$8, SoundSource.BLOCKS, 1.0f, 1.0f);
             $$1.gameEvent(null, GameEvent.FLUID_PICKUP, $$2);
         }
         return InteractionResult.sidedSuccess($$1.isClientSide);
@@ -224,7 +224,7 @@ public interface CauldronInteraction {
             $$2.awardStat(Stats.FILL_CAULDRON);
             $$2.awardStat(Stats.ITEM_USED.get($$7));
             $$0.setBlockAndUpdate($$1, $$5);
-            $$0.playSound((Player)null, $$1, $$6, SoundSource.BLOCKS, 1.0f, 1.0f);
+            $$0.playSound(null, $$1, $$6, SoundSource.BLOCKS, 1.0f, 1.0f);
             $$0.gameEvent(null, GameEvent.FLUID_PLACE, $$1);
         }
         return InteractionResult.sidedSuccess($$0.isClientSide);

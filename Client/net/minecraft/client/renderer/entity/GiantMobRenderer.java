@@ -27,7 +27,7 @@ extends MobRenderer<Giant, HumanoidModel<Giant>> {
         super($$0, new GiantZombieModel($$0.bakeLayer(ModelLayers.GIANT)), 0.5f * $$1);
         this.scale = $$1;
         this.addLayer(new ItemInHandLayer<Giant, HumanoidModel<Giant>>(this, $$0.getItemInHandRenderer()));
-        this.addLayer(new HumanoidArmorLayer<Giant, HumanoidModel<Giant>, GiantZombieModel>(this, new GiantZombieModel($$0.bakeLayer(ModelLayers.GIANT_INNER_ARMOR)), new GiantZombieModel($$0.bakeLayer(ModelLayers.GIANT_OUTER_ARMOR))));
+        this.addLayer(new HumanoidArmorLayer<Giant, HumanoidModel<Giant>, GiantZombieModel>(this, new GiantZombieModel($$0.bakeLayer(ModelLayers.GIANT_INNER_ARMOR)), new GiantZombieModel($$0.bakeLayer(ModelLayers.GIANT_OUTER_ARMOR)), $$0.getModelManager()));
     }
 
     @Override

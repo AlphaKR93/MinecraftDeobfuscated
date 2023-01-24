@@ -52,7 +52,7 @@ implements Clearable {
         super(BlockEntityType.CAMPFIRE, $$0, $$1);
     }
 
-    public static void cookTick(Level $$0, BlockPos $$12, BlockState $$2, CampfireBlockEntity $$3) {
+    public static void cookTick(Level $$0, BlockPos $$1, BlockState $$22, CampfireBlockEntity $$3) {
         boolean $$4 = false;
         for (int $$5 = 0; $$5 < $$3.items.size(); ++$$5) {
             SimpleContainer $$7;
@@ -62,14 +62,14 @@ implements Clearable {
             $$4 = true;
             int n = $$5;
             $$3.cookingProgress[n] = $$3.cookingProgress[n] + 1;
-            if ($$3.cookingProgress[$$5] < $$3.cookingTime[$$5] || !($$8 = (ItemStack)$$3.quickCheck.getRecipeFor($$7 = new SimpleContainer($$6), $$0).map($$1 -> $$1.assemble($$7)).orElse((Object)$$6)).isItemEnabled($$0.enabledFeatures())) continue;
-            Containers.dropItemStack($$0, $$12.getX(), $$12.getY(), $$12.getZ(), $$8);
+            if ($$3.cookingProgress[$$5] < $$3.cookingTime[$$5] || !($$8 = (ItemStack)$$3.quickCheck.getRecipeFor($$7 = new SimpleContainer($$6), $$0).map($$2 -> $$2.assemble($$7, $$0.registryAccess())).orElse((Object)$$6)).isItemEnabled($$0.enabledFeatures())) continue;
+            Containers.dropItemStack($$0, $$1.getX(), $$1.getY(), $$1.getZ(), $$8);
             $$3.items.set($$5, ItemStack.EMPTY);
-            $$0.sendBlockUpdated($$12, $$2, $$2, 3);
-            $$0.gameEvent(GameEvent.BLOCK_CHANGE, $$12, GameEvent.Context.of($$2));
+            $$0.sendBlockUpdated($$1, $$22, $$22, 3);
+            $$0.gameEvent(GameEvent.BLOCK_CHANGE, $$1, GameEvent.Context.of($$22));
         }
         if ($$4) {
-            CampfireBlockEntity.setChanged($$0, $$12, $$2);
+            CampfireBlockEntity.setChanged($$0, $$1, $$22);
         }
     }
 

@@ -3,6 +3,7 @@
  * 
  * Could not load the following classes:
  *  com.google.common.collect.Maps
+ *  java.lang.Float
  *  java.lang.Integer
  *  java.lang.Math
  *  java.lang.NumberFormatException
@@ -22,14 +23,18 @@ import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.CompassItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.Holder;
+import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.CrossbowItem;
@@ -38,6 +43,8 @@ import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.armortrim.ArmorTrim;
+import net.minecraft.world.item.armortrim.TrimMaterial;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LightBlock;
 
@@ -87,6 +94,19 @@ public class ItemProperties {
     static {
         ItemProperties.registerGeneric(new ResourceLocation("lefthanded"), ($$0, $$1, $$2, $$3) -> $$2 == null || $$2.getMainArm() == HumanoidArm.RIGHT ? 0.0f : 1.0f);
         ItemProperties.registerGeneric(new ResourceLocation("cooldown"), ($$0, $$1, $$2, $$3) -> $$2 instanceof Player ? ((Player)$$2).getCooldowns().getCooldownPercent($$0.getItem(), 0.0f) : 0.0f);
+        ClampedItemPropertyFunction $$02 = ($$0, $$1, $$2, $$3) -> {
+            if (!$$0.is(ItemTags.TRIMMABLE_ARMOR)) {
+                return Float.NEGATIVE_INFINITY;
+            }
+            if ($$1 == null) {
+                return 0.0f;
+            }
+            if (!$$1.enabledFeatures().contains(FeatureFlags.UPDATE_1_20)) {
+                return Float.NEGATIVE_INFINITY;
+            }
+            return ((Float)ArmorTrim.getTrim($$1.registryAccess(), $$0).map(ArmorTrim::material).map(Holder::value).map(TrimMaterial::itemModelIndex).orElse((Object)Float.valueOf((float)0.0f))).floatValue();
+        };
+        ItemProperties.registerGeneric(ItemModelGenerators.TRIM_TYPE_PREDICATE_ID, $$02);
         ItemProperties.registerCustomModelData(($$0, $$1, $$2, $$3) -> $$0.hasTag() ? (float)$$0.getTag().getInt(TAG_CUSTOM_MODEL_DATA) : 0.0f);
         ItemProperties.register(Items.BOW, new ResourceLocation("pull"), ($$0, $$1, $$2, $$3) -> {
             if ($$2 == null) {

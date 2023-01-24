@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import javax.annotation.Nullable;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -34,6 +33,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.TraceableEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -43,7 +43,8 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 
 public class ItemEntity
-extends Entity {
+extends Entity
+implements TraceableEntity {
     private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(ItemEntity.class, EntityDataSerializers.ITEM_STACK);
     private static final int LIFETIME = 6000;
     private static final int INFINITE_PICKUP_DELAY = Short.MAX_VALUE;
@@ -54,7 +55,7 @@ extends Entity {
     @Nullable
     private UUID thrower;
     @Nullable
-    private UUID owner;
+    private UUID target;
     public final float bobOffs;
 
     public ItemEntity(EntityType<? extends ItemEntity> $$0, Level $$1) {
@@ -87,8 +88,15 @@ extends Entity {
         return this.getItem().is(ItemTags.DAMPENS_VIBRATIONS);
     }
 
-    public Entity getThrowingEntity() {
-        return (Entity)Util.mapNullable(this.getThrower(), this.level::getPlayerByUUID);
+    @Override
+    @Nullable
+    public Entity getOwner() {
+        Level level;
+        if (this.thrower != null && (level = this.level) instanceof ServerLevel) {
+            ServerLevel $$0 = (ServerLevel)level;
+            return $$0.getEntity(this.thrower);
+        }
+        return null;
     }
 
     @Override
@@ -195,7 +203,7 @@ extends Entity {
     private void tryToMerge(ItemEntity $$0) {
         ItemStack $$1 = this.getItem();
         ItemStack $$2 = $$0.getItem();
-        if (!Objects.equals((Object)this.getOwner(), (Object)$$0.getOwner()) || !ItemEntity.areMergable($$1, $$2)) {
+        if (!Objects.equals((Object)this.target, (Object)$$0.target) || !ItemEntity.areMergable($$1, $$2)) {
             return;
         }
         if ($$2.getCount() < $$1.getCount()) {
@@ -274,11 +282,11 @@ extends Entity {
         $$0.putShort("Health", (short)this.health);
         $$0.putShort("Age", (short)this.age);
         $$0.putShort("PickupDelay", (short)this.pickupDelay);
-        if (this.getThrower() != null) {
-            $$0.putUUID("Thrower", this.getThrower());
+        if (this.thrower != null) {
+            $$0.putUUID("Thrower", this.thrower);
         }
-        if (this.getOwner() != null) {
-            $$0.putUUID("Owner", this.getOwner());
+        if (this.target != null) {
+            $$0.putUUID("Owner", this.target);
         }
         if (!this.getItem().isEmpty()) {
             $$0.put("Item", this.getItem().save(new CompoundTag()));
@@ -293,7 +301,7 @@ extends Entity {
             this.pickupDelay = $$0.getShort("PickupDelay");
         }
         if ($$0.hasUUID("Owner")) {
-            this.owner = $$0.getUUID("Owner");
+            this.target = $$0.getUUID("Owner");
         }
         if ($$0.hasUUID("Thrower")) {
             this.thrower = $$0.getUUID("Thrower");
@@ -313,7 +321,7 @@ extends Entity {
         ItemStack $$1 = this.getItem();
         Item $$2 = $$1.getItem();
         int $$3 = $$1.getCount();
-        if (this.pickupDelay == 0 && (this.owner == null || this.owner.equals((Object)$$0.getUUID())) && $$0.getInventory().add($$1)) {
+        if (this.pickupDelay == 0 && (this.target == null || this.target.equals((Object)$$0.getUUID())) && $$0.getInventory().add($$1)) {
             $$0.take(this, $$3);
             if ($$1.isEmpty()) {
                 this.discard();
@@ -364,18 +372,8 @@ extends Entity {
         }
     }
 
-    @Nullable
-    public UUID getOwner() {
-        return this.owner;
-    }
-
-    public void setOwner(@Nullable UUID $$0) {
-        this.owner = $$0;
-    }
-
-    @Nullable
-    public UUID getThrower() {
-        return this.thrower;
+    public void setTarget(@Nullable UUID $$0) {
+        this.target = $$0;
     }
 
     public void setThrower(@Nullable UUID $$0) {

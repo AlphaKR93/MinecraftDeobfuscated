@@ -31,9 +31,4 @@ extends Enchantment {
     public boolean isTreasureOnly() {
         return true;
     }
-
-    @Override
-    public int getMaxLevel() {
-        return 1;
-    }
 }

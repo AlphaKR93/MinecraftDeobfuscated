@@ -7,6 +7,7 @@
  */
 package net.minecraft.world.item.crafting;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
@@ -50,27 +51,27 @@ extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer $$0) {
-        ItemStack $$1 = new ItemStack(Items.FIREWORK_ROCKET, 3);
-        CompoundTag $$2 = $$1.getOrCreateTagElement("Fireworks");
-        ListTag $$3 = new ListTag();
-        int $$4 = 0;
-        for (int $$5 = 0; $$5 < $$0.getContainerSize(); ++$$5) {
-            CompoundTag $$7;
-            ItemStack $$6 = $$0.getItem($$5);
-            if ($$6.isEmpty()) continue;
-            if (GUNPOWDER_INGREDIENT.test($$6)) {
-                ++$$4;
+    public ItemStack assemble(CraftingContainer $$0, RegistryAccess $$1) {
+        ItemStack $$2 = new ItemStack(Items.FIREWORK_ROCKET, 3);
+        CompoundTag $$3 = $$2.getOrCreateTagElement("Fireworks");
+        ListTag $$4 = new ListTag();
+        int $$5 = 0;
+        for (int $$6 = 0; $$6 < $$0.getContainerSize(); ++$$6) {
+            CompoundTag $$8;
+            ItemStack $$7 = $$0.getItem($$6);
+            if ($$7.isEmpty()) continue;
+            if (GUNPOWDER_INGREDIENT.test($$7)) {
+                ++$$5;
                 continue;
             }
-            if (!STAR_INGREDIENT.test($$6) || ($$7 = $$6.getTagElement("Explosion")) == null) continue;
-            $$3.add($$7);
+            if (!STAR_INGREDIENT.test($$7) || ($$8 = $$7.getTagElement("Explosion")) == null) continue;
+            $$4.add($$8);
         }
-        $$2.putByte("Flight", (byte)$$4);
-        if (!$$3.isEmpty()) {
-            $$2.put("Explosions", $$3);
+        $$3.putByte("Flight", (byte)$$5);
+        if (!$$4.isEmpty()) {
+            $$3.put("Explosions", $$4);
         }
-        return $$1;
+        return $$2;
     }
 
     @Override
@@ -79,7 +80,7 @@ extends CustomRecipe {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess $$0) {
         return new ItemStack(Items.FIREWORK_ROCKET);
     }
 

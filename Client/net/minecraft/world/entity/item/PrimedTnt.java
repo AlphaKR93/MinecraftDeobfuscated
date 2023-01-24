@@ -22,10 +22,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.TraceableEntity;
 import net.minecraft.world.level.Level;
 
 public class PrimedTnt
-extends Entity {
+extends Entity
+implements TraceableEntity {
     private static final EntityDataAccessor<Integer> DATA_FUSE_ID = SynchedEntityData.defineId(PrimedTnt.class, EntityDataSerializers.INT);
     private static final int DEFAULT_FUSE_TIME = 80;
     @Nullable
@@ -103,6 +105,7 @@ extends Entity {
         this.setFuse($$0.getShort("Fuse"));
     }
 
+    @Override
     @Nullable
     public LivingEntity getOwner() {
         return this.owner;

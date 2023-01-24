@@ -45,7 +45,7 @@ extends RecipeBookComponent {
 
     @Override
     public void setupGhostRecipe(Recipe<?> $$0, List<Slot> $$1) {
-        ItemStack $$2 = $$0.getResultItem();
+        ItemStack $$2 = $$0.getResultItem(this.minecraft.level.registryAccess());
         this.ghostRecipe.setRecipe($$0);
         this.ghostRecipe.addIngredient(Ingredient.of($$2), ((Slot)$$1.get((int)2)).x, ((Slot)$$1.get((int)2)).y);
         NonNullList<Ingredient> $$3 = $$0.getIngredients();

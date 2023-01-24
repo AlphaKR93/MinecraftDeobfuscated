@@ -9,6 +9,7 @@
  *  java.util.List
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.Mob
  */
 package net.minecraft.world.entity.monster;
 
@@ -111,7 +112,6 @@ extends SpellcasterIllager {
         super.customServerAiStep();
     }
 
-    @Override
     public boolean isAlliedTo(Entity $$0) {
         if ($$0 == null) {
             return false;
@@ -123,7 +123,7 @@ extends SpellcasterIllager {
             return true;
         }
         if ($$0 instanceof Vex) {
-            return this.isAlliedTo(((Vex)$$0).getOwner());
+            return this.isAlliedTo((Entity)((Vex)((Object)$$0)).getOwner());
         }
         if ($$0 instanceof LivingEntity && ((LivingEntity)$$0).getMobType() == MobType.ILLAGER) {
             return this.getTeam() == null && $$0.getTeam() == null;
@@ -131,7 +131,6 @@ extends SpellcasterIllager {
         return false;
     }
 
-    @Override
     protected SoundEvent getAmbientSound() {
         return SoundEvents.EVOKER_AMBIENT;
     }
@@ -175,7 +174,7 @@ extends SpellcasterIllager {
             if (Evoker.this.getTarget() != null) {
                 Evoker.this.getLookControl().setLookAt(Evoker.this.getTarget(), Evoker.this.getMaxHeadYRot(), Evoker.this.getMaxHeadXRot());
             } else if (Evoker.this.getWololoTarget() != null) {
-                Evoker.this.getLookControl().setLookAt(Evoker.this.getWololoTarget(), Evoker.this.getMaxHeadYRot(), Evoker.this.getMaxHeadXRot());
+                Evoker.this.getLookControl().setLookAt((Entity)((Object)Evoker.this.getWololoTarget()), Evoker.this.getMaxHeadYRot(), Evoker.this.getMaxHeadXRot());
             }
         }
     }
@@ -194,7 +193,7 @@ extends SpellcasterIllager {
             if (!super.canUse()) {
                 return false;
             }
-            int $$0 = Evoker.this.level.getNearbyEntities(Vex.class, this.vexCountTargeting, Evoker.this, Evoker.this.getBoundingBox().inflate(16.0)).size();
+            int $$0 = Evoker.this.level.getNearbyEntities(Vex.class, this.vexCountTargeting, (LivingEntity)((Object)Evoker.this), Evoker.this.getBoundingBox().inflate(16.0)).size();
             return Evoker.this.random.nextInt(8) + 1 > $$0;
         }
 
@@ -220,7 +219,7 @@ extends SpellcasterIllager {
                 $$3.setOwner(Evoker.this);
                 $$3.setBoundOrigin($$2);
                 $$3.setLimitedLife(20 * (30 + Evoker.this.random.nextInt(90)));
-                $$0.addFreshEntityWithPassengers($$3);
+                $$0.addFreshEntityWithPassengers((Entity)((Object)$$3));
             }
         }
 
@@ -292,7 +291,7 @@ extends SpellcasterIllager {
                 break;
             } while (($$6 = ((BlockPos)$$6).below()).getY() >= Mth.floor($$2) - 1);
             if ($$7) {
-                Evoker.this.level.addFreshEntity(new EvokerFangs(Evoker.this.level, $$0, (double)$$6.getY() + $$8, $$1, $$4, $$5, Evoker.this));
+                Evoker.this.level.addFreshEntity(new EvokerFangs(Evoker.this.level, $$0, (double)$$6.getY() + $$8, $$1, $$4, $$5, (LivingEntity)((Object)Evoker.this)));
             }
         }
 
@@ -313,7 +312,7 @@ extends SpellcasterIllager {
 
         public EvokerWololoSpellGoal() {
             super(Evoker.this);
-            this.wololoTargeting = TargetingConditions.forNonCombat().range(16.0).selector((Predicate<LivingEntity>)((Predicate)$$0 -> ((Sheep)$$0).getColor() == DyeColor.BLUE));
+            this.wololoTargeting = TargetingConditions.forNonCombat().range(16.0).selector((Predicate<LivingEntity>)((Predicate)$$0 -> ((Sheep)((Object)$$0)).getColor() == DyeColor.BLUE));
         }
 
         @Override
@@ -330,7 +329,7 @@ extends SpellcasterIllager {
             if (!Evoker.this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                 return false;
             }
-            List $$0 = Evoker.this.level.getNearbyEntities(Sheep.class, this.wololoTargeting, Evoker.this, Evoker.this.getBoundingBox().inflate(16.0, 4.0, 16.0));
+            List $$0 = Evoker.this.level.getNearbyEntities(Sheep.class, this.wololoTargeting, (LivingEntity)((Object)Evoker.this), Evoker.this.getBoundingBox().inflate(16.0, 4.0, 16.0));
             if ($$0.isEmpty()) {
                 return false;
             }

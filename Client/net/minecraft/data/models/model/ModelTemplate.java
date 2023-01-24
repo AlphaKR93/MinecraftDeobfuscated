@@ -61,21 +61,31 @@ public class ModelTemplate {
     }
 
     public ResourceLocation create(ResourceLocation $$0, TextureMapping $$1, BiConsumer<ResourceLocation, Supplier<JsonElement>> $$2) {
-        Map<TextureSlot, ResourceLocation> $$3 = this.createMap($$1);
-        $$2.accept((Object)$$0, () -> {
-            JsonObject $$12 = new JsonObject();
-            this.model.ifPresent($$1 -> $$12.addProperty("parent", $$1.toString()));
-            if (!$$3.isEmpty()) {
-                JsonObject $$22 = new JsonObject();
-                $$3.forEach(($$1, $$2) -> $$22.addProperty($$1.getId(), $$2.toString()));
-                $$12.add("textures", (JsonElement)$$22);
-            }
-            return $$12;
-        });
+        return this.create($$0, $$1, $$2, this::createBaseTemplate);
+    }
+
+    public ResourceLocation create(ResourceLocation $$0, TextureMapping $$1, BiConsumer<ResourceLocation, Supplier<JsonElement>> $$2, JsonFactory $$3) {
+        Map<TextureSlot, ResourceLocation> $$4 = this.createMap($$1);
+        $$2.accept((Object)$$0, () -> $$3.create($$0, $$4));
         return $$0;
+    }
+
+    public JsonObject createBaseTemplate(ResourceLocation $$0, Map<TextureSlot, ResourceLocation> $$12) {
+        JsonObject $$22 = new JsonObject();
+        this.model.ifPresent($$1 -> $$22.addProperty("parent", $$1.toString()));
+        if (!$$12.isEmpty()) {
+            JsonObject $$3 = new JsonObject();
+            $$12.forEach(($$1, $$2) -> $$3.addProperty($$1.getId(), $$2.toString()));
+            $$22.add("textures", (JsonElement)$$3);
+        }
+        return $$22;
     }
 
     private Map<TextureSlot, ResourceLocation> createMap(TextureMapping $$0) {
         return (Map)Streams.concat((Stream[])new Stream[]{this.requiredSlots.stream(), $$0.getForced()}).collect(ImmutableMap.toImmutableMap((Function)Function.identity(), $$0::get));
+    }
+
+    public static interface JsonFactory {
+        public JsonObject create(ResourceLocation var1, Map<TextureSlot, ResourceLocation> var2);
     }
 }

@@ -9,7 +9,6 @@
  *  java.lang.Object
  *  java.lang.Override
  *  java.util.EnumSet
- *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.entity.monster;
 
@@ -21,7 +20,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -93,6 +91,7 @@ extends Monster {
         return SoundEvents.BLAZE_DEATH;
     }
 
+    @Override
     public float getLightLevelDependentMagicValue() {
         return 1.0f;
     }
@@ -113,6 +112,7 @@ extends Monster {
         super.aiStep();
     }
 
+    @Override
     public boolean isSensitiveToWater() {
         return true;
     }
@@ -133,10 +133,12 @@ extends Monster {
         super.customServerAiStep();
     }
 
+    @Override
     public boolean causeFallDamage(float $$0, float $$1, DamageSource $$2) {
         return false;
     }
 
+    @Override
     public boolean isOnFire() {
         return this.isCharged();
     }
@@ -192,16 +194,16 @@ extends Monster {
             if ($$0 == null) {
                 return;
             }
-            boolean $$1 = this.blaze.getSensing().hasLineOfSight((Entity)$$0);
+            boolean $$1 = this.blaze.getSensing().hasLineOfSight($$0);
             this.lastSeen = $$1 ? 0 : ++this.lastSeen;
-            double $$2 = this.blaze.distanceToSqr((Entity)$$0);
+            double $$2 = this.blaze.distanceToSqr($$0);
             if ($$2 < 4.0) {
                 if (!$$1) {
                     return;
                 }
                 if (this.attackTime <= 0) {
                     this.attackTime = 20;
-                    this.blaze.doHurtTarget((Entity)$$0);
+                    this.blaze.doHurtTarget($$0);
                 }
                 this.blaze.getMoveControl().setWantedPosition($$0.getX(), $$0.getY(), $$0.getZ(), 1.0);
             } else if ($$2 < this.getFollowDistance() * this.getFollowDistance() && $$1) {
@@ -232,7 +234,7 @@ extends Monster {
                         }
                     }
                 }
-                this.blaze.getLookControl().setLookAt((Entity)$$0, 10.0f, 10.0f);
+                this.blaze.getLookControl().setLookAt($$0, 10.0f, 10.0f);
             } else if (this.lastSeen < 5) {
                 this.blaze.getMoveControl().setWantedPosition($$0.getX(), $$0.getY(), $$0.getZ(), 1.0);
             }

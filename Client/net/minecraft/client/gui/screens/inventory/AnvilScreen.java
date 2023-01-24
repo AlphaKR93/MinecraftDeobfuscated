@@ -122,8 +122,21 @@ extends ItemCombinerScreen<AnvilMenu> {
     }
 
     @Override
+    protected void renderBg(PoseStack $$0, float $$1, int $$2, int $$3) {
+        super.renderBg($$0, $$1, $$2, $$3);
+        this.blit($$0, this.leftPos + 59, this.topPos + 20, 0, this.imageHeight + (((AnvilMenu)this.menu).getSlot(0).hasItem() ? 0 : 16), 110, 16);
+    }
+
+    @Override
     public void renderFg(PoseStack $$0, int $$1, int $$2, float $$3) {
         this.name.render($$0, $$1, $$2, $$3);
+    }
+
+    @Override
+    protected void renderErrorIcon(PoseStack $$0, int $$1, int $$2) {
+        if ((((AnvilMenu)this.menu).getSlot(0).hasItem() || ((AnvilMenu)this.menu).getSlot(1).hasItem()) && !((AnvilMenu)this.menu).getSlot(((AnvilMenu)this.menu).getResultSlot()).hasItem()) {
+            this.blit($$0, $$1 + 99, $$2 + 45, this.imageWidth, 0, 28, 21);
+        }
     }
 
     @Override

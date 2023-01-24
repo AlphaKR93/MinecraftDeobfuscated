@@ -6,7 +6,6 @@
  *  java.lang.Object
  *  java.lang.Override
  *  java.util.EnumSet
- *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world.entity.ai.goal;
 
@@ -49,28 +48,28 @@ extends Goal {
     }
 
     private boolean isHoldingCrossbow() {
-        return ((LivingEntity)((Object)this.mob)).isHolding(Items.CROSSBOW);
+        return ((LivingEntity)this.mob).isHolding(Items.CROSSBOW);
     }
 
     @Override
     public boolean canContinueToUse() {
-        return this.isValidTarget() && (this.canUse() || !((Mob)((Object)this.mob)).getNavigation().isDone()) && this.isHoldingCrossbow();
+        return this.isValidTarget() && (this.canUse() || !((Mob)this.mob).getNavigation().isDone()) && this.isHoldingCrossbow();
     }
 
     private boolean isValidTarget() {
-        return ((Mob)((Object)this.mob)).getTarget() != null && ((Mob)((Object)this.mob)).getTarget().isAlive();
+        return ((Mob)this.mob).getTarget() != null && ((Mob)this.mob).getTarget().isAlive();
     }
 
     @Override
     public void stop() {
         super.stop();
-        ((Mob)((Object)this.mob)).setAggressive(false);
-        ((Mob)((Object)this.mob)).setTarget(null);
+        ((Mob)this.mob).setAggressive(false);
+        ((Mob)this.mob).setTarget(null);
         this.seeTime = 0;
-        if (((LivingEntity)((Object)this.mob)).isUsingItem()) {
-            ((LivingEntity)((Object)this.mob)).stopUsingItem();
+        if (((LivingEntity)this.mob).isUsingItem()) {
+            ((LivingEntity)this.mob).stopUsingItem();
             ((CrossbowAttackMob)this.mob).setChargingCrossbow(false);
-            CrossbowItem.setCharged(((LivingEntity)((Object)this.mob)).getUseItem(), false);
+            CrossbowItem.setCharged(((LivingEntity)this.mob).getUseItem(), false);
         }
     }
 
@@ -83,45 +82,45 @@ extends Goal {
     public void tick() {
         boolean $$4;
         boolean $$2;
-        LivingEntity $$0 = ((Mob)((Object)this.mob)).getTarget();
+        LivingEntity $$0 = ((Mob)this.mob).getTarget();
         if ($$0 == null) {
             return;
         }
-        boolean $$1 = ((Mob)((Object)this.mob)).getSensing().hasLineOfSight($$0);
+        boolean $$1 = ((Mob)this.mob).getSensing().hasLineOfSight($$0);
         boolean bl = $$2 = this.seeTime > 0;
         if ($$1 != $$2) {
             this.seeTime = 0;
         }
         this.seeTime = $$1 ? ++this.seeTime : --this.seeTime;
-        double $$3 = this.mob.distanceToSqr((Entity)$$0);
+        double $$3 = ((Entity)this.mob).distanceToSqr($$0);
         boolean bl2 = $$4 = ($$3 > (double)this.attackRadiusSqr || this.seeTime < 5) && this.attackDelay == 0;
         if ($$4) {
             --this.updatePathDelay;
             if (this.updatePathDelay <= 0) {
-                ((Mob)((Object)this.mob)).getNavigation().moveTo($$0, this.canRun() ? this.speedModifier : this.speedModifier * 0.5);
-                this.updatePathDelay = PATHFINDING_DELAY_RANGE.sample(((LivingEntity)((Object)this.mob)).getRandom());
+                ((Mob)this.mob).getNavigation().moveTo($$0, this.canRun() ? this.speedModifier : this.speedModifier * 0.5);
+                this.updatePathDelay = PATHFINDING_DELAY_RANGE.sample(((LivingEntity)this.mob).getRandom());
             }
         } else {
             this.updatePathDelay = 0;
-            ((Mob)((Object)this.mob)).getNavigation().stop();
+            ((Mob)this.mob).getNavigation().stop();
         }
-        ((Mob)((Object)this.mob)).getLookControl().setLookAt($$0, 30.0f, 30.0f);
+        ((Mob)this.mob).getLookControl().setLookAt($$0, 30.0f, 30.0f);
         if (this.crossbowState == CrossbowState.UNCHARGED) {
             if (!$$4) {
-                ((LivingEntity)((Object)this.mob)).startUsingItem(ProjectileUtil.getWeaponHoldingHand(this.mob, Items.CROSSBOW));
+                ((LivingEntity)this.mob).startUsingItem(ProjectileUtil.getWeaponHoldingHand(this.mob, Items.CROSSBOW));
                 this.crossbowState = CrossbowState.CHARGING;
                 ((CrossbowAttackMob)this.mob).setChargingCrossbow(true);
             }
         } else if (this.crossbowState == CrossbowState.CHARGING) {
             ItemStack $$6;
             int $$5;
-            if (!((LivingEntity)((Object)this.mob)).isUsingItem()) {
+            if (!((LivingEntity)this.mob).isUsingItem()) {
                 this.crossbowState = CrossbowState.UNCHARGED;
             }
-            if (($$5 = ((LivingEntity)((Object)this.mob)).getTicksUsingItem()) >= CrossbowItem.getChargeDuration($$6 = ((LivingEntity)((Object)this.mob)).getUseItem())) {
-                ((LivingEntity)((Object)this.mob)).releaseUsingItem();
+            if (($$5 = ((LivingEntity)this.mob).getTicksUsingItem()) >= CrossbowItem.getChargeDuration($$6 = ((LivingEntity)this.mob).getUseItem())) {
+                ((LivingEntity)this.mob).releaseUsingItem();
                 this.crossbowState = CrossbowState.CHARGED;
-                this.attackDelay = 20 + ((LivingEntity)((Object)this.mob)).getRandom().nextInt(20);
+                this.attackDelay = 20 + ((LivingEntity)this.mob).getRandom().nextInt(20);
                 ((CrossbowAttackMob)this.mob).setChargingCrossbow(false);
             }
         } else if (this.crossbowState == CrossbowState.CHARGED) {
@@ -131,7 +130,7 @@ extends Goal {
             }
         } else if (this.crossbowState == CrossbowState.READY_TO_ATTACK && $$1) {
             ((RangedAttackMob)this.mob).performRangedAttack($$0, 1.0f);
-            ItemStack $$7 = ((LivingEntity)((Object)this.mob)).getItemInHand(ProjectileUtil.getWeaponHoldingHand(this.mob, Items.CROSSBOW));
+            ItemStack $$7 = ((LivingEntity)this.mob).getItemInHand(ProjectileUtil.getWeaponHoldingHand(this.mob, Items.CROSSBOW));
             CrossbowItem.setCharged($$7, false);
             this.crossbowState = CrossbowState.UNCHARGED;
         }

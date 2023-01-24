@@ -13,7 +13,6 @@
 package net.minecraft.client.renderer.blockentity;
 
 import com.google.common.collect.ImmutableMap;
-import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -41,6 +40,7 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -161,14 +161,14 @@ implements BlockEntityRenderer<SignBlockEntity> {
 
     static int getDarkColor(SignBlockEntity $$0) {
         int $$1 = $$0.getColor().getTextColor();
-        double $$2 = 0.4;
-        int $$3 = (int)((double)NativeImage.getR($$1) * 0.4);
-        int $$4 = (int)((double)NativeImage.getG($$1) * 0.4);
-        int $$5 = (int)((double)NativeImage.getB($$1) * 0.4);
         if ($$1 == DyeColor.BLACK.getTextColor() && $$0.hasGlowingText()) {
             return -988212;
         }
-        return NativeImage.combine(0, $$5, $$4, $$3);
+        double $$2 = 0.4;
+        int $$3 = (int)((double)FastColor.ARGB32.red($$1) * 0.4);
+        int $$4 = (int)((double)FastColor.ARGB32.green($$1) * 0.4);
+        int $$5 = (int)((double)FastColor.ARGB32.blue($$1) * 0.4);
+        return FastColor.ARGB32.color(0, $$3, $$4, $$5);
     }
 
     public static SignModel createSignModel(EntityModelSet $$0, WoodType $$1) {

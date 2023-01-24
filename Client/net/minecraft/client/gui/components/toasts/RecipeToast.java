@@ -60,7 +60,7 @@ implements Toast {
         $$1.getMinecraft().getItemRenderer().renderAndDecorateFakeItem($$4, 3, 3);
         $$5.popPose();
         RenderSystem.applyModelViewMatrix();
-        $$1.getMinecraft().getItemRenderer().renderAndDecorateFakeItem($$3.getResultItem(), 8, 8);
+        $$1.getMinecraft().getItemRenderer().renderAndDecorateFakeItem($$3.getResultItem($$1.getMinecraft().level.registryAccess()), 8, 8);
         return (double)($$2 - this.lastChanged) >= 5000.0 * $$1.getNotificationDisplayTimeMultiplier() ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
     }
 

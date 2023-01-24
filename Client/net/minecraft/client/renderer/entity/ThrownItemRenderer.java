@@ -53,7 +53,7 @@ extends EntityRenderer<T> {
         $$3.scale(this.scale, this.scale, this.scale);
         $$3.mulPose(this.entityRenderDispatcher.cameraOrientation());
         $$3.mulPose(Axis.YP.rotationDegrees(180.0f));
-        this.itemRenderer.renderStatic(((ItemSupplier)$$0).getItem(), ItemTransforms.TransformType.GROUND, $$5, OverlayTexture.NO_OVERLAY, $$3, $$4, ((Entity)$$0).getId());
+        this.itemRenderer.renderStatic(((ItemSupplier)$$0).getItem(), ItemTransforms.TransformType.GROUND, $$5, OverlayTexture.NO_OVERLAY, $$3, $$4, ((Entity)$$0).level, ((Entity)$$0).getId());
         $$3.popPose();
         super.render($$0, $$1, $$2, $$3, $$4, $$5);
     }

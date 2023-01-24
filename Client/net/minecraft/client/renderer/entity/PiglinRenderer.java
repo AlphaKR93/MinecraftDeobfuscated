@@ -31,7 +31,7 @@ extends HumanoidMobRenderer<Mob, PiglinModel<Mob>> {
 
     public PiglinRenderer(EntityRendererProvider.Context $$0, ModelLayerLocation $$1, ModelLayerLocation $$2, ModelLayerLocation $$3, boolean $$4) {
         super($$0, PiglinRenderer.createModel($$0.getModelSet(), $$1, $$4), 0.5f, 1.0019531f, 1.0f, 1.0019531f);
-        this.addLayer(new HumanoidArmorLayer(this, new HumanoidModel($$0.bakeLayer($$2)), new HumanoidModel($$0.bakeLayer($$3))));
+        this.addLayer(new HumanoidArmorLayer(this, new HumanoidModel($$0.bakeLayer($$2)), new HumanoidModel($$0.bakeLayer($$3)), $$0.getModelManager()));
     }
 
     private static PiglinModel<Mob> createModel(EntityModelSet $$0, ModelLayerLocation $$1, boolean $$2) {

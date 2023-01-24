@@ -6,6 +6,7 @@
  *  java.lang.Object
  *  java.lang.Override
  *  java.util.Map
+ *  net.minecraft.world.item.Item
  */
 package net.minecraft.world.level.block;
 

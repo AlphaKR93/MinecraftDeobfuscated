@@ -7,6 +7,7 @@
  */
 package net.minecraft.world.item.crafting;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -56,27 +57,27 @@ extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer $$0) {
-        ItemStack $$1 = ItemStack.EMPTY;
+    public ItemStack assemble(CraftingContainer $$0, RegistryAccess $$1) {
         ItemStack $$2 = ItemStack.EMPTY;
-        for (int $$3 = 0; $$3 < $$0.getContainerSize(); ++$$3) {
-            ItemStack $$4 = $$0.getItem($$3);
-            if ($$4.isEmpty()) continue;
-            if ($$4.getItem() instanceof BannerItem) {
-                $$1 = $$4;
+        ItemStack $$3 = ItemStack.EMPTY;
+        for (int $$4 = 0; $$4 < $$0.getContainerSize(); ++$$4) {
+            ItemStack $$5 = $$0.getItem($$4);
+            if ($$5.isEmpty()) continue;
+            if ($$5.getItem() instanceof BannerItem) {
+                $$2 = $$5;
                 continue;
             }
-            if (!$$4.is(Items.SHIELD)) continue;
-            $$2 = $$4.copy();
+            if (!$$5.is(Items.SHIELD)) continue;
+            $$3 = $$5.copy();
         }
-        if ($$2.isEmpty()) {
-            return $$2;
+        if ($$3.isEmpty()) {
+            return $$3;
         }
-        CompoundTag $$5 = BlockItem.getBlockEntityData($$1);
-        CompoundTag $$6 = $$5 == null ? new CompoundTag() : $$5.copy();
-        $$6.putInt("Base", ((BannerItem)$$1.getItem()).getColor().getId());
-        BlockItem.setBlockEntityData($$2, BlockEntityType.BANNER, $$6);
-        return $$2;
+        CompoundTag $$6 = BlockItem.getBlockEntityData($$2);
+        CompoundTag $$7 = $$6 == null ? new CompoundTag() : $$6.copy();
+        $$7.putInt("Base", ((BannerItem)$$2.getItem()).getColor().getId());
+        BlockItem.setBlockEntityData($$3, BlockEntityType.BANNER, $$7);
+        return $$3;
     }
 
     @Override

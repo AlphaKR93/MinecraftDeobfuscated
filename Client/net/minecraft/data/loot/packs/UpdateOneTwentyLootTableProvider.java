@@ -16,11 +16,14 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.data.loot.packs.UpdateOneTwentyBlockLoot;
+import net.minecraft.data.loot.packs.UpdateOneTwentyChestLoot;
+import net.minecraft.data.loot.packs.UpdateOneTwentyEntityLoot;
+import net.minecraft.data.loot.packs.UpdateOneTwentyFishingLoot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
 public class UpdateOneTwentyLootTableProvider {
     public static LootTableProvider create(PackOutput $$0) {
-        return new LootTableProvider($$0, (Set<ResourceLocation>)Set.of(), (List<LootTableProvider.SubProviderEntry>)List.of((Object)((Object)new LootTableProvider.SubProviderEntry((Supplier<LootTableSubProvider>)((Supplier)UpdateOneTwentyBlockLoot::new), LootContextParamSets.BLOCK))));
+        return new LootTableProvider($$0, (Set<ResourceLocation>)Set.of(), (List<LootTableProvider.SubProviderEntry>)List.of((Object)((Object)new LootTableProvider.SubProviderEntry((Supplier<LootTableSubProvider>)((Supplier)UpdateOneTwentyFishingLoot::new), LootContextParamSets.FISHING)), (Object)((Object)new LootTableProvider.SubProviderEntry((Supplier<LootTableSubProvider>)((Supplier)UpdateOneTwentyBlockLoot::new), LootContextParamSets.BLOCK)), (Object)((Object)new LootTableProvider.SubProviderEntry((Supplier<LootTableSubProvider>)((Supplier)UpdateOneTwentyChestLoot::new), LootContextParamSets.CHEST)), (Object)((Object)new LootTableProvider.SubProviderEntry((Supplier<LootTableSubProvider>)((Supplier)UpdateOneTwentyEntityLoot::new), LootContextParamSets.ENTITY))));
     }
 }

@@ -27,6 +27,7 @@ import java.util.List;
 import net.minecraft.client.renderer.texture.atlas.SpriteSource;
 import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.minecraft.client.renderer.texture.atlas.sources.DirectoryLister;
+import net.minecraft.client.renderer.texture.atlas.sources.PalettedPermutations;
 import net.minecraft.client.renderer.texture.atlas.sources.SingleFile;
 import net.minecraft.client.renderer.texture.atlas.sources.SourceFilter;
 import net.minecraft.client.renderer.texture.atlas.sources.Unstitcher;
@@ -38,6 +39,7 @@ public class SpriteSources {
     public static final SpriteSourceType DIRECTORY = SpriteSources.register("directory", DirectoryLister.CODEC);
     public static final SpriteSourceType FILTER = SpriteSources.register("filter", SourceFilter.CODEC);
     public static final SpriteSourceType UNSTITCHER = SpriteSources.register("unstitch", Unstitcher.CODEC);
+    public static final SpriteSourceType PALETTED_PERMUTATIONS = SpriteSources.register("paletted_permutations", PalettedPermutations.CODEC);
     public static Codec<SpriteSourceType> TYPE_CODEC = ResourceLocation.CODEC.flatXmap($$0 -> {
         SpriteSourceType $$1 = (SpriteSourceType)((Object)((Object)TYPES.get($$0)));
         return $$1 != null ? DataResult.success((Object)((Object)$$1)) : DataResult.error((String)("Unknown type " + $$0));

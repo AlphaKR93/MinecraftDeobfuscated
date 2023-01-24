@@ -25,7 +25,6 @@
  *  java.util.function.Predicate
  *  java.util.function.Supplier
  *  javax.annotation.Nullable
- *  net.minecraft.world.level.saveddata.maps.MapItemSavedData
  */
 package net.minecraft.world.level;
 

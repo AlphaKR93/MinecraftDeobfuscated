@@ -43,19 +43,19 @@ extends Behavior<Villager> {
     }
 
     @Override
-    protected void tick(ServerLevel $$0, Villager $$1, long $$2) {
+    protected void stop(ServerLevel $$0, Villager $$1, long $$2) {
         this.followPlayer($$1);
     }
 
     @Override
-    protected void tick(ServerLevel $$0, Villager $$1, long $$2) {
+    protected void start(ServerLevel $$0, Villager $$1, long $$2) {
         Brain<Villager> $$3 = $$1.getBrain();
         $$3.eraseMemory(MemoryModuleType.WALK_TARGET);
         $$3.eraseMemory(MemoryModuleType.LOOK_TARGET);
     }
 
     @Override
-    protected void tick(ServerLevel $$0, Villager $$1, long $$2) {
+    protected void start(ServerLevel $$0, Villager $$1, long $$2) {
         this.followPlayer($$1);
     }
 

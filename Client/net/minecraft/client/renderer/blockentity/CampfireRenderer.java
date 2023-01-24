@@ -45,7 +45,7 @@ implements BlockEntityRenderer<CampfireBlockEntity> {
             $$2.mulPose(Axis.XP.rotationDegrees(90.0f));
             $$2.translate(-0.3125f, -0.3125f, 0.0f);
             $$2.scale(0.375f, 0.375f, 0.375f);
-            this.itemRenderer.renderStatic($$10, ItemTransforms.TransformType.FIXED, $$4, $$5, $$2, $$3, $$8 + $$9);
+            this.itemRenderer.renderStatic($$10, ItemTransforms.TransformType.FIXED, $$4, $$5, $$2, $$3, $$0.getLevel(), $$8 + $$9);
             $$2.popPose();
         }
     }

@@ -52,7 +52,7 @@ extends Behavior<Villager> {
     }
 
     @Override
-    protected void start(ServerLevel $$0, Villager $$1, long $$2) {
+    protected void stop(ServerLevel $$0, Villager $$1, long $$2) {
         Villager $$3 = (Villager)$$1.getBrain().getMemory(MemoryModuleType.INTERACTION_TARGET).get();
         BehaviorUtils.lockGazeAndWalkToEachOther($$1, $$3, 0.5f);
         this.trades = TradeWithVillager.figureOutWhatIAmWillingToTrade($$1, $$3);
@@ -78,7 +78,7 @@ extends Behavior<Villager> {
     }
 
     @Override
-    protected void start(ServerLevel $$0, Villager $$1, long $$2) {
+    protected void stop(ServerLevel $$0, Villager $$1, long $$2) {
         $$1.getBrain().eraseMemory(MemoryModuleType.INTERACTION_TARGET);
     }
 

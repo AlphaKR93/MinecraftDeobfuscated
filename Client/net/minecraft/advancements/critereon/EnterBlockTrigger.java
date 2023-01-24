@@ -9,6 +9,7 @@
  *  java.lang.String
  *  java.util.function.Consumer
  *  javax.annotation.Nullable
+ *  net.minecraft.server.level.ServerPlayer
  */
 package net.minecraft.advancements.critereon;
 

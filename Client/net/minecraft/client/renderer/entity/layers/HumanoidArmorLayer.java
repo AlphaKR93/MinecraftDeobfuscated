@@ -20,27 +20,36 @@ import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.DyeableArmorItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.armortrim.ArmorTrim;
 
 public class HumanoidArmorLayer<T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>>
 extends RenderLayer<T, M> {
     private static final Map<String, ResourceLocation> ARMOR_LOCATION_CACHE = Maps.newHashMap();
     private final A innerModel;
     private final A outerModel;
+    private final TextureAtlas armorTrimAtlas;
 
-    public HumanoidArmorLayer(RenderLayerParent<T, M> $$0, A $$1, A $$2) {
+    public HumanoidArmorLayer(RenderLayerParent<T, M> $$0, A $$1, A $$2, ModelManager $$3) {
         super($$0);
         this.innerModel = $$1;
         this.outerModel = $$2;
+        this.armorTrimAtlas = $$3.getAtlas(Sheets.ARMOR_TRIMS_SHEET);
     }
 
     @Override
@@ -51,28 +60,36 @@ extends RenderLayer<T, M> {
         this.renderArmorPiece($$0, $$1, $$3, EquipmentSlot.HEAD, $$2, this.getArmorModel(EquipmentSlot.HEAD));
     }
 
+    /*
+     * WARNING - void declaration
+     */
     private void renderArmorPiece(PoseStack $$0, MultiBufferSource $$1, T $$2, EquipmentSlot $$3, int $$4, A $$5) {
-        ItemStack $$6 = ((LivingEntity)$$2).getItemBySlot($$3);
-        if (!($$6.getItem() instanceof ArmorItem)) {
+        void $$8;
+        ItemStack $$62 = ((LivingEntity)$$2).getItemBySlot($$3);
+        Item item = $$62.getItem();
+        if (!(item instanceof ArmorItem)) {
             return;
         }
-        ArmorItem $$7 = (ArmorItem)$$6.getItem();
-        if ($$7.getSlot() != $$3) {
+        ArmorItem $$7 = (ArmorItem)item;
+        if ($$8.getSlot() != $$3) {
             return;
         }
         ((HumanoidModel)this.getParentModel()).copyPropertiesTo($$5);
         this.setPartVisibility($$5, $$3);
-        boolean $$8 = this.usesInnerModel($$3);
-        boolean $$9 = $$6.hasFoil();
-        if ($$7 instanceof DyeableArmorItem) {
-            int $$10 = ((DyeableArmorItem)$$7).getColor($$6);
-            float $$11 = (float)($$10 >> 16 & 0xFF) / 255.0f;
-            float $$12 = (float)($$10 >> 8 & 0xFF) / 255.0f;
-            float $$13 = (float)($$10 & 0xFF) / 255.0f;
-            this.renderModel($$0, $$1, $$4, $$7, $$9, $$5, $$8, $$11, $$12, $$13, null);
-            this.renderModel($$0, $$1, $$4, $$7, $$9, $$5, $$8, 1.0f, 1.0f, 1.0f, "overlay");
+        boolean $$9 = this.usesInnerModel($$3);
+        boolean $$10 = $$62.hasFoil();
+        if ($$8 instanceof DyeableArmorItem) {
+            int $$11 = ((DyeableArmorItem)$$8).getColor($$62);
+            float $$12 = (float)($$11 >> 16 & 0xFF) / 255.0f;
+            float $$13 = (float)($$11 >> 8 & 0xFF) / 255.0f;
+            float $$14 = (float)($$11 & 0xFF) / 255.0f;
+            this.renderModel($$0, $$1, $$4, (ArmorItem)$$8, $$10, $$5, $$9, $$12, $$13, $$14, null);
+            this.renderModel($$0, $$1, $$4, (ArmorItem)$$8, $$10, $$5, $$9, 1.0f, 1.0f, 1.0f, "overlay");
         } else {
-            this.renderModel($$0, $$1, $$4, $$7, $$9, $$5, $$8, 1.0f, 1.0f, 1.0f, null);
+            this.renderModel($$0, $$1, $$4, (ArmorItem)$$8, $$10, $$5, $$9, 1.0f, 1.0f, 1.0f, null);
+            if (((LivingEntity)$$2).level.enabledFeatures().contains(FeatureFlags.UPDATE_1_20)) {
+                ArmorTrim.getTrim(((LivingEntity)$$2).level.registryAccess(), $$62).ifPresent($$6 -> this.renderTrim($$0, $$1, $$4, (ArmorTrim)$$6, $$10, $$5, $$9, 1.0f, 1.0f, 1.0f));
+            }
         }
     }
 
@@ -105,6 +122,12 @@ extends RenderLayer<T, M> {
 
     private void renderModel(PoseStack $$0, MultiBufferSource $$1, int $$2, ArmorItem $$3, boolean $$4, A $$5, boolean $$6, float $$7, float $$8, float $$9, @Nullable String $$10) {
         VertexConsumer $$11 = ItemRenderer.getArmorFoilBuffer($$1, RenderType.armorCutoutNoCull(this.getArmorLocation($$3, $$6, $$10)), false, $$4);
+        ((AgeableListModel)$$5).renderToBuffer($$0, $$11, $$2, OverlayTexture.NO_OVERLAY, $$7, $$8, $$9, 1.0f);
+    }
+
+    private void renderTrim(PoseStack $$0, MultiBufferSource $$1, int $$2, ArmorTrim $$3, boolean $$4, A $$5, boolean $$6, float $$7, float $$8, float $$9) {
+        TextureAtlasSprite $$10 = this.armorTrimAtlas.getSprite($$6 ? $$3.innerTexture() : $$3.outerTexture());
+        VertexConsumer $$11 = $$10.wrap(ItemRenderer.getFoilBufferDirect($$1, Sheets.armorTrimsSheet(), true, $$4));
         ((AgeableListModel)$$5).renderToBuffer($$0, $$11, $$2, OverlayTexture.NO_OVERLAY, $$7, $$8, $$9, 1.0f);
     }
 

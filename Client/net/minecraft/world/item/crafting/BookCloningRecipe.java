@@ -8,6 +8,7 @@
 package net.minecraft.world.item.crafting;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -49,33 +50,33 @@ extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer $$0) {
-        int $$1 = 0;
-        ItemStack $$2 = ItemStack.EMPTY;
-        for (int $$3 = 0; $$3 < $$0.getContainerSize(); ++$$3) {
-            ItemStack $$4 = $$0.getItem($$3);
-            if ($$4.isEmpty()) continue;
-            if ($$4.is(Items.WRITTEN_BOOK)) {
-                if (!$$2.isEmpty()) {
+    public ItemStack assemble(CraftingContainer $$0, RegistryAccess $$1) {
+        int $$2 = 0;
+        ItemStack $$3 = ItemStack.EMPTY;
+        for (int $$4 = 0; $$4 < $$0.getContainerSize(); ++$$4) {
+            ItemStack $$5 = $$0.getItem($$4);
+            if ($$5.isEmpty()) continue;
+            if ($$5.is(Items.WRITTEN_BOOK)) {
+                if (!$$3.isEmpty()) {
                     return ItemStack.EMPTY;
                 }
-                $$2 = $$4;
+                $$3 = $$5;
                 continue;
             }
-            if ($$4.is(Items.WRITABLE_BOOK)) {
-                ++$$1;
+            if ($$5.is(Items.WRITABLE_BOOK)) {
+                ++$$2;
                 continue;
             }
             return ItemStack.EMPTY;
         }
-        if ($$2.isEmpty() || !$$2.hasTag() || $$1 < 1 || WrittenBookItem.getGeneration($$2) >= 2) {
+        if ($$3.isEmpty() || !$$3.hasTag() || $$2 < 1 || WrittenBookItem.getGeneration($$3) >= 2) {
             return ItemStack.EMPTY;
         }
-        ItemStack $$5 = new ItemStack(Items.WRITTEN_BOOK, $$1);
-        CompoundTag $$6 = $$2.getTag().copy();
-        $$6.putInt("generation", WrittenBookItem.getGeneration($$2) + 1);
-        $$5.setTag($$6);
-        return $$5;
+        ItemStack $$6 = new ItemStack(Items.WRITTEN_BOOK, $$2);
+        CompoundTag $$7 = $$3.getTag().copy();
+        $$7.putInt("generation", WrittenBookItem.getGeneration($$3) + 1);
+        $$6.setTag($$7);
+        return $$6;
     }
 
     @Override

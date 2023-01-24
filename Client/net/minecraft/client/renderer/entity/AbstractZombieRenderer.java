@@ -20,7 +20,7 @@ extends HumanoidMobRenderer<T, M> {
 
     protected AbstractZombieRenderer(EntityRendererProvider.Context $$0, M $$1, M $$2, M $$3) {
         super($$0, $$1, 0.5f);
-        this.addLayer(new HumanoidArmorLayer(this, $$2, $$3));
+        this.addLayer(new HumanoidArmorLayer(this, $$2, $$3, $$0.getModelManager()));
     }
 
     @Override

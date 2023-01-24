@@ -6,7 +6,6 @@
  *  java.lang.Override
  *  java.util.List
  *  javax.annotation.Nullable
- *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.level.block;
 
@@ -134,7 +133,7 @@ extends BaseEntityBlock {
                 BeehiveBlock.dropHoneycomb($$12, $$2);
                 $$6.hurtAndBreak(1, $$3, $$1 -> $$1.broadcastBreakEvent($$4));
                 $$8 = true;
-                $$12.gameEvent((Entity)((Object)$$3), GameEvent.SHEAR, $$2);
+                $$12.gameEvent($$3, GameEvent.SHEAR, $$2);
             } else if ($$6.is(Items.GLASS_BOTTLE)) {
                 $$6.shrink(1);
                 $$12.playSound($$3, $$3.getX(), $$3.getY(), $$3.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0f, 1.0f);
@@ -144,7 +143,7 @@ extends BaseEntityBlock {
                     $$3.drop(new ItemStack(Items.HONEY_BOTTLE), false);
                 }
                 $$8 = true;
-                $$12.gameEvent((Entity)((Object)$$3), GameEvent.FLUID_PICKUP, $$2);
+                $$12.gameEvent($$3, GameEvent.FLUID_PICKUP, $$2);
             }
             if (!$$12.isClientSide() && $$8) {
                 $$3.awardStat(Stats.ITEM_USED.get($$9));

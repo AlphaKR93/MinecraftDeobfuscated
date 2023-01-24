@@ -2528,8 +2528,7 @@ extends Entity {
     }
 
     public void onItemPickup(ItemEntity $$0) {
-        Player $$1;
-        Player player = $$1 = $$0.getThrower() != null ? this.level.getPlayerByUUID($$0.getThrower()) : null;
+        Entity $$1 = $$0.getOwner();
         if ($$1 instanceof ServerPlayer) {
             CriteriaTriggers.THROWN_ITEM_PICKED_UP_BY_ENTITY.trigger((ServerPlayer)$$1, $$0.getItem(), this);
         }

@@ -141,6 +141,10 @@ implements Comparable<ResourceLocation> {
         return this.withPath($$0 + this.path);
     }
 
+    public ResourceLocation withSuffix(String $$0) {
+        return this.withPath(this.path + $$0);
+    }
+
     public String toString() {
         return this.namespace + ":" + this.path;
     }

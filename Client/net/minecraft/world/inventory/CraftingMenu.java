@@ -81,7 +81,7 @@ extends RecipeBookMenu<CraftingContainer> {
         ServerPlayer $$5 = (ServerPlayer)$$2;
         ItemStack $$6 = ItemStack.EMPTY;
         Optional<CraftingRecipe> $$7 = $$1.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, $$3, $$1);
-        if ($$7.isPresent() && $$4.setRecipeUsed($$1, $$5, $$8 = (CraftingRecipe)$$7.get()) && ($$9 = $$8.assemble($$3)).isItemEnabled($$1.enabledFeatures())) {
+        if ($$7.isPresent() && $$4.setRecipeUsed($$1, $$5, $$8 = (CraftingRecipe)$$7.get()) && ($$9 = $$8.assemble($$3, $$1.registryAccess())).isItemEnabled($$1.enabledFeatures())) {
             $$6 = $$9;
         }
         $$4.setItem(0, $$6);

@@ -85,7 +85,7 @@ extends AbstractContainerScreen<StonecutterMenu> {
                 int $$9 = $$3 + $$8 % 4 * 16;
                 int $$10 = $$4 + $$8 / 4 * 18 + 2;
                 if ($$1 < $$9 || $$1 >= $$9 + 16 || $$2 < $$10 || $$2 >= $$10 + 18) continue;
-                this.renderTooltip($$0, ((StonecutterRecipe)$$6.get($$7)).getResultItem(), $$1, $$2);
+                this.renderTooltip($$0, ((StonecutterRecipe)$$6.get($$7)).getResultItem(this.minecraft.level.registryAccess()), $$1, $$2);
             }
         }
     }
@@ -113,7 +113,7 @@ extends AbstractContainerScreen<StonecutterMenu> {
             int $$6 = $$0 + $$5 % 4 * 16;
             int $$7 = $$5 / 4;
             int $$8 = $$1 + $$7 * 18 + 2;
-            this.minecraft.getItemRenderer().renderAndDecorateItem(((StonecutterRecipe)$$3.get($$4)).getResultItem(), $$6, $$8);
+            this.minecraft.getItemRenderer().renderAndDecorateItem(((StonecutterRecipe)$$3.get($$4)).getResultItem(this.minecraft.level.registryAccess()), $$6, $$8);
         }
     }
 

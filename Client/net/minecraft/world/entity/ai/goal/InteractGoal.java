@@ -6,6 +6,7 @@
  *  java.lang.Enum
  *  java.lang.Object
  *  java.util.EnumSet
+ *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.entity.ai.goal;
 

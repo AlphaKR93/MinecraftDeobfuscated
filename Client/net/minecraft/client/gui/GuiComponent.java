@@ -178,6 +178,10 @@ public abstract class GuiComponent {
         GuiComponent.innerBlit($$0.last().pose(), $$1, $$1 + $$4, $$2, $$2 + $$5, $$3, $$6.getU0(), $$6.getU1(), $$6.getV0(), $$6.getV1());
     }
 
+    public static void blit(PoseStack $$0, int $$1, int $$2, int $$3, int $$4, int $$5, TextureAtlasSprite $$6, float $$7, float $$8, float $$9, float $$10) {
+        GuiComponent.innerBlit($$0.last().pose(), $$1, $$1 + $$4, $$2, $$2 + $$5, $$3, $$6.getU0(), $$6.getU1(), $$6.getV0(), $$6.getV1(), $$7, $$8, $$9, $$10);
+    }
+
     public void blit(PoseStack $$0, int $$1, int $$2, int $$3, int $$4, int $$5, int $$6) {
         GuiComponent.blit($$0, $$1, $$2, this.blitOffset, $$3, $$4, $$5, $$6, 256, 256);
     }
@@ -207,6 +211,20 @@ public abstract class GuiComponent {
         $$10.vertex($$0, $$2, $$3, $$5).uv($$7, $$8).endVertex();
         $$10.vertex($$0, $$1, $$3, $$5).uv($$6, $$8).endVertex();
         BufferUploader.drawWithShader($$10.end());
+    }
+
+    private static void innerBlit(Matrix4f $$0, int $$1, int $$2, int $$3, int $$4, int $$5, float $$6, float $$7, float $$8, float $$9, float $$10, float $$11, float $$12, float $$13) {
+        RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionColorTexShader));
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        BufferBuilder $$14 = Tesselator.getInstance().getBuilder();
+        $$14.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+        $$14.vertex($$0, $$1, $$4, $$5).color($$10, $$11, $$12, $$13).uv($$6, $$9).endVertex();
+        $$14.vertex($$0, $$2, $$4, $$5).color($$10, $$11, $$12, $$13).uv($$7, $$9).endVertex();
+        $$14.vertex($$0, $$2, $$3, $$5).color($$10, $$11, $$12, $$13).uv($$7, $$8).endVertex();
+        $$14.vertex($$0, $$1, $$3, $$5).color($$10, $$11, $$12, $$13).uv($$6, $$8).endVertex();
+        BufferUploader.drawWithShader($$14.end());
+        RenderSystem.disableBlend();
     }
 
     public int getBlitOffset() {

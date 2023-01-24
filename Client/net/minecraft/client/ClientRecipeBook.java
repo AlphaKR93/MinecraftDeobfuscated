@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.stats.RecipeBook;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
@@ -49,14 +50,14 @@ extends RecipeBook {
     private Map<RecipeBookCategories, List<RecipeCollection>> collectionsByTab = ImmutableMap.of();
     private List<RecipeCollection> allCollections = ImmutableList.of();
 
-    public void setupCollections(Iterable<Recipe<?>> $$0) {
-        Map<RecipeBookCategories, List<List<Recipe<?>>>> $$1 = ClientRecipeBook.categorizeAndGroupRecipes($$0);
-        HashMap $$2 = Maps.newHashMap();
-        ImmutableList.Builder $$3 = ImmutableList.builder();
-        $$1.forEach((arg_0, arg_1) -> ClientRecipeBook.lambda$setupCollections$0((Map)$$2, $$3, arg_0, arg_1));
-        RecipeBookCategories.AGGREGATE_CATEGORIES.forEach((arg_0, arg_1) -> ClientRecipeBook.lambda$setupCollections$2((Map)$$2, arg_0, arg_1));
-        this.collectionsByTab = ImmutableMap.copyOf((Map)$$2);
-        this.allCollections = $$3.build();
+    public void setupCollections(Iterable<Recipe<?>> $$0, RegistryAccess $$1) {
+        Map<RecipeBookCategories, List<List<Recipe<?>>>> $$2 = ClientRecipeBook.categorizeAndGroupRecipes($$0);
+        HashMap $$3 = Maps.newHashMap();
+        ImmutableList.Builder $$4 = ImmutableList.builder();
+        $$2.forEach((arg_0, arg_1) -> ClientRecipeBook.lambda$setupCollections$1((Map)$$3, $$1, $$4, arg_0, arg_1));
+        RecipeBookCategories.AGGREGATE_CATEGORIES.forEach((arg_0, arg_1) -> ClientRecipeBook.lambda$setupCollections$3((Map)$$3, arg_0, arg_1));
+        this.collectionsByTab = ImmutableMap.copyOf((Map)$$3);
+        this.allCollections = $$4.build();
     }
 
     private static Map<RecipeBookCategories, List<List<Recipe<?>>>> categorizeAndGroupRecipes(Iterable<Recipe<?>> $$02) {
@@ -132,11 +133,11 @@ extends RecipeBook {
         return (List)this.collectionsByTab.getOrDefault((Object)$$0, (Object)Collections.emptyList());
     }
 
-    private static /* synthetic */ void lambda$setupCollections$2(Map $$0, RecipeBookCategories $$12, List $$2) {
+    private static /* synthetic */ void lambda$setupCollections$3(Map $$0, RecipeBookCategories $$12, List $$2) {
         $$0.put((Object)$$12, (Object)((List)$$2.stream().flatMap($$1 -> ((List)$$0.getOrDefault((Object)$$1, (Object)ImmutableList.of())).stream()).collect(ImmutableList.toImmutableList())));
     }
 
-    private static /* synthetic */ void lambda$setupCollections$0(Map $$0, ImmutableList.Builder $$1, RecipeBookCategories $$2, List $$3) {
-        $$0.put((Object)$$2, (Object)((List)$$3.stream().map(RecipeCollection::new).peek(arg_0 -> ((ImmutableList.Builder)$$1).add(arg_0)).collect(ImmutableList.toImmutableList())));
+    private static /* synthetic */ void lambda$setupCollections$1(Map $$0, RegistryAccess $$12, ImmutableList.Builder $$2, RecipeBookCategories $$3, List $$4) {
+        $$0.put((Object)$$3, (Object)((List)$$4.stream().map($$1 -> new RecipeCollection($$12, (List<Recipe<?>>)$$1)).peek(arg_0 -> ((ImmutableList.Builder)$$2).add(arg_0)).collect(ImmutableList.toImmutableList())));
     }
 }

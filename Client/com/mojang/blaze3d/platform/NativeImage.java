@@ -34,6 +34,7 @@
  *  java.util.EnumSet
  *  java.util.Locale
  *  java.util.Set
+ *  java.util.function.IntUnaryOperator
  *  javax.annotation.Nullable
  *  org.apache.commons.io.IOUtils
  *  org.lwjgl.stb.STBIWriteCallback
@@ -73,7 +74,9 @@ import java.util.Base64;
 import java.util.EnumSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.IntUnaryOperator;
 import javax.annotation.Nullable;
+import net.minecraft.util.FastColor;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.stb.STBIWriteCallback;
 import org.lwjgl.stb.STBImage;
@@ -88,10 +91,6 @@ import org.slf4j.Logger;
 public final class NativeImage
 implements AutoCloseable {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final int OFFSET_A = 24;
-    private static final int OFFSET_B = 16;
-    private static final int OFFSET_G = 8;
-    private static final int OFFSET_R = 0;
     private static final Set<StandardOpenOption> OPEN_OPTIONS = EnumSet.of((Enum)StandardOpenOption.WRITE, (Enum)StandardOpenOption.CREATE, (Enum)StandardOpenOption.TRUNCATE_EXISTING);
     private final Format format;
     private final int width;
@@ -245,6 +244,31 @@ implements AutoCloseable {
         MemoryUtil.memPutInt((long)(this.pixels + $$3), (int)$$2);
     }
 
+    public NativeImage mappedCopy(IntUnaryOperator $$0) {
+        if (this.format != Format.RGBA) {
+            throw new IllegalArgumentException(String.format((Locale)Locale.ROOT, (String)"function application only works on RGBA images; have %s", (Object[])new Object[]{this.format}));
+        }
+        this.checkAllocated();
+        NativeImage $$1 = new NativeImage(this.width, this.height, false);
+        int $$2 = this.width * this.height;
+        IntBuffer $$3 = MemoryUtil.memIntBuffer((long)this.pixels, (int)$$2);
+        IntBuffer $$4 = MemoryUtil.memIntBuffer((long)$$1.pixels, (int)$$2);
+        for (int $$5 = 0; $$5 < $$2; ++$$5) {
+            $$4.put($$5, $$0.applyAsInt($$3.get($$5)));
+        }
+        return $$1;
+    }
+
+    public int[] getPixelsRGBA() {
+        if (this.format != Format.RGBA) {
+            throw new IllegalArgumentException(String.format((Locale)Locale.ROOT, (String)"getPixelsRGBA only works on RGBA images; have %s", (Object[])new Object[]{this.format}));
+        }
+        this.checkAllocated();
+        int[] $$0 = new int[this.width * this.height];
+        MemoryUtil.memIntBuffer((long)this.pixels, (int)(this.width * this.height)).get($$0);
+        return $$0;
+    }
+
     public void setPixelLuminance(int $$0, int $$1, byte $$2) {
         RenderSystem.assertOnRenderThread();
         if (!this.format.hasLuminance()) {
@@ -310,14 +334,14 @@ implements AutoCloseable {
             throw new UnsupportedOperationException("Can only call blendPixel with RGBA format");
         }
         int $$3 = this.getPixelRGBA($$0, $$1);
-        float $$4 = (float)NativeImage.getA($$2) / 255.0f;
-        float $$5 = (float)NativeImage.getB($$2) / 255.0f;
-        float $$6 = (float)NativeImage.getG($$2) / 255.0f;
-        float $$7 = (float)NativeImage.getR($$2) / 255.0f;
-        float $$8 = (float)NativeImage.getA($$3) / 255.0f;
-        float $$9 = (float)NativeImage.getB($$3) / 255.0f;
-        float $$10 = (float)NativeImage.getG($$3) / 255.0f;
-        float $$11 = (float)NativeImage.getR($$3) / 255.0f;
+        float $$4 = (float)FastColor.ABGR32.alpha($$2) / 255.0f;
+        float $$5 = (float)FastColor.ABGR32.blue($$2) / 255.0f;
+        float $$6 = (float)FastColor.ABGR32.green($$2) / 255.0f;
+        float $$7 = (float)FastColor.ABGR32.red($$2) / 255.0f;
+        float $$8 = (float)FastColor.ABGR32.alpha($$3) / 255.0f;
+        float $$9 = (float)FastColor.ABGR32.blue($$3) / 255.0f;
+        float $$10 = (float)FastColor.ABGR32.green($$3) / 255.0f;
+        float $$11 = (float)FastColor.ABGR32.red($$3) / 255.0f;
         float $$12 = $$4;
         float $$13 = 1.0f - $$4;
         float $$14 = $$4 * $$12 + $$8 * $$13;
@@ -340,7 +364,7 @@ implements AutoCloseable {
         int $$19 = (int)($$15 * 255.0f);
         int $$20 = (int)($$16 * 255.0f);
         int $$21 = (int)($$17 * 255.0f);
-        this.setPixelRGBA($$0, $$1, NativeImage.combine($$18, $$19, $$20, $$21));
+        this.setPixelRGBA($$0, $$1, FastColor.ABGR32.color($$18, $$19, $$20, $$21));
     }
 
     @Deprecated
@@ -352,13 +376,8 @@ implements AutoCloseable {
         int[] $$0 = new int[this.getWidth() * this.getHeight()];
         for (int $$1 = 0; $$1 < this.getHeight(); ++$$1) {
             for (int $$2 = 0; $$2 < this.getWidth(); ++$$2) {
-                int $$8;
                 int $$3 = this.getPixelRGBA($$2, $$1);
-                int $$4 = NativeImage.getA($$3);
-                int $$5 = NativeImage.getB($$3);
-                int $$6 = NativeImage.getG($$3);
-                int $$7 = NativeImage.getR($$3);
-                $$0[$$2 + $$1 * this.getWidth()] = $$8 = $$4 << 24 | $$7 << 16 | $$6 << 8 | $$5;
+                $$0[$$2 + $$1 * this.getWidth()] = FastColor.ARGB32.color(FastColor.ABGR32.alpha($$3), FastColor.ABGR32.red($$3), FastColor.ABGR32.green($$3), FastColor.ABGR32.blue($$3));
             }
         }
         return $$0;
@@ -591,26 +610,6 @@ implements AutoCloseable {
             NativeImage nativeImage = NativeImage.read($$3);
             return nativeImage;
         }
-    }
-
-    public static int getA(int $$0) {
-        return $$0 >> 24 & 0xFF;
-    }
-
-    public static int getR(int $$0) {
-        return $$0 >> 0 & 0xFF;
-    }
-
-    public static int getG(int $$0) {
-        return $$0 >> 8 & 0xFF;
-    }
-
-    public static int getB(int $$0) {
-        return $$0 >> 16 & 0xFF;
-    }
-
-    public static int combine(int $$0, int $$1, int $$2, int $$3) {
-        return ($$0 & 0xFF) << 24 | ($$1 & 0xFF) << 16 | ($$2 & 0xFF) << 8 | ($$3 & 0xFF) << 0;
     }
 
     public static enum Format {

@@ -28,7 +28,6 @@
  *  javax.management.MalformedObjectNameException
  *  javax.management.NotCompliantMBeanException
  *  javax.management.ObjectName
- *  net.minecraft.server.MinecraftServer
  *  org.slf4j.Logger
  */
 package net.minecraft.util.monitoring.jmx;

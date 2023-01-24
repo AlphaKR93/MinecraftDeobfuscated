@@ -1328,7 +1328,7 @@ ClientGamePacketListener {
         PacketUtils.ensureRunningOnSameThread($$0, this, this.minecraft);
         this.recipeManager.replaceRecipes((Iterable<Recipe<?>>)$$0.getRecipes());
         ClientRecipeBook $$1 = this.minecraft.player.getRecipeBook();
-        $$1.setupCollections((Iterable<Recipe<?>>)this.recipeManager.getRecipes());
+        $$1.setupCollections((Iterable<Recipe<?>>)this.recipeManager.getRecipes(), this.minecraft.level.registryAccess());
         this.minecraft.populateSearchTree(SearchRegistry.RECIPE_COLLECTIONS, $$1.getCollections());
     }
 

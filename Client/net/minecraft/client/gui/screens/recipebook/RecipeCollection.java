@@ -18,32 +18,39 @@ import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.stats.RecipeBook;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 
 public class RecipeCollection {
+    private final RegistryAccess registryAccess;
     private final List<Recipe<?>> recipes;
     private final boolean singleResultItem;
     private final Set<Recipe<?>> craftable = Sets.newHashSet();
     private final Set<Recipe<?>> fitsDimensions = Sets.newHashSet();
     private final Set<Recipe<?>> known = Sets.newHashSet();
 
-    public RecipeCollection(List<Recipe<?>> $$0) {
-        this.recipes = ImmutableList.copyOf($$0);
-        this.singleResultItem = $$0.size() <= 1 ? true : RecipeCollection.allRecipesHaveSameResult($$0);
+    public RecipeCollection(RegistryAccess $$0, List<Recipe<?>> $$1) {
+        this.registryAccess = $$0;
+        this.recipes = ImmutableList.copyOf($$1);
+        this.singleResultItem = $$1.size() <= 1 ? true : RecipeCollection.allRecipesHaveSameResult($$0, $$1);
     }
 
-    private static boolean allRecipesHaveSameResult(List<Recipe<?>> $$0) {
-        int $$1 = $$0.size();
-        ItemStack $$2 = ((Recipe)$$0.get(0)).getResultItem();
-        for (int $$3 = 1; $$3 < $$1; ++$$3) {
-            ItemStack $$4 = ((Recipe)$$0.get($$3)).getResultItem();
-            if (ItemStack.isSame($$2, $$4) && ItemStack.tagMatches($$2, $$4)) continue;
+    private static boolean allRecipesHaveSameResult(RegistryAccess $$0, List<Recipe<?>> $$1) {
+        int $$2 = $$1.size();
+        ItemStack $$3 = ((Recipe)$$1.get(0)).getResultItem($$0);
+        for (int $$4 = 1; $$4 < $$2; ++$$4) {
+            ItemStack $$5 = ((Recipe)$$1.get($$4)).getResultItem($$0);
+            if (ItemStack.isSame($$3, $$5) && ItemStack.tagMatches($$3, $$5)) continue;
             return false;
         }
         return true;
+    }
+
+    public RegistryAccess registryAccess() {
+        return this.registryAccess;
     }
 
     public boolean hasKnownRecipes() {

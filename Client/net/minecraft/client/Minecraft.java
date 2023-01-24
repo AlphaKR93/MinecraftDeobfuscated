@@ -594,7 +594,7 @@ implements WindowEventHandler {
         this.resourceManager.registerReloadListener(this.blockEntityRenderDispatcher);
         BlockEntityWithoutLevelRenderer $$11 = new BlockEntityWithoutLevelRenderer(this.blockEntityRenderDispatcher, this.entityModels);
         this.resourceManager.registerReloadListener($$11);
-        this.itemRenderer = new ItemRenderer(this.textureManager, this.modelManager, this.itemColors, $$11);
+        this.itemRenderer = new ItemRenderer(this, this.textureManager, this.modelManager, this.itemColors, $$11);
         this.resourceManager.registerReloadListener(this.itemRenderer);
         this.renderBuffers = new RenderBuffers();
         this.playerSocialManager = new PlayerSocialManager(this, this.userApiService);
@@ -808,7 +808,7 @@ implements WindowEventHandler {
     private void createSearchTrees() {
         this.searchRegistry.register(SearchRegistry.CREATIVE_NAMES, $$03 -> new FullTextSearchTree($$02 -> $$02.getTooltipLines(null, TooltipFlag.Default.NORMAL.asCreative()).stream().map($$0 -> ChatFormatting.stripFormatting($$0.getString()).trim()).filter($$0 -> !$$0.isEmpty()), $$0 -> Stream.of((Object)BuiltInRegistries.ITEM.getKey($$0.getItem())), $$03));
         this.searchRegistry.register(SearchRegistry.CREATIVE_TAGS, $$02 -> new IdSearchTree($$0 -> $$0.getTags().map(TagKey::location), $$02));
-        this.searchRegistry.register(SearchRegistry.RECIPE_COLLECTIONS, $$0 -> new FullTextSearchTree($$02 -> $$02.getRecipes().stream().flatMap($$0 -> $$0.getResultItem().getTooltipLines(null, TooltipFlag.Default.NORMAL).stream()).map($$0 -> ChatFormatting.stripFormatting($$0.getString()).trim()).filter($$0 -> !$$0.isEmpty()), $$02 -> $$02.getRecipes().stream().map($$0 -> BuiltInRegistries.ITEM.getKey($$0.getResultItem().getItem())), $$0));
+        this.searchRegistry.register(SearchRegistry.RECIPE_COLLECTIONS, $$03 -> new FullTextSearchTree($$02 -> $$02.getRecipes().stream().flatMap($$1 -> $$1.getResultItem($$02.registryAccess()).getTooltipLines(null, TooltipFlag.Default.NORMAL).stream()).map($$0 -> ChatFormatting.stripFormatting($$0.getString()).trim()).filter($$0 -> !$$0.isEmpty()), $$0 -> $$0.getRecipes().stream().map($$1 -> BuiltInRegistries.ITEM.getKey($$1.getResultItem($$0.registryAccess()).getItem())), $$03));
         CreativeModeTabs.searchTab().setSearchTreeBuilder((Consumer<List<ItemStack>>)((Consumer)$$0 -> {
             this.populateSearchTree(SearchRegistry.CREATIVE_NAMES, (List)$$0);
             this.populateSearchTree(SearchRegistry.CREATIVE_TAGS, (List)$$0);

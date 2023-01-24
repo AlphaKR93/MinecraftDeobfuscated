@@ -23,7 +23,6 @@ import java.util.Optional;
 import net.minecraft.client.renderer.texture.atlas.SpriteSource;
 import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.minecraft.client.renderer.texture.atlas.SpriteSources;
-import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -33,7 +32,6 @@ public class SingleFile
 implements SpriteSource {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final Codec<SingleFile> CODEC = RecordCodecBuilder.create($$02 -> $$02.group((App)ResourceLocation.CODEC.fieldOf("resource").forGetter($$0 -> $$0.resourceId), (App)ResourceLocation.CODEC.optionalFieldOf("sprite").forGetter($$0 -> $$0.spriteId)).apply((Applicative)$$02, SingleFile::new));
-    private final FileToIdConverter TEXTURE_ID_CONVERTER = new FileToIdConverter("textures", ".png");
     private final ResourceLocation resourceId;
     private final Optional<ResourceLocation> spriteId;
 
@@ -44,7 +42,7 @@ implements SpriteSource {
 
     @Override
     public void run(ResourceManager $$0, SpriteSource.Output $$1) {
-        ResourceLocation $$2 = this.TEXTURE_ID_CONVERTER.idToFile(this.resourceId);
+        ResourceLocation $$2 = TEXTURE_ID_CONVERTER.idToFile(this.resourceId);
         Optional $$3 = $$0.getResource($$2);
         if ($$3.isPresent()) {
             $$1.add((ResourceLocation)this.spriteId.orElse((Object)this.resourceId), (Resource)$$3.get());

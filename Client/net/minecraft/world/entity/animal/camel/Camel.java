@@ -10,6 +10,7 @@
  *  java.lang.Object
  *  java.lang.Override
  *  javax.annotation.Nullable
+ *  net.minecraft.server.level.ServerLevel
  */
 package net.minecraft.world.entity.animal.camel;
 
@@ -415,7 +416,7 @@ Saddleable {
     @Override
     @Nullable
     public Camel getBreedOffspring(ServerLevel $$0, AgeableMob $$1) {
-        return EntityType.CAMEL.create($$0);
+        return EntityType.CAMEL.create((Level)$$0);
     }
 
     @Override

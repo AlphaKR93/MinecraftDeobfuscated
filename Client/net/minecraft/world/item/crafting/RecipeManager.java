@@ -123,8 +123,8 @@ extends SimpleJsonResourceReloadListener {
         return List.copyOf((Collection)this.byType($$0).values());
     }
 
-    public <C extends Container, T extends Recipe<C>> List<T> getRecipesFor(RecipeType<T> $$02, C $$1, Level $$22) {
-        return (List)this.byType($$02).values().stream().filter($$2 -> $$2.matches($$1, $$22)).sorted(Comparator.comparing($$0 -> $$0.getResultItem().getDescriptionId())).collect(Collectors.toList());
+    public <C extends Container, T extends Recipe<C>> List<T> getRecipesFor(RecipeType<T> $$0, C $$12, Level $$22) {
+        return (List)this.byType($$0).values().stream().filter($$2 -> $$2.matches($$12, $$22)).sorted(Comparator.comparing($$1 -> $$1.getResultItem($$22.registryAccess()).getDescriptionId())).collect(Collectors.toList());
     }
 
     private <C extends Container, T extends Recipe<C>> Map<ResourceLocation, T> byType(RecipeType<T> $$0) {

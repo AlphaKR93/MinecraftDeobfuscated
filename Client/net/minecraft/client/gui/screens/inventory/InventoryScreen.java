@@ -6,6 +6,7 @@
  *  java.lang.Object
  *  java.lang.Override
  *  java.util.function.Supplier
+ *  javax.annotation.Nullable
  *  org.joml.Quaternionf
  *  org.joml.Quaternionfc
  */
@@ -15,6 +16,7 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.function.Supplier;
+import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
@@ -112,49 +114,55 @@ implements RecipeUpdateListener {
         int $$4 = this.leftPos;
         int $$5 = this.topPos;
         this.blit($$0, $$4, $$5, 0, 0, this.imageWidth, this.imageHeight);
-        InventoryScreen.renderEntityInInventory($$4 + 51, $$5 + 75, 30, (float)($$4 + 51) - this.xMouse, (float)($$5 + 75 - 50) - this.yMouse, this.minecraft.player);
+        InventoryScreen.renderEntityInInventoryFollowsMouse($$4 + 51, $$5 + 75, 30, (float)($$4 + 51) - this.xMouse, (float)($$5 + 75 - 50) - this.yMouse, this.minecraft.player);
     }
 
-    public static void renderEntityInInventory(int $$0, int $$1, int $$2, float $$3, float $$4, LivingEntity $$5) {
+    public static void renderEntityInInventoryFollowsMouse(int $$0, int $$1, int $$2, float $$3, float $$4, LivingEntity $$5) {
         float $$6 = (float)Math.atan((double)($$3 / 40.0f));
         float $$7 = (float)Math.atan((double)($$4 / 40.0f));
-        PoseStack $$8 = RenderSystem.getModelViewStack();
-        $$8.pushPose();
-        $$8.translate($$0, $$1, 1050.0f);
-        $$8.scale(1.0f, 1.0f, -1.0f);
-        RenderSystem.applyModelViewMatrix();
-        PoseStack $$9 = new PoseStack();
-        $$9.translate(0.0f, 0.0f, 1000.0f);
-        $$9.scale($$2, $$2, $$2);
-        Quaternionf $$10 = new Quaternionf().rotateZ((float)Math.PI);
-        Quaternionf $$11 = new Quaternionf().rotateX($$7 * 20.0f * ((float)Math.PI / 180));
-        $$10.mul((Quaternionfc)$$11);
-        $$9.mulPose($$10);
-        float $$12 = $$5.yBodyRot;
-        float $$13 = $$5.getYRot();
-        float $$14 = $$5.getXRot();
-        float $$15 = $$5.yHeadRotO;
-        float $$16 = $$5.yHeadRot;
+        Quaternionf $$8 = new Quaternionf().rotateZ((float)Math.PI);
+        Quaternionf $$9 = new Quaternionf().rotateX($$7 * 20.0f * ((float)Math.PI / 180));
+        $$8.mul((Quaternionfc)$$9);
+        float $$10 = $$5.yBodyRot;
+        float $$11 = $$5.getYRot();
+        float $$12 = $$5.getXRot();
+        float $$13 = $$5.yHeadRotO;
+        float $$14 = $$5.yHeadRot;
         $$5.yBodyRot = 180.0f + $$6 * 20.0f;
         $$5.setYRot(180.0f + $$6 * 40.0f);
         $$5.setXRot(-$$7 * 20.0f);
         $$5.yHeadRot = $$5.getYRot();
         $$5.yHeadRotO = $$5.getYRot();
+        InventoryScreen.renderEntityInInventory($$0, $$1, $$2, $$8, $$9, $$5);
+        $$5.yBodyRot = $$10;
+        $$5.setYRot($$11);
+        $$5.setXRot($$12);
+        $$5.yHeadRotO = $$13;
+        $$5.yHeadRot = $$14;
+    }
+
+    public static void renderEntityInInventory(int $$0, int $$1, int $$2, Quaternionf $$3, @Nullable Quaternionf $$4, LivingEntity $$5) {
+        PoseStack $$6 = RenderSystem.getModelViewStack();
+        $$6.pushPose();
+        $$6.translate($$0, $$1, 1050.0f);
+        $$6.scale(1.0f, 1.0f, -1.0f);
+        RenderSystem.applyModelViewMatrix();
+        PoseStack $$7 = new PoseStack();
+        $$7.translate(0.0f, 0.0f, 1000.0f);
+        $$7.scale($$2, $$2, $$2);
+        $$7.mulPose($$3);
         Lighting.setupForEntityInInventory();
-        EntityRenderDispatcher $$17 = Minecraft.getInstance().getEntityRenderDispatcher();
-        $$11.conjugate();
-        $$17.overrideCameraOrientation($$11);
-        $$17.setRenderShadow(false);
-        MultiBufferSource.BufferSource $$18 = Minecraft.getInstance().renderBuffers().bufferSource();
-        RenderSystem.runAsFancy(() -> $$17.render($$5, 0.0, 0.0, 0.0, 0.0f, 1.0f, $$9, $$18, 0xF000F0));
-        $$18.endBatch();
-        $$17.setRenderShadow(true);
-        $$5.yBodyRot = $$12;
-        $$5.setYRot($$13);
-        $$5.setXRot($$14);
-        $$5.yHeadRotO = $$15;
-        $$5.yHeadRot = $$16;
-        $$8.popPose();
+        EntityRenderDispatcher $$8 = Minecraft.getInstance().getEntityRenderDispatcher();
+        if ($$4 != null) {
+            $$4.conjugate();
+            $$8.overrideCameraOrientation($$4);
+        }
+        $$8.setRenderShadow(false);
+        MultiBufferSource.BufferSource $$9 = Minecraft.getInstance().renderBuffers().bufferSource();
+        RenderSystem.runAsFancy(() -> $$8.render($$5, 0.0, 0.0, 0.0, 0.0f, 1.0f, $$7, $$9, 0xF000F0));
+        $$9.endBatch();
+        $$8.setRenderShadow(true);
+        $$6.popPose();
         RenderSystem.applyModelViewMatrix();
         Lighting.setupFor3DItems();
     }

@@ -8,6 +8,7 @@
 package net.minecraft.world.item.crafting;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -51,17 +52,17 @@ extends ShapedRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer $$0) {
-        ItemStack $$1 = ItemStack.EMPTY;
-        for (int $$2 = 0; $$2 < $$0.getContainerSize() && $$1.isEmpty(); ++$$2) {
-            ItemStack $$3 = $$0.getItem($$2);
-            if (!$$3.is(Items.FILLED_MAP)) continue;
-            $$1 = $$3;
+    public ItemStack assemble(CraftingContainer $$0, RegistryAccess $$1) {
+        ItemStack $$2 = ItemStack.EMPTY;
+        for (int $$3 = 0; $$3 < $$0.getContainerSize() && $$2.isEmpty(); ++$$3) {
+            ItemStack $$4 = $$0.getItem($$3);
+            if (!$$4.is(Items.FILLED_MAP)) continue;
+            $$2 = $$4;
         }
-        $$1 = $$1.copy();
-        $$1.setCount(1);
-        $$1.getOrCreateTag().putInt("map_scale_direction", 1);
-        return $$1;
+        $$2 = $$2.copy();
+        $$2.setCount(1);
+        $$2.getOrCreateTag().putInt("map_scale_direction", 1);
+        return $$2;
     }
 
     @Override

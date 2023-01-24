@@ -50,7 +50,7 @@ extends LootItemConditionalFunction {
             return $$0;
         }
         Optional<SmeltingRecipe> $$2 = $$1.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer($$0), $$1.getLevel());
-        if ($$2.isPresent() && !($$3 = ((SmeltingRecipe)$$2.get()).getResultItem()).isEmpty()) {
+        if ($$2.isPresent() && !($$3 = ((SmeltingRecipe)$$2.get()).getResultItem($$1.getLevel().registryAccess())).isEmpty()) {
             ItemStack $$4 = $$3.copy();
             $$4.setCount($$0.getCount());
             return $$4;
