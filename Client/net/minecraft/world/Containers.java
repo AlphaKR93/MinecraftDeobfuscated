@@ -4,7 +4,6 @@
  * Could not load the following classes:
  *  java.lang.Math
  *  java.lang.Object
- *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world;
 

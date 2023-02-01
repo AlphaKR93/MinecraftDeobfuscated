@@ -32,7 +32,7 @@ import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.BelowOrAboveWidgetTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
-import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.MenuTooltipPositioner;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -50,7 +50,11 @@ GuiEventListener,
 LayoutElement,
 NarratableEntry {
     public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
+    public static final ResourceLocation ACCESSIBILITY_TEXTURE = new ResourceLocation("textures/gui/accessibility.png");
     protected static final int BUTTON_TEXTURE_Y_OFFSET = 46;
+    protected static final int BUTTON_TEXTURE_WIDTH = 200;
+    protected static final int BUTTON_TEXTURE_HEIGHT = 20;
+    protected static final int BUTTON_TEXTURE_BORDER = 4;
     protected int width;
     protected int height;
     private int x;
@@ -60,6 +64,7 @@ NarratableEntry {
     public boolean active = true;
     public boolean visible = true;
     protected float alpha = 1.0f;
+    private int tabOrderGroup;
     private boolean focused;
     @Nullable
     private Tooltip tooltip;
@@ -100,7 +105,7 @@ NarratableEntry {
             return;
         }
         this.isHovered = $$1 >= this.getX() && $$2 >= this.getY() && $$1 < this.getX() + this.width && $$2 < this.getY() + this.height;
-        this.renderButton($$0, $$1, $$2, $$3);
+        this.renderWidget($$0, $$1, $$2, $$3);
         this.updateTooltip();
     }
 
@@ -126,7 +131,7 @@ NarratableEntry {
         if (!this.isHovered && this.isFocused() && Minecraft.getInstance().getLastInputType().isKeyboard()) {
             return new BelowOrAboveWidgetTooltipPositioner(this);
         }
-        return DefaultTooltipPositioner.INSTANCE;
+        return new MenuTooltipPositioner(this);
     }
 
     public void setTooltip(@Nullable Tooltip $$0) {
@@ -145,24 +150,40 @@ NarratableEntry {
         return Component.translatable("gui.narrate.button", $$0);
     }
 
-    public void renderButton(PoseStack $$0, int $$1, int $$2, float $$3) {
-        Minecraft $$4 = Minecraft.getInstance();
-        Font $$5 = $$4.font;
+    public void renderWidget(PoseStack $$0, int $$1, int $$2, float $$3) {
+        this.renderButton($$0, $$1, $$2);
+    }
+
+    protected void renderButton(PoseStack $$0, int $$1, int $$2) {
+        Minecraft $$3 = Minecraft.getInstance();
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
         RenderSystem.setShaderTexture(0, this.getTextureLocation());
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, this.alpha);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        int $$6 = this.width / 2;
-        int $$7 = this.width - $$6;
-        int $$8 = this.getTextureY();
-        this.blit($$0, this.getX(), this.getY(), 0, $$8, $$6, this.height);
-        this.blit($$0, this.getX() + $$6, this.getY(), 200 - $$7, $$8, $$7, this.height);
-        this.renderBg($$0, $$4, $$1, $$2);
+        this.blitNineSliced($$0, this.getX(), this.getY(), this.width, this.height, 4, 200, 20, 0, this.getTextureY());
+        this.renderBg($$0, $$3, $$1, $$2);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        int $$9 = this.active ? 0xFFFFFF : 0xA0A0A0;
-        AbstractWidget.drawCenteredString($$0, $$5, this.getMessage(), this.getX() + $$6, this.getY() + (this.height - 8) / 2, $$9 | Mth.ceil(this.alpha * 255.0f) << 24);
+        int $$4 = this.active ? 0xFFFFFF : 0xA0A0A0;
+        Font $$5 = $$3.font;
+        this.renderString($$0, $$5, this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, $$4);
+    }
+
+    public void renderString(PoseStack $$0, Font $$1, int $$2, int $$3, int $$4) {
+        AbstractWidget.drawCenteredString($$0, $$1, this.getMessage(), $$2, $$3, $$4 | Mth.ceil(this.alpha * 255.0f) << 24);
+    }
+
+    public void renderTexture(PoseStack $$0, ResourceLocation $$1, int $$2, int $$3, int $$4, int $$5, int $$6, int $$7, int $$8, int $$9, int $$10) {
+        RenderSystem.setShaderTexture(0, $$1);
+        int $$11 = $$5;
+        if (!this.isActive()) {
+            $$11 += $$6 * 2;
+        } else if (this.isHoveredOrFocused()) {
+            $$11 += $$6;
+        }
+        RenderSystem.enableDepthTest();
+        AbstractWidget.blit($$0, $$2, $$3, $$4, $$11, $$7, $$8, $$9, $$10);
     }
 
     protected void renderBg(PoseStack $$0, Minecraft $$1, int $$2, int $$3) {
@@ -338,5 +359,14 @@ NarratableEntry {
     @Override
     public ScreenRectangle getRectangle() {
         return new ScreenRectangle(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+    }
+
+    @Override
+    public int getTabOrderGroup() {
+        return this.tabOrderGroup;
+    }
+
+    public void setTabOrderGroup(int $$0) {
+        this.tabOrderGroup = $$0;
     }
 }

@@ -19,6 +19,7 @@
  *  java.util.List
  *  java.util.Map
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.player.Player
  *  org.slf4j.Logger
  */
 package net.minecraft.world.level.saveddata.maps;

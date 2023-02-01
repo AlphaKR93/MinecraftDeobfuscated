@@ -34,7 +34,7 @@ import net.minecraft.util.Mth;
 
 public class CycleButton<T>
 extends AbstractButton {
-    static final BooleanSupplier DEFAULT_ALT_LIST_SELECTOR = Screen::hasAltDown;
+    public static final BooleanSupplier DEFAULT_ALT_LIST_SELECTOR = Screen::hasAltDown;
     private static final List<Boolean> BOOLEAN_OPTIONS = ImmutableList.of((Object)Boolean.TRUE, (Object)Boolean.FALSE);
     private final Component name;
     private int index;

@@ -122,6 +122,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.RiderShieldingMount;
 import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.WalkAnimationState;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -228,9 +229,7 @@ extends Entity {
     public float oAttackAnim;
     public float attackAnim;
     protected int attackStrengthTicker;
-    public float animationSpeedOld;
-    public float animationSpeed;
-    public float animationPosition;
+    public final WalkAnimationState walkAnimation = new WalkAnimationState();
     public final int invulnerableDuration = 20;
     public final float timeOffs;
     public final float rotA;
@@ -1028,7 +1027,7 @@ extends Entity {
             }
             $$3 = true;
         }
-        this.animationSpeed = 1.5f;
+        this.walkAnimation.setSpeed(1.5f);
         boolean $$7 = true;
         if ((float)this.invulnerableTime > 10.0f) {
             if ($$1 <= this.lastHurt) {
@@ -1586,7 +1585,7 @@ extends Entity {
             case 44: 
             case 57: {
                 DamageSource $$5;
-                this.animationSpeed = 1.5f;
+                this.walkAnimation.setSpeed(1.5f);
                 this.invulnerableTime = 20;
                 this.hurtTime = this.hurtDuration = 10;
                 if ($$0 == 33) {
@@ -2019,20 +2018,17 @@ extends Entity {
                 }
             }
         }
-        this.calculateEntityAnimation(this, this instanceof FlyingAnimal);
+        this.calculateEntityAnimation(this instanceof FlyingAnimal);
     }
 
-    public void calculateEntityAnimation(LivingEntity $$0, boolean $$1) {
-        double $$4;
-        double $$3;
-        $$0.animationSpeedOld = $$0.animationSpeed;
-        double $$2 = $$0.getX() - $$0.xo;
-        float $$5 = (float)Math.sqrt((double)($$2 * $$2 + ($$3 = $$1 ? $$0.getY() - $$0.yo : 0.0) * $$3 + ($$4 = $$0.getZ() - $$0.zo) * $$4)) * 4.0f;
-        if ($$5 > 1.0f) {
-            $$5 = 1.0f;
-        }
-        $$0.animationSpeed += ($$5 - $$0.animationSpeed) * 0.4f;
-        $$0.animationPosition += $$0.animationSpeed;
+    public void calculateEntityAnimation(boolean $$0) {
+        float $$1 = (float)Mth.length(this.getX() - this.xo, $$0 ? this.getY() - this.yo : 0.0, this.getZ() - this.zo);
+        this.updateWalkAnimation($$1);
+    }
+
+    protected void updateWalkAnimation(float $$0) {
+        float $$1 = Math.min((float)($$0 * 4.0f), (float)1.0f);
+        this.walkAnimation.update($$1, 0.4f);
     }
 
     public Vec3 handleRelativeFrictionAndCalculateMovement(Vec3 $$0, float $$1) {

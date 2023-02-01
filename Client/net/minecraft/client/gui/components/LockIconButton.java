@@ -40,7 +40,7 @@ extends Button {
     }
 
     @Override
-    public void renderButton(PoseStack $$0, int $$1, int $$2, float $$3) {
+    public void renderWidget(PoseStack $$0, int $$1, int $$2, float $$3) {
         Icon $$6;
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
         RenderSystem.setShaderTexture(0, Button.WIDGETS_LOCATION);

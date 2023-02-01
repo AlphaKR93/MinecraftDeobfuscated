@@ -10,7 +10,6 @@
  *  java.util.function.BiPredicate
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
- *  net.minecraft.server.level.ServerLevel
  */
 package net.minecraft.world.level.block;
 
@@ -170,7 +169,7 @@ SimpleWaterloggedBlock {
 
     @Override
     public void tick(BlockState $$0, ServerLevel $$1, BlockPos $$2, RandomSource $$3) {
-        if (PointedDripstoneBlock.isStalagmite($$0) && !this.canSurvive($$0, (LevelReader)$$1, $$2)) {
+        if (PointedDripstoneBlock.isStalagmite($$0) && !this.canSurvive($$0, $$1, $$2)) {
             $$1.destroyBlock($$2, true);
         } else {
             PointedDripstoneBlock.spawnFallingStalactite($$0, $$1, $$2);
@@ -180,7 +179,7 @@ SimpleWaterloggedBlock {
     @Override
     public void randomTick(BlockState $$0, ServerLevel $$1, BlockPos $$2, RandomSource $$3) {
         PointedDripstoneBlock.maybeTransferFluid($$0, $$1, $$2, $$3.nextFloat());
-        if ($$3.nextFloat() < 0.011377778f && PointedDripstoneBlock.isStalactiteStartPos($$0, (LevelReader)$$1, $$2)) {
+        if ($$3.nextFloat() < 0.011377778f && PointedDripstoneBlock.isStalactiteStartPos($$0, $$1, $$2)) {
             PointedDripstoneBlock.growStalactiteOrStalagmiteIfPossible($$0, $$1, $$2, $$3);
         }
     }
@@ -194,10 +193,10 @@ SimpleWaterloggedBlock {
         if ($$3 > 0.17578125f && $$3 > 0.05859375f) {
             return;
         }
-        if (!PointedDripstoneBlock.isStalactiteStartPos($$0, (LevelReader)$$1, $$2)) {
+        if (!PointedDripstoneBlock.isStalactiteStartPos($$0, $$1, $$2)) {
             return;
         }
-        Optional<FluidInfo> $$4 = PointedDripstoneBlock.getFluidAboveStalactite((Level)$$1, $$2, $$0);
+        Optional<FluidInfo> $$4 = PointedDripstoneBlock.getFluidAboveStalactite($$1, $$2, $$0);
         if ($$4.isEmpty()) {
             return;
         }
@@ -212,19 +211,19 @@ SimpleWaterloggedBlock {
         if ($$3 >= $$8) {
             return;
         }
-        BlockPos $$9 = PointedDripstoneBlock.findTip($$0, (LevelAccessor)$$1, $$2, 11, false);
+        BlockPos $$9 = PointedDripstoneBlock.findTip($$0, $$1, $$2, 11, false);
         if ($$9 == null) {
             return;
         }
         if (((FluidInfo)((Object)$$4.get())).sourceState.is(Blocks.MUD) && $$5 == Fluids.WATER) {
             BlockState $$10 = Blocks.CLAY.defaultBlockState();
             $$1.setBlockAndUpdate(((FluidInfo)((Object)$$4.get())).pos, $$10);
-            Block.pushEntitiesUp(((FluidInfo)((Object)$$4.get())).sourceState, $$10, (LevelAccessor)$$1, ((FluidInfo)((Object)$$4.get())).pos);
+            Block.pushEntitiesUp(((FluidInfo)((Object)$$4.get())).sourceState, $$10, $$1, ((FluidInfo)((Object)$$4.get())).pos);
             $$1.gameEvent(GameEvent.BLOCK_CHANGE, ((FluidInfo)((Object)$$4.get())).pos, GameEvent.Context.of($$10));
             $$1.levelEvent(1504, $$9, 0);
             return;
         }
-        BlockPos $$11 = PointedDripstoneBlock.findFillableCauldronBelowStalactiteTip((Level)$$1, $$9, $$5);
+        BlockPos $$11 = PointedDripstoneBlock.findFillableCauldronBelowStalactiteTip($$1, $$9, $$5);
         if ($$11 == null) {
             return;
         }
@@ -325,7 +324,7 @@ SimpleWaterloggedBlock {
         BlockPos.MutableBlockPos $$3 = $$2.mutable();
         BlockState $$4 = $$0;
         while (PointedDripstoneBlock.isStalactite($$4)) {
-            FallingBlockEntity $$5 = FallingBlockEntity.fall((Level)$$1, $$3, $$4);
+            FallingBlockEntity $$5 = FallingBlockEntity.fall($$1, $$3, $$4);
             if (PointedDripstoneBlock.isTip($$4, true)) {
                 int $$6 = Math.max((int)(1 + $$2.getY() - $$3.getY()), (int)6);
                 float $$7 = 1.0f * (float)$$6;
@@ -333,7 +332,7 @@ SimpleWaterloggedBlock {
                 break;
             }
             $$3.move(Direction.DOWN);
-            $$4 = $$1.getBlockState((BlockPos)$$3);
+            $$4 = $$1.getBlockState($$3);
         }
     }
 
@@ -344,7 +343,7 @@ SimpleWaterloggedBlock {
         if (!PointedDripstoneBlock.canGrow($$4, $$5 = $$1.getBlockState((BlockPos)$$2.above(2)))) {
             return;
         }
-        BlockPos $$6 = PointedDripstoneBlock.findTip($$0, (LevelAccessor)$$1, $$2, 7, false);
+        BlockPos $$6 = PointedDripstoneBlock.findTip($$0, $$1, $$2, 7, false);
         if ($$6 == null) {
             return;
         }
@@ -363,7 +362,7 @@ SimpleWaterloggedBlock {
         BlockPos.MutableBlockPos $$2 = $$1.mutable();
         for (int $$3 = 0; $$3 < 10; ++$$3) {
             $$2.move(Direction.DOWN);
-            BlockState $$4 = $$0.getBlockState((BlockPos)$$2);
+            BlockState $$4 = $$0.getBlockState($$2);
             if (!$$4.getFluidState().isEmpty()) {
                 return;
             }
@@ -371,11 +370,11 @@ SimpleWaterloggedBlock {
                 PointedDripstoneBlock.grow($$0, $$2, Direction.UP);
                 return;
             }
-            if (PointedDripstoneBlock.isValidPointedDripstonePlacement((LevelReader)$$0, $$2, Direction.UP) && !$$0.isWaterAt((BlockPos)$$2.below())) {
+            if (PointedDripstoneBlock.isValidPointedDripstonePlacement($$0, $$2, Direction.UP) && !$$0.isWaterAt((BlockPos)$$2.below())) {
                 PointedDripstoneBlock.grow($$0, (BlockPos)$$2.below(), Direction.UP);
                 return;
             }
-            if (PointedDripstoneBlock.canDripThrough((BlockGetter)$$0, $$2, $$4)) continue;
+            if (PointedDripstoneBlock.canDripThrough($$0, $$2, $$4)) continue;
             return;
         }
     }
@@ -384,9 +383,9 @@ SimpleWaterloggedBlock {
         Vec3i $$3 = $$1.relative($$2);
         BlockState $$4 = $$0.getBlockState((BlockPos)$$3);
         if (PointedDripstoneBlock.isUnmergedTipWithDirection($$4, $$2.getOpposite())) {
-            PointedDripstoneBlock.createMergedTips($$4, (LevelAccessor)$$0, (BlockPos)$$3);
+            PointedDripstoneBlock.createMergedTips($$4, $$0, (BlockPos)$$3);
         } else if ($$4.isAir() || $$4.is(Blocks.WATER)) {
-            PointedDripstoneBlock.createDripstone((LevelAccessor)$$0, (BlockPos)$$3, $$2, DripstoneThickness.TIP);
+            PointedDripstoneBlock.createDripstone($$0, (BlockPos)$$3, $$2, DripstoneThickness.TIP);
         }
     }
 
@@ -549,7 +548,7 @@ SimpleWaterloggedBlock {
     }
 
     public static Fluid getCauldronFillFluidType(ServerLevel $$02, BlockPos $$1) {
-        return (Fluid)PointedDripstoneBlock.getFluidAboveStalactite((Level)$$02, $$1, $$02.getBlockState($$1)).map($$0 -> $$0.fluid).filter(PointedDripstoneBlock::canFillCauldron).orElse((Object)Fluids.EMPTY);
+        return (Fluid)PointedDripstoneBlock.getFluidAboveStalactite($$02, $$1, $$02.getBlockState($$1)).map($$0 -> $$0.fluid).filter(PointedDripstoneBlock::canFillCauldron).orElse((Object)Fluids.EMPTY);
     }
 
     private static Optional<FluidInfo> getFluidAboveStalactite(Level $$0, BlockPos $$12, BlockState $$2) {

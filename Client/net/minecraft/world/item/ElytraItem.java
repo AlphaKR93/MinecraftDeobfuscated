@@ -11,11 +11,8 @@ package net.minecraft.world.item;
 import javax.annotation.Nullable;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
@@ -44,18 +41,7 @@ implements Wearable {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level $$0, Player $$1, InteractionHand $$2) {
-        ItemStack $$3 = $$1.getItemInHand($$2);
-        EquipmentSlot $$4 = Mob.getEquipmentSlotForItem($$3);
-        ItemStack $$5 = $$1.getItemBySlot($$4);
-        if ($$5.isEmpty()) {
-            $$1.setItemSlot($$4, $$3.copy());
-            if (!$$0.isClientSide()) {
-                $$1.awardStat(Stats.ITEM_USED.get(this));
-            }
-            $$3.setCount(0);
-            return InteractionResultHolder.sidedSuccess($$3, $$0.isClientSide());
-        }
-        return InteractionResultHolder.fail($$3);
+        return this.swapWithEquipmentSlot(this, $$0, $$1, $$2);
     }
 
     @Override

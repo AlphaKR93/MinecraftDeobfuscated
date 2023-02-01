@@ -9,10 +9,12 @@ package net.minecraft.client.gui.components.events;
 
 import javax.annotation.Nullable;
 import net.minecraft.client.gui.ComponentPath;
+import net.minecraft.client.gui.components.TabOrderedElement;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 
-public interface GuiEventListener {
+public interface GuiEventListener
+extends TabOrderedElement {
     public static final long DOUBLE_CLICK_THRESHOLD_MS = 250L;
 
     default public void mouseMoved(double $$0, double $$1) {

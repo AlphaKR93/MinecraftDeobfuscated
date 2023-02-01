@@ -48,6 +48,7 @@ import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -79,8 +80,14 @@ extends Screen {
     protected void init() {
         this.rules = new RuleList(this.gameRules);
         this.addWidget(this.rules);
-        this.doneButton = this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, $$0 -> this.exitCallback.accept((Object)Optional.of((Object)this.gameRules))).bounds(this.width / 2 - 155, this.height - 29, 150, 20).build());
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, $$0 -> this.exitCallback.accept((Object)Optional.empty())).bounds(this.width / 2 - 155 + 160, this.height - 29, 150, 20).build());
+        GridLayout.RowHelper $$02 = new GridLayout().columnSpacing(10).createRowHelper(2);
+        this.doneButton = $$02.addChild(Button.builder(CommonComponents.GUI_DONE, $$0 -> this.exitCallback.accept((Object)Optional.of((Object)this.gameRules))).build());
+        $$02.addChild(Button.builder(CommonComponents.GUI_CANCEL, $$0 -> this.exitCallback.accept((Object)Optional.empty())).build());
+        $$02.getGrid().visitWidgets((Consumer<AbstractWidget>)((Consumer)$$1 -> {
+            AbstractWidget cfr_ignored_0 = (AbstractWidget)this.addRenderableWidget($$1);
+        }));
+        $$02.getGrid().setPosition(this.width / 2 - 155, this.height - 28);
+        $$02.getGrid().arrangeElements();
     }
 
     @Override

@@ -820,15 +820,15 @@ extends Level {
         }
 
         @Override
-        public void onCreated(Entity $$0) {
+        public void onSectionChange(Entity $$0) {
         }
 
         @Override
-        public void onDestroyed(Entity $$0) {
+        public void onTrackingEnd(Entity $$0) {
         }
 
         @Override
-        public void onTickingStart(Entity $$0) {
+        public void onTrackingStart(Entity $$0) {
             ClientLevel.this.tickingEntities.add($$0);
         }
 
@@ -838,20 +838,20 @@ extends Level {
         }
 
         @Override
-        public void onTickingStart(Entity $$0) {
+        public void onTrackingStart(Entity $$0) {
             if ($$0 instanceof AbstractClientPlayer) {
                 ClientLevel.this.players.add((Object)((AbstractClientPlayer)$$0));
             }
         }
 
         @Override
-        public void onDestroyed(Entity $$0) {
+        public void onTrackingEnd(Entity $$0) {
             $$0.unRide();
             ClientLevel.this.players.remove((Object)$$0);
         }
 
         @Override
-        public void onCreated(Entity $$0) {
+        public void onSectionChange(Entity $$0) {
         }
     }
 

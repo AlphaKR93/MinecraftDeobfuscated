@@ -139,6 +139,9 @@ implements AutoCloseable {
         if ($$2.COLOR_MODULATOR != null) {
             $$2.COLOR_MODULATOR.set(RenderSystem.getShaderColor());
         }
+        if ($$2.GLINT_ALPHA != null) {
+            $$2.GLINT_ALPHA.set(RenderSystem.getShaderGlintAlpha());
+        }
         if ($$2.FOG_START != null) {
             $$2.FOG_START.set(RenderSystem.getShaderFogStart());
         }

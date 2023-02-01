@@ -111,8 +111,8 @@ implements RenderLayerParent<T, M> {
         float $$15 = 0.0f;
         float $$16 = 0.0f;
         if (!((Entity)$$0).isPassenger() && ((LivingEntity)$$0).isAlive()) {
-            $$15 = Mth.lerp($$2, ((LivingEntity)$$0).animationSpeedOld, ((LivingEntity)$$0).animationSpeed);
-            $$16 = ((LivingEntity)$$0).animationPosition - ((LivingEntity)$$0).animationSpeed * (1.0f - $$2);
+            $$15 = ((LivingEntity)$$0).walkAnimation.speed($$2);
+            $$16 = ((LivingEntity)$$0).walkAnimation.position($$2);
             if (((LivingEntity)$$0).isBaby()) {
                 $$16 *= 3.0f;
             }

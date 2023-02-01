@@ -1098,7 +1098,7 @@ extends RealmsScreen {
         }
 
         @Override
-        public void renderButton(PoseStack $$0, int $$1, int $$2, float $$3) {
+        public void renderWidget(PoseStack $$0, int $$1, int $$2, float $$3) {
             RealmsMainScreen.this.drawInvitationPendingIcon($$0, $$1, $$2, this.getX(), this.getY(), this.isHoveredOrFocused(), this.active);
         }
     }
@@ -1126,7 +1126,7 @@ extends RealmsScreen {
         }
 
         @Override
-        public void renderButton(PoseStack $$0, int $$1, int $$2, float $$3) {
+        public void renderWidget(PoseStack $$0, int $$1, int $$2, float $$3) {
             RealmsMainScreen.this.renderNews($$0, $$1, $$2, RealmsMainScreen.this.hasUnreadNews, this.getX(), this.getY(), this.isHoveredOrFocused(), this.active);
         }
     }
@@ -1138,7 +1138,7 @@ extends RealmsScreen {
         }
 
         @Override
-        public void renderButton(PoseStack $$0, int $$1, int $$2, float $$3) {
+        public void renderWidget(PoseStack $$0, int $$1, int $$2, float $$3) {
             RenderSystem.setShaderTexture(0, CROSS_ICON_LOCATION);
             float $$4 = this.isHoveredOrFocused() ? 12.0f : 0.0f;
             CloseButton.blit($$0, this.getX(), this.getY(), 0.0f, $$4, 12, 12, 12, 24);

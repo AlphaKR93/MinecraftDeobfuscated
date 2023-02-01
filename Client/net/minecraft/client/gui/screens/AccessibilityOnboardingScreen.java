@@ -19,10 +19,10 @@ import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.AccessibilityOnboardingTextWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.CommonButtons;
 import net.minecraft.client.gui.components.LogoRenderer;
 import net.minecraft.client.gui.layouts.FrameLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
-import net.minecraft.client.gui.screens.AccessibilityOptionsScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.PanoramaRenderer;
@@ -52,25 +52,27 @@ extends Screen {
 
     @Override
     public void init() {
-        FrameLayout $$02 = new FrameLayout();
-        $$02.defaultChildLayoutSetting().alignVerticallyTop().padding(4);
-        $$02.setMinDimensions(this.width, this.height - this.initTitleYPos());
-        GridLayout $$1 = $$02.addChild(new GridLayout());
-        $$1.defaultCellSetting().alignHorizontallyCenter().padding(4);
-        GridLayout.RowHelper $$2 = $$1.createRowHelper(1);
+        int $$02 = this.initTitleYPos();
+        FrameLayout $$1 = FrameLayout.withMinDimensions(this.width, this.height - $$02);
+        $$1.defaultChildLayoutSetting().alignVerticallyTop().padding(4);
+        GridLayout $$2 = $$1.addChild(new GridLayout());
+        $$2.defaultCellSetting().alignHorizontallyCenter().padding(4);
+        GridLayout.RowHelper $$3 = $$2.createRowHelper(1);
+        $$3.defaultCellSetting().padding(2);
         this.textWidget = new AccessibilityOnboardingTextWidget(this.font, this.title, this.width);
-        $$2.addChild(this.textWidget, $$2.newCellSettings().padding(16));
-        AbstractWidget $$3 = this.options.narrator().createButton(this.options, 0, 0, 150);
-        $$3.active = this.narratorAvailable;
-        $$2.addChild($$3);
+        $$3.addChild(this.textWidget, $$3.newCellSettings().paddingBottom(16));
+        AbstractWidget $$4 = this.options.narrator().createButton(this.options, 0, 0, 150);
+        $$4.active = this.narratorAvailable;
+        $$3.addChild($$4);
         if (this.narratorAvailable) {
-            this.setInitialFocus($$3);
+            this.setInitialFocus($$4);
         }
-        $$2.addChild(Button.builder(Component.translatable("options.accessibility.title"), $$0 -> this.minecraft.setScreen(new AccessibilityOptionsScreen(new TitleScreen(true), this.minecraft.options))).build());
-        $$02.addChild(Button.builder(CommonComponents.GUI_CONTINUE, $$0 -> this.minecraft.setScreen(new TitleScreen(true, this.logoRenderer))).build(), $$02.newChildLayoutSettings().alignVerticallyBottom().padding(8));
-        $$02.arrangeElements();
-        FrameLayout.alignInRectangle($$02, 0, this.initTitleYPos(), this.width, this.height, 0.5f, 0.0f);
-        $$02.visitWidgets((Consumer<AbstractWidget>)((Consumer)this::addRenderableWidget));
+        $$3.addChild(CommonButtons.accessibilityTextAndImage(this.minecraft, this));
+        $$3.addChild(CommonButtons.languageTextAndImage(this.minecraft, this));
+        $$1.addChild(Button.builder(CommonComponents.GUI_CONTINUE, $$0 -> this.onClose()).build(), $$1.newChildLayoutSettings().alignVerticallyBottom().padding(8));
+        $$1.arrangeElements();
+        FrameLayout.alignInRectangle($$1, 0, $$02, this.width, this.height, 0.5f, 0.0f);
+        $$1.visitWidgets((Consumer<AbstractWidget>)((Consumer)this::addRenderableWidget));
     }
 
     private int initTitleYPos() {
@@ -79,7 +81,7 @@ extends Screen {
 
     @Override
     public void onClose() {
-        this.minecraft.getNarrator().clear();
+        Narrator.getNarrator().clear();
         this.minecraft.setScreen(new TitleScreen(true, this.logoRenderer));
     }
 

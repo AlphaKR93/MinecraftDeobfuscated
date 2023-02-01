@@ -26,6 +26,8 @@ extends AbstractLayout {
     private final List<LayoutElement> children = new ArrayList();
     private final List<CellInhabitant> cellInhabitants = new ArrayList();
     private final LayoutSettings defaultCellSettings = LayoutSettings.defaults();
+    private int rowSpacing = 0;
+    private int columnSpacing = 0;
 
     public GridLayout() {
         this(0, 0);
@@ -47,39 +49,41 @@ extends AbstractLayout {
         int[] $$3 = new int[$$1 + 1];
         int[] $$4 = new int[$$0 + 1];
         for (CellInhabitant $$5 : this.cellInhabitants) {
-            Divisor $$6 = new Divisor($$5.getHeight(), $$5.occupiedRows);
-            for (int $$7 = $$5.row; $$7 <= $$5.getLastOccupiedRow(); ++$$7) {
-                $$4[$$7] = Math.max((int)$$4[$$7], (int)$$6.nextInt());
+            int $$6 = $$5.getHeight() - ($$5.occupiedRows - 1) * this.rowSpacing;
+            Divisor $$7 = new Divisor($$6, $$5.occupiedRows);
+            for (int $$8 = $$5.row; $$8 <= $$5.getLastOccupiedRow(); ++$$8) {
+                $$4[$$8] = Math.max((int)$$4[$$8], (int)$$7.nextInt());
             }
-            Divisor $$8 = new Divisor($$5.getWidth(), $$5.occupiedColumns);
-            for (int $$9 = $$5.column; $$9 <= $$5.getLastOccupiedColumn(); ++$$9) {
-                $$3[$$9] = Math.max((int)$$3[$$9], (int)$$8.nextInt());
+            int $$9 = $$5.getWidth() - ($$5.occupiedColumns - 1) * this.columnSpacing;
+            Divisor $$10 = new Divisor($$9, $$5.occupiedColumns);
+            for (int $$11 = $$5.column; $$11 <= $$5.getLastOccupiedColumn(); ++$$11) {
+                $$3[$$11] = Math.max((int)$$3[$$11], (int)$$10.nextInt());
             }
         }
-        int[] $$10 = new int[$$1 + 1];
-        int[] $$11 = new int[$$0 + 1];
-        $$10[0] = 0;
-        for (int $$12 = 1; $$12 <= $$1; ++$$12) {
-            $$10[$$12] = $$10[$$12 - 1] + $$3[$$12 - 1];
+        int[] $$12 = new int[$$1 + 1];
+        int[] $$13 = new int[$$0 + 1];
+        $$12[0] = 0;
+        for (int $$14 = 1; $$14 <= $$1; ++$$14) {
+            $$12[$$14] = $$12[$$14 - 1] + $$3[$$14 - 1] + this.columnSpacing;
         }
-        $$11[0] = 0;
-        for (int $$13 = 1; $$13 <= $$0; ++$$13) {
-            $$11[$$13] = $$11[$$13 - 1] + $$4[$$13 - 1];
+        $$13[0] = 0;
+        for (int $$15 = 1; $$15 <= $$0; ++$$15) {
+            $$13[$$15] = $$13[$$15 - 1] + $$4[$$15 - 1] + this.rowSpacing;
         }
-        for (CellInhabitant $$14 : this.cellInhabitants) {
-            int $$15 = 0;
-            for (int $$16 = $$14.column; $$16 <= $$14.getLastOccupiedColumn(); ++$$16) {
-                $$15 += $$3[$$16];
-            }
-            $$14.setX(this.getX() + $$10[$$14.column], $$15);
+        for (CellInhabitant $$16 : this.cellInhabitants) {
             int $$17 = 0;
-            for (int $$18 = $$14.row; $$18 <= $$14.getLastOccupiedRow(); ++$$18) {
-                $$17 += $$4[$$18];
+            for (int $$18 = $$16.column; $$18 <= $$16.getLastOccupiedColumn(); ++$$18) {
+                $$17 += $$3[$$18];
             }
-            $$14.setY(this.getY() + $$11[$$14.row], $$17);
+            $$16.setX(this.getX() + $$12[$$16.column], $$17 += this.columnSpacing * ($$16.occupiedColumns - 1));
+            int $$19 = 0;
+            for (int $$20 = $$16.row; $$20 <= $$16.getLastOccupiedRow(); ++$$20) {
+                $$19 += $$4[$$20];
+            }
+            $$16.setY(this.getY() + $$13[$$16.row], $$19 += this.rowSpacing * ($$16.occupiedRows - 1));
         }
-        this.width = $$10[$$1] + $$3[$$1];
-        this.height = $$11[$$0] + $$4[$$0];
+        this.width = $$12[$$1] + $$3[$$1];
+        this.height = $$13[$$0] + $$4[$$0];
     }
 
     public <T extends LayoutElement> T addChild(T $$0, int $$1, int $$2) {
@@ -104,6 +108,20 @@ extends AbstractLayout {
         this.cellInhabitants.add((Object)new CellInhabitant($$0, $$1, $$2, $$3, $$4, $$5));
         this.children.add($$0);
         return $$0;
+    }
+
+    public GridLayout columnSpacing(int $$0) {
+        this.columnSpacing = $$0;
+        return this;
+    }
+
+    public GridLayout rowSpacing(int $$0) {
+        this.rowSpacing = $$0;
+        return this;
+    }
+
+    public GridLayout spacing(int $$0) {
+        return this.columnSpacing($$0).rowSpacing($$0);
     }
 
     @Override
@@ -177,6 +195,10 @@ extends AbstractLayout {
             }
             this.index += $$1;
             return GridLayout.this.addChild($$0, $$3, $$4, 1, $$1, $$2);
+        }
+
+        public GridLayout getGrid() {
+            return GridLayout.this;
         }
 
         public LayoutSettings newCellSettings() {

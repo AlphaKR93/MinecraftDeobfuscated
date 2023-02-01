@@ -4,6 +4,7 @@
  * Could not load the following classes:
  *  java.lang.Object
  *  java.lang.Override
+ *  net.minecraft.world.level.chunk.ChunkGenerator
  */
 package net.minecraft.world.level.levelgen.structure.structures;
 

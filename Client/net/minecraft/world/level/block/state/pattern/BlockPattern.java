@@ -13,6 +13,7 @@
  *  java.lang.String
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
+ *  net.minecraft.core.BlockPos
  */
 package net.minecraft.world.level.block.state.pattern;
 
@@ -88,7 +89,7 @@ public class BlockPattern {
     public BlockPatternMatch find(LevelReader $$0, BlockPos $$1) {
         LoadingCache<BlockPos, BlockInWorld> $$2 = BlockPattern.createLevelCache($$0, false);
         int $$3 = Math.max((int)Math.max((int)this.width, (int)this.height), (int)this.depth);
-        for (BlockPos $$4 : BlockPos.betweenClosed($$1, $$1.offset($$3 - 1, $$3 - 1, $$3 - 1))) {
+        for (BlockPos $$4 : BlockPos.betweenClosed((BlockPos)$$1, (BlockPos)$$1.offset($$3 - 1, $$3 - 1, $$3 - 1))) {
             for (Direction $$5 : Direction.values()) {
                 for (Direction $$6 : Direction.values()) {
                     BlockPatternMatch $$7;

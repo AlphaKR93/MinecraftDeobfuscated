@@ -49,7 +49,7 @@ extends OptionsSubScreen {
     private final int oldMipmaps;
 
     private static OptionInstance<?>[] options(Options $$0) {
-        return new OptionInstance[]{$$0.graphicsMode(), $$0.renderDistance(), $$0.prioritizeChunkUpdates(), $$0.simulationDistance(), $$0.ambientOcclusion(), $$0.framerateLimit(), $$0.enableVsync(), $$0.bobView(), $$0.guiScale(), $$0.attackIndicator(), $$0.gamma(), $$0.cloudStatus(), $$0.fullscreen(), $$0.particles(), $$0.mipmapLevels(), $$0.entityShadows(), $$0.screenEffectScale(), $$0.entityDistanceScaling(), $$0.fovEffectScale(), $$0.showAutosaveIndicator()};
+        return new OptionInstance[]{$$0.graphicsMode(), $$0.renderDistance(), $$0.prioritizeChunkUpdates(), $$0.simulationDistance(), $$0.ambientOcclusion(), $$0.framerateLimit(), $$0.enableVsync(), $$0.bobView(), $$0.guiScale(), $$0.attackIndicator(), $$0.gamma(), $$0.cloudStatus(), $$0.fullscreen(), $$0.particles(), $$0.mipmapLevels(), $$0.entityShadows(), $$0.screenEffectScale(), $$0.entityDistanceScaling(), $$0.fovEffectScale(), $$0.showAutosaveIndicator(), $$0.glintSpeed(), $$0.glintStrength()};
     }
 
     public VideoSettingsScreen(Screen $$0, Options $$1) {

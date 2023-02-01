@@ -16,15 +16,14 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.frog.Frog;
 
 public class FrogModel<T extends Frog>
 extends HierarchicalModel<T> {
-    private static final float WALK_ANIMATION_SPEED_FACTOR = 8000.0f;
-    public static final float MIN_WALK_ANIMATION_SPEED = 0.5f;
-    public static final float MAX_WALK_ANIMATION_SPEED = 1.5f;
+    private static final float MAX_WALK_ANIMATION_SPEED = 1.5f;
+    private static final float MAX_SWIM_ANIMATION_SPEED = 1.0f;
+    private static final float WALK_ANIMATION_SCALE_FACTOR = 2.5f;
     private final ModelPart root;
     private final ModelPart body;
     private final ModelPart head;
@@ -74,13 +73,14 @@ extends HierarchicalModel<T> {
     @Override
     public void setupAnim(T $$0, float $$1, float $$2, float $$3, float $$4, float $$5) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
-        float $$6 = (float)((Entity)$$0).getDeltaMovement().horizontalDistanceSqr();
-        float $$7 = Mth.clamp($$6 * 8000.0f, 0.5f, 1.5f);
         this.animate(((Frog)$$0).jumpAnimationState, FrogAnimation.FROG_JUMP, $$3);
         this.animate(((Frog)$$0).croakAnimationState, FrogAnimation.FROG_CROAK, $$3);
         this.animate(((Frog)$$0).tongueAnimationState, FrogAnimation.FROG_TONGUE, $$3);
-        this.animate(((Frog)$$0).walkAnimationState, FrogAnimation.FROG_WALK, $$3, $$7);
-        this.animate(((Frog)$$0).swimAnimationState, FrogAnimation.FROG_SWIM, $$3);
+        if (((Entity)$$0).isInWaterOrBubble()) {
+            this.animateWalk(FrogAnimation.FROG_SWIM, $$1, $$2, 1.0f, 2.5f);
+        } else {
+            this.animateWalk(FrogAnimation.FROG_WALK, $$1, $$2, 1.5f, 2.5f);
+        }
         this.animate(((Frog)$$0).swimIdleAnimationState, FrogAnimation.FROG_IDLE_WATER, $$3);
         this.croakingBody.visible = ((Frog)$$0).croakAnimationState.isStarted();
     }

@@ -37,11 +37,11 @@ extends MobRenderer<IronGolem, IronGolemModel<IronGolem>> {
     @Override
     protected void setupRotations(IronGolem $$0, PoseStack $$1, float $$2, float $$3, float $$4) {
         super.setupRotations($$0, $$1, $$2, $$3, $$4);
-        if ((double)$$0.animationSpeed < 0.01) {
+        if ((double)$$0.walkAnimation.speed() < 0.01) {
             return;
         }
         float $$5 = 13.0f;
-        float $$6 = $$0.animationPosition - $$0.animationSpeed * (1.0f - $$4) + 6.0f;
+        float $$6 = $$0.walkAnimation.position($$4) + 6.0f;
         float $$7 = (Math.abs((float)($$6 % 13.0f - 6.5f)) - 3.25f) / 3.25f;
         $$1.mulPose(Axis.ZP.rotationDegrees(6.5f * $$7));
     }

@@ -54,9 +54,9 @@ extends MultiLineTextWidget {
     }
 
     @Override
-    public void renderButton(PoseStack $$0, int $$1, int $$2, float $$3) {
+    public void renderWidget(PoseStack $$0, int $$1, int $$2, float $$3) {
         this.renderBg($$0, Minecraft.getInstance(), $$1, $$2);
-        super.renderButton($$0, $$1, $$2, $$3);
+        super.renderWidget($$0, $$1, $$2, $$3);
     }
 
     @Override

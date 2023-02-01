@@ -61,23 +61,23 @@ public class AdvancementCommands {
         if ($$4 == 0) {
             if ($$3.size() == 1) {
                 if ($$1.size() == 1) {
-                    throw new CommandRuntimeException(Component.translatable($$2.getKey() + ".one.to.one.failure", ((Advancement)$$3.iterator().next()).getChatComponent(), ((ServerPlayer)$$1.iterator().next()).getDisplayName()));
+                    throw new CommandRuntimeException(Component.translatable($$2.getKey() + ".one.to.one.failure", ((Advancement)$$3.iterator().next()).getChatComponent(), ((ServerPlayer)((Object)$$1.iterator().next())).getDisplayName()));
                 }
                 throw new CommandRuntimeException(Component.translatable($$2.getKey() + ".one.to.many.failure", ((Advancement)$$3.iterator().next()).getChatComponent(), $$1.size()));
             }
             if ($$1.size() == 1) {
-                throw new CommandRuntimeException(Component.translatable($$2.getKey() + ".many.to.one.failure", $$3.size(), ((ServerPlayer)$$1.iterator().next()).getDisplayName()));
+                throw new CommandRuntimeException(Component.translatable($$2.getKey() + ".many.to.one.failure", $$3.size(), ((ServerPlayer)((Object)$$1.iterator().next())).getDisplayName()));
             }
             throw new CommandRuntimeException(Component.translatable($$2.getKey() + ".many.to.many.failure", $$3.size(), $$1.size()));
         }
         if ($$3.size() == 1) {
             if ($$1.size() == 1) {
-                $$0.sendSuccess(Component.translatable($$2.getKey() + ".one.to.one.success", ((Advancement)$$3.iterator().next()).getChatComponent(), ((ServerPlayer)$$1.iterator().next()).getDisplayName()), true);
+                $$0.sendSuccess(Component.translatable($$2.getKey() + ".one.to.one.success", ((Advancement)$$3.iterator().next()).getChatComponent(), ((ServerPlayer)((Object)$$1.iterator().next())).getDisplayName()), true);
             } else {
                 $$0.sendSuccess(Component.translatable($$2.getKey() + ".one.to.many.success", ((Advancement)$$3.iterator().next()).getChatComponent(), $$1.size()), true);
             }
         } else if ($$1.size() == 1) {
-            $$0.sendSuccess(Component.translatable($$2.getKey() + ".many.to.one.success", $$3.size(), ((ServerPlayer)$$1.iterator().next()).getDisplayName()), true);
+            $$0.sendSuccess(Component.translatable($$2.getKey() + ".many.to.one.success", $$3.size(), ((ServerPlayer)((Object)$$1.iterator().next())).getDisplayName()), true);
         } else {
             $$0.sendSuccess(Component.translatable($$2.getKey() + ".many.to.many.success", $$3.size(), $$1.size()), true);
         }
@@ -95,12 +95,12 @@ public class AdvancementCommands {
         }
         if ($$5 == 0) {
             if ($$1.size() == 1) {
-                throw new CommandRuntimeException(Component.translatable($$2.getKey() + ".criterion.to.one.failure", $$4, $$3.getChatComponent(), ((ServerPlayer)$$1.iterator().next()).getDisplayName()));
+                throw new CommandRuntimeException(Component.translatable($$2.getKey() + ".criterion.to.one.failure", $$4, $$3.getChatComponent(), ((ServerPlayer)((Object)$$1.iterator().next())).getDisplayName()));
             }
             throw new CommandRuntimeException(Component.translatable($$2.getKey() + ".criterion.to.many.failure", $$4, $$3.getChatComponent(), $$1.size()));
         }
         if ($$1.size() == 1) {
-            $$0.sendSuccess(Component.translatable($$2.getKey() + ".criterion.to.one.success", $$4, $$3.getChatComponent(), ((ServerPlayer)$$1.iterator().next()).getDisplayName()), true);
+            $$0.sendSuccess(Component.translatable($$2.getKey() + ".criterion.to.one.success", $$4, $$3.getChatComponent(), ((ServerPlayer)((Object)$$1.iterator().next())).getDisplayName()), true);
         } else {
             $$0.sendSuccess(Component.translatable($$2.getKey() + ".criterion.to.many.success", $$4, $$3.getChatComponent(), $$1.size()), true);
         }

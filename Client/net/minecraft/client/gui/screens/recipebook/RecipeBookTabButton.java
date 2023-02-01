@@ -55,7 +55,7 @@ extends StateSwitchingButton {
     }
 
     @Override
-    public void renderButton(PoseStack $$0, int $$1, int $$2, float $$3) {
+    public void renderWidget(PoseStack $$0, int $$1, int $$2, float $$3) {
         if (this.animationTime > 0.0f) {
             float $$4 = 1.0f + 0.1f * (float)Math.sin((double)(this.animationTime / 15.0f * (float)Math.PI));
             $$0.pushPose();

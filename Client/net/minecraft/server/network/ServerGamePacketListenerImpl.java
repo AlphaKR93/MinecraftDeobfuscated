@@ -45,7 +45,6 @@
  *  java.util.stream.Collectors
  *  java.util.stream.Stream
  *  javax.annotation.Nullable
- *  net.minecraft.world.entity.player.Player
  *  org.slf4j.Logger
  */
 package net.minecraft.server.network;
@@ -960,12 +959,12 @@ ServerGamePacketListener {
             LOGGER.warn("{} moved wrongly!", (Object)this.player.getName().getString());
         }
         this.player.absMoveTo($$2, $$3, $$4, $$5, $$6);
-        if (!this.player.noPhysics && !this.player.isSleeping() && ($$22 && $$1.noCollision((Entity)((Object)this.player), $$18) || this.isPlayerCollidingWithAnythingNew($$1, $$18))) {
+        if (!this.player.noPhysics && !this.player.isSleeping() && ($$22 && $$1.noCollision(this.player, $$18) || this.isPlayerCollidingWithAnythingNew($$1, $$18))) {
             this.teleport($$7, $$8, $$9, $$5, $$6);
             this.player.doCheckFallDamage(this.player.getY() - $$10, $$0.isOnGround());
             return;
         }
-        this.clientIsFloating = $$21 >= -0.03125 && !$$20 && this.player.gameMode.getGameModeForPlayer() != GameType.SPECTATOR && !this.server.isFlightAllowed() && !this.player.getAbilities().mayfly && !this.player.hasEffect(MobEffects.LEVITATION) && !this.player.isFallFlying() && !this.player.isAutoSpinAttack() && this.noBlocksAround((Entity)((Object)this.player));
+        this.clientIsFloating = $$21 >= -0.03125 && !$$20 && this.player.gameMode.getGameModeForPlayer() != GameType.SPECTATOR && !this.server.isFlightAllowed() && !this.player.getAbilities().mayfly && !this.player.hasEffect(MobEffects.LEVITATION) && !this.player.isFallFlying() && !this.player.isAutoSpinAttack() && this.noBlocksAround(this.player);
         this.player.getLevel().getChunkSource().move(this.player);
         this.player.doCheckFallDamage(this.player.getY() - $$10, $$0.isOnGround());
         this.player.setOnGround($$0.isOnGround());
@@ -979,7 +978,7 @@ ServerGamePacketListener {
     }
 
     private boolean isPlayerCollidingWithAnythingNew(LevelReader $$0, AABB $$1) {
-        Iterable $$2 = $$0.getCollisions((Entity)((Object)this.player), this.player.getBoundingBox().deflate(1.0E-5f));
+        Iterable $$2 = $$0.getCollisions(this.player, this.player.getBoundingBox().deflate(1.0E-5f));
         VoxelShape $$3 = Shapes.create($$1.deflate(1.0E-5f));
         for (VoxelShape $$4 : $$2) {
             if (Shapes.joinIsNotEmpty($$4, $$3, BooleanOp.AND)) continue;
@@ -1348,7 +1347,7 @@ ServerGamePacketListener {
     }
 
     private void broadcastChatMessage(PlayerChatMessage $$0) {
-        this.server.getPlayerList().broadcastChatMessage($$0, this.player, ChatType.bind(ChatType.CHAT, (Entity)((Object)this.player)));
+        this.server.getPlayerList().broadcastChatMessage($$0, this.player, ChatType.bind(ChatType.CHAT, this.player));
         this.detectRateSpam();
     }
 
@@ -1765,7 +1764,7 @@ ServerGamePacketListener {
         this.signedMessageDecoder = $$0.createMessageDecoder(this.player.getUUID());
         this.chatMessageChain.append($$1 -> {
             this.player.setChatSession($$0);
-            this.server.getPlayerList().broadcastAll(new ClientboundPlayerInfoUpdatePacket((EnumSet<ClientboundPlayerInfoUpdatePacket.Action>)EnumSet.of((Enum)ClientboundPlayerInfoUpdatePacket.Action.INITIALIZE_CHAT), (Collection<ServerPlayer>)List.of((Object)((Object)this.player))));
+            this.server.getPlayerList().broadcastAll(new ClientboundPlayerInfoUpdatePacket((EnumSet<ClientboundPlayerInfoUpdatePacket.Action>)EnumSet.of((Enum)ClientboundPlayerInfoUpdatePacket.Action.INITIALIZE_CHAT), (Collection<ServerPlayer>)List.of((Object)this.player)));
             return CompletableFuture.completedFuture(null);
         });
     }

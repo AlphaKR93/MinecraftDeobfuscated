@@ -105,7 +105,7 @@ implements SpriteSource {
         for (int $$3 = 0; $$3 < $$0.length; ++$$3) {
             int $$4 = $$0[$$3];
             if (FastColor.ABGR32.alpha($$4) == 0) continue;
-            $$2.put(FastColor.ABGR32.bgr($$4), $$1[$$3]);
+            $$2.put(FastColor.ABGR32.transparent($$4), $$1[$$3]);
         }
         return arg_0 -> PalettedPermutations.lambda$createPaletteMapping$7((Int2IntMap)$$2, arg_0);
     }
@@ -158,8 +158,8 @@ implements SpriteSource {
         if ($$2 == 0) {
             return $$1;
         }
-        int $$3 = FastColor.ABGR32.bgr($$1);
-        int $$4 = $$0.getOrDefault($$3, $$3);
+        int $$3 = FastColor.ABGR32.transparent($$1);
+        int $$4 = $$0.getOrDefault($$3, FastColor.ABGR32.opaque($$3));
         int $$5 = FastColor.ABGR32.alpha($$4);
         return FastColor.ABGR32.color($$2 * $$5 / 255, $$4);
     }

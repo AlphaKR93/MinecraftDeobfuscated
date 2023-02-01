@@ -18,6 +18,7 @@ import java.util.function.Consumer;
 import net.minecraft.client.gui.layouts.AbstractLayout;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.layouts.LayoutSettings;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.util.Mth;
 
 public class FrameLayout
@@ -94,6 +95,10 @@ extends AbstractLayout {
 
     public static void centerInRectangle(LayoutElement $$0, int $$1, int $$2, int $$3, int $$4) {
         FrameLayout.alignInRectangle($$0, $$1, $$2, $$3, $$4, 0.5f, 0.5f);
+    }
+
+    public static void centerInRectangle(LayoutElement $$0, ScreenRectangle $$1) {
+        FrameLayout.centerInRectangle($$0, $$1.position().x(), $$1.position().y(), $$1.width(), $$1.height());
     }
 
     public static void alignInRectangle(LayoutElement $$0, int $$1, int $$2, int $$3, int $$4, float $$5, float $$6) {

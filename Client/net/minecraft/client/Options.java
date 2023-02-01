@@ -86,6 +86,7 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.VideoMode;
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.logging.LogUtils;
@@ -486,6 +487,20 @@ public class Options {
         }
         return Options.percentValueLabel($$0, $$1);
     }, OptionInstance.UnitDouble.INSTANCE.xmap(Mth::square, Math::sqrt), 1.0, $$0 -> {});
+    private static final Component ACCESSIBILITY_TOOLTIP_GLINT_SPEED = Component.translatable("options.glintSpeed.tooltip");
+    private final OptionInstance<Double> glintSpeed = new OptionInstance<Double>("options.glintSpeed", OptionInstance.cachedConstantTooltip(ACCESSIBILITY_TOOLTIP_GLINT_SPEED), ($$0, $$1) -> {
+        if ($$1 == 0.0) {
+            return Options.genericValueLabel($$0, CommonComponents.OPTION_OFF);
+        }
+        return Options.percentValueLabel($$0, $$1);
+    }, OptionInstance.UnitDouble.INSTANCE, 0.5, $$0 -> {});
+    private static final Component ACCESSIBILITY_TOOLTIP_GLINT_STRENGTH = Component.translatable("options.glintStrength.tooltip");
+    private final OptionInstance<Double> glintStrength = new OptionInstance<Double>("options.glintStrength", OptionInstance.cachedConstantTooltip(ACCESSIBILITY_TOOLTIP_GLINT_STRENGTH), ($$0, $$1) -> {
+        if ($$1 == 0.0) {
+            return Options.genericValueLabel($$0, CommonComponents.OPTION_OFF);
+        }
+        return Options.percentValueLabel($$0, $$1);
+    }, OptionInstance.UnitDouble.INSTANCE, 1.0, RenderSystem::setShaderGlintAlpha);
     private final OptionInstance<Double> gamma = new OptionInstance<Double>("options.gamma", OptionInstance.noTooltip(), ($$0, $$1) -> {
         int $$2 = (int)($$1 * 100.0);
         if ($$2 == 0) {
@@ -792,6 +807,14 @@ public class Options {
         return this.darknessEffectScale;
     }
 
+    public OptionInstance<Double> glintSpeed() {
+        return this.glintSpeed;
+    }
+
+    public OptionInstance<Double> glintStrength() {
+        return this.glintStrength;
+    }
+
     public OptionInstance<Double> gamma() {
         return this.gamma;
     }
@@ -868,6 +891,8 @@ public class Options {
         $$0.process("screenEffectScale", this.screenEffectScale);
         $$0.process("fovEffectScale", this.fovEffectScale);
         $$0.process("darknessEffectScale", this.darknessEffectScale);
+        $$0.process("glintSpeed", this.glintSpeed);
+        $$0.process("glintStrength", this.glintStrength);
         $$0.process("gamma", this.gamma);
         $$0.process("renderDistance", this.renderDistance);
         $$0.process("simulationDistance", this.simulationDistance);
@@ -1217,7 +1242,7 @@ public class Options {
     }
 
     public String dumpOptionsForReport() {
-        Stream $$02 = Stream.builder().add((Object)Pair.of((Object)"ao", (Object)this.ambientOcclusion.get())).add((Object)Pair.of((Object)"biomeBlendRadius", (Object)this.biomeBlendRadius.get())).add((Object)Pair.of((Object)"enableVsync", (Object)this.enableVsync.get())).add((Object)Pair.of((Object)"entityDistanceScaling", (Object)this.entityDistanceScaling.get())).add((Object)Pair.of((Object)"entityShadows", (Object)this.entityShadows.get())).add((Object)Pair.of((Object)"forceUnicodeFont", (Object)this.forceUnicodeFont.get())).add((Object)Pair.of((Object)"fov", (Object)this.fov.get())).add((Object)Pair.of((Object)"fovEffectScale", (Object)this.fovEffectScale.get())).add((Object)Pair.of((Object)"darknessEffectScale", (Object)this.darknessEffectScale.get())).add((Object)Pair.of((Object)"prioritizeChunkUpdates", (Object)this.prioritizeChunkUpdates.get())).add((Object)Pair.of((Object)"fullscreen", (Object)this.fullscreen.get())).add((Object)Pair.of((Object)"fullscreenResolution", (Object)String.valueOf((Object)this.fullscreenVideoModeString))).add((Object)Pair.of((Object)"gamma", (Object)this.gamma.get())).add((Object)Pair.of((Object)"glDebugVerbosity", (Object)this.glDebugVerbosity)).add((Object)Pair.of((Object)"graphicsMode", (Object)this.graphicsMode.get())).add((Object)Pair.of((Object)"guiScale", (Object)this.guiScale.get())).add((Object)Pair.of((Object)"maxFps", (Object)this.framerateLimit.get())).add((Object)Pair.of((Object)"mipmapLevels", (Object)this.mipmapLevels.get())).add((Object)Pair.of((Object)"narrator", (Object)((Object)this.narrator.get()))).add((Object)Pair.of((Object)"overrideHeight", (Object)this.overrideHeight)).add((Object)Pair.of((Object)"overrideWidth", (Object)this.overrideWidth)).add((Object)Pair.of((Object)"particles", (Object)this.particles.get())).add((Object)Pair.of((Object)"reducedDebugInfo", (Object)this.reducedDebugInfo.get())).add((Object)Pair.of((Object)"renderClouds", (Object)this.cloudStatus.get())).add((Object)Pair.of((Object)"renderDistance", (Object)this.renderDistance.get())).add((Object)Pair.of((Object)"simulationDistance", (Object)this.simulationDistance.get())).add((Object)Pair.of((Object)"resourcePacks", this.resourcePacks)).add((Object)Pair.of((Object)"screenEffectScale", (Object)this.screenEffectScale.get())).add((Object)Pair.of((Object)"syncChunkWrites", (Object)this.syncWrites)).add((Object)Pair.of((Object)"useNativeTransport", (Object)this.useNativeTransport)).add((Object)Pair.of((Object)"soundDevice", (Object)this.soundDevice.get())).build();
+        Stream $$02 = Stream.builder().add((Object)Pair.of((Object)"ao", (Object)this.ambientOcclusion.get())).add((Object)Pair.of((Object)"biomeBlendRadius", (Object)this.biomeBlendRadius.get())).add((Object)Pair.of((Object)"enableVsync", (Object)this.enableVsync.get())).add((Object)Pair.of((Object)"entityDistanceScaling", (Object)this.entityDistanceScaling.get())).add((Object)Pair.of((Object)"entityShadows", (Object)this.entityShadows.get())).add((Object)Pair.of((Object)"forceUnicodeFont", (Object)this.forceUnicodeFont.get())).add((Object)Pair.of((Object)"fov", (Object)this.fov.get())).add((Object)Pair.of((Object)"fovEffectScale", (Object)this.fovEffectScale.get())).add((Object)Pair.of((Object)"darknessEffectScale", (Object)this.darknessEffectScale.get())).add((Object)Pair.of((Object)"glintSpeed", (Object)this.glintSpeed.get())).add((Object)Pair.of((Object)"glintStrength", (Object)this.glintStrength.get())).add((Object)Pair.of((Object)"prioritizeChunkUpdates", (Object)this.prioritizeChunkUpdates.get())).add((Object)Pair.of((Object)"fullscreen", (Object)this.fullscreen.get())).add((Object)Pair.of((Object)"fullscreenResolution", (Object)String.valueOf((Object)this.fullscreenVideoModeString))).add((Object)Pair.of((Object)"gamma", (Object)this.gamma.get())).add((Object)Pair.of((Object)"glDebugVerbosity", (Object)this.glDebugVerbosity)).add((Object)Pair.of((Object)"graphicsMode", (Object)this.graphicsMode.get())).add((Object)Pair.of((Object)"guiScale", (Object)this.guiScale.get())).add((Object)Pair.of((Object)"maxFps", (Object)this.framerateLimit.get())).add((Object)Pair.of((Object)"mipmapLevels", (Object)this.mipmapLevels.get())).add((Object)Pair.of((Object)"narrator", (Object)((Object)this.narrator.get()))).add((Object)Pair.of((Object)"overrideHeight", (Object)this.overrideHeight)).add((Object)Pair.of((Object)"overrideWidth", (Object)this.overrideWidth)).add((Object)Pair.of((Object)"particles", (Object)this.particles.get())).add((Object)Pair.of((Object)"reducedDebugInfo", (Object)this.reducedDebugInfo.get())).add((Object)Pair.of((Object)"renderClouds", (Object)this.cloudStatus.get())).add((Object)Pair.of((Object)"renderDistance", (Object)this.renderDistance.get())).add((Object)Pair.of((Object)"simulationDistance", (Object)this.simulationDistance.get())).add((Object)Pair.of((Object)"resourcePacks", this.resourcePacks)).add((Object)Pair.of((Object)"screenEffectScale", (Object)this.screenEffectScale.get())).add((Object)Pair.of((Object)"syncChunkWrites", (Object)this.syncWrites)).add((Object)Pair.of((Object)"useNativeTransport", (Object)this.useNativeTransport)).add((Object)Pair.of((Object)"soundDevice", (Object)this.soundDevice.get())).build();
         return (String)$$02.map($$0 -> (String)$$0.getFirst() + ": " + $$0.getSecond()).collect(Collectors.joining((CharSequence)System.lineSeparator()));
     }
 

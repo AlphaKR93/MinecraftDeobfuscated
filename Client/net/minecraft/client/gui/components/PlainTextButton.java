@@ -29,7 +29,7 @@ extends Button {
     }
 
     @Override
-    public void renderButton(PoseStack $$0, int $$1, int $$2, float $$3) {
+    public void renderWidget(PoseStack $$0, int $$1, int $$2, float $$3) {
         Component $$4 = this.isHoveredOrFocused() ? this.underlinedMessage : this.message;
         PlainTextButton.drawString($$0, this.font, $$4, this.getX(), this.getY(), 0xFFFFFF | Mth.ceil(this.alpha * 255.0f) << 24);
     }

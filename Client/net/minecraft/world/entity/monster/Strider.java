@@ -199,8 +199,8 @@ Saddleable {
 
     @Override
     public double getPassengersRidingOffset() {
-        float $$0 = Math.min((float)0.25f, (float)this.animationSpeed);
-        float $$1 = this.animationPosition;
+        float $$0 = Math.min((float)0.25f, (float)this.walkAnimation.speed());
+        float $$1 = this.walkAnimation.position();
         return (double)this.getBbHeight() - 0.19 + (double)(0.12f * Mth.cos($$1 * 1.5f) * 2.0f * $$0);
     }
 

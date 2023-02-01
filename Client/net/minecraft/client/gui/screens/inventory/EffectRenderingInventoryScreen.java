@@ -6,7 +6,6 @@
  *  java.lang.Iterable
  *  java.lang.Object
  *  java.lang.Override
- *  java.lang.String
  *  java.util.Collection
  *  java.util.List
  *  java.util.Optional
@@ -77,7 +76,7 @@ extends AbstractContainerScreen<T> {
                 $$9 += $$7;
             }
             if ($$10 != null) {
-                List $$12 = List.of((Object)this.getEffectName($$10), (Object)Component.literal(MobEffectUtil.formatDuration($$10, 1.0f)));
+                List $$12 = List.of((Object)this.getEffectName($$10), (Object)MobEffectUtil.formatDuration($$10, 1.0f));
                 this.renderTooltip($$0, (List<Component>)$$12, (Optional<TooltipComponent>)Optional.empty(), $$1, $$2);
             }
         }
@@ -113,7 +112,7 @@ extends AbstractContainerScreen<T> {
         for (MobEffectInstance $$5 : $$3) {
             Component $$6 = this.getEffectName($$5);
             this.font.drawShadow($$0, $$6, (float)($$1 + 10 + 18), (float)($$4 + 6), 0xFFFFFF);
-            String $$7 = MobEffectUtil.formatDuration($$5, 1.0f);
+            Component $$7 = MobEffectUtil.formatDuration($$5, 1.0f);
             this.font.drawShadow($$0, $$7, (float)($$1 + 10 + 18), (float)($$4 + 6 + 10), 0x7F7F7F);
             $$4 += $$2;
         }

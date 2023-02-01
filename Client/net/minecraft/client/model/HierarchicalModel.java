@@ -2,6 +2,7 @@
  * Decompiled with CFR 0.1.0 (FabricMC a830a72d).
  * 
  * Could not load the following classes:
+ *  java.lang.Math
  *  java.lang.Object
  *  java.lang.Override
  *  java.lang.String
@@ -55,6 +56,12 @@ extends EntityModel<E> {
 
     protected void animate(AnimationState $$0, AnimationDefinition $$1, float $$2) {
         this.animate($$0, $$1, $$2, 1.0f);
+    }
+
+    protected void animateWalk(AnimationDefinition $$0, float $$1, float $$2, float $$3, float $$4) {
+        long $$5 = (long)($$1 * 50.0f * $$3);
+        float $$6 = Math.min((float)($$2 * $$4), (float)1.0f);
+        KeyframeAnimations.animate(this, $$0, $$5, $$6, ANIMATION_VECTOR_CACHE);
     }
 
     protected void animate(AnimationState $$0, AnimationDefinition $$12, float $$2, float $$3) {

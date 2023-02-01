@@ -45,6 +45,7 @@ GuiEventListener {
     private static final int MAX_ROW = 4;
     private static final int MAX_ROW_LARGE = 5;
     private static final float ITEM_RENDER_SCALE = 0.375f;
+    public static final int BUTTON_SIZE = 25;
     private final List<OverlayRecipeButton> recipeButtons = Lists.newArrayList();
     private boolean isVisible;
     private int x;
@@ -57,11 +58,11 @@ GuiEventListener {
     boolean isFurnaceMenu;
 
     public void init(Minecraft $$0, RecipeCollection $$1, int $$2, int $$3, int $$4, int $$5, float $$6) {
-        float $$20;
         float $$19;
         float $$18;
         float $$17;
         float $$16;
+        float $$15;
         this.minecraft = $$0;
         this.collection = $$1;
         if ($$0.player.containerMenu instanceof AbstractFurnaceMenu) {
@@ -76,29 +77,28 @@ GuiEventListener {
         int $$13 = (int)Math.ceil((double)((float)$$11 / (float)$$12));
         this.x = $$2;
         this.y = $$3;
-        int $$14 = 25;
-        float $$15 = this.x + Math.min((int)$$11, (int)$$12) * 25;
-        if ($$15 > ($$16 = (float)($$4 + 50))) {
-            this.x = (int)((float)this.x - $$6 * (float)((int)(($$15 - $$16) / $$6)));
+        float $$14 = this.x + Math.min((int)$$11, (int)$$12) * 25;
+        if ($$14 > ($$15 = (float)($$4 + 50))) {
+            this.x = (int)((float)this.x - $$6 * (float)((int)(($$14 - $$15) / $$6)));
         }
-        if (($$17 = (float)(this.y + $$13 * 25)) > ($$18 = (float)($$5 + 50))) {
-            this.y = (int)((float)this.y - $$6 * (float)Mth.ceil(($$17 - $$18) / $$6));
+        if (($$16 = (float)(this.y + $$13 * 25)) > ($$17 = (float)($$5 + 50))) {
+            this.y = (int)((float)this.y - $$6 * (float)Mth.ceil(($$16 - $$17) / $$6));
         }
-        if (($$19 = (float)this.y) < ($$20 = (float)($$5 - 100))) {
-            this.y = (int)((float)this.y - $$6 * (float)Mth.ceil(($$19 - $$20) / $$6));
+        if (($$18 = (float)this.y) < ($$19 = (float)($$5 - 100))) {
+            this.y = (int)((float)this.y - $$6 * (float)Mth.ceil(($$18 - $$19) / $$6));
         }
         this.isVisible = true;
         this.recipeButtons.clear();
-        for (int $$21 = 0; $$21 < $$11; ++$$21) {
-            boolean $$22 = $$21 < $$10;
-            Recipe $$23 = $$22 ? (Recipe)$$8.get($$21) : (Recipe)$$9.get($$21 - $$10);
-            int $$24 = this.x + 4 + 25 * ($$21 % $$12);
-            int $$25 = this.y + 5 + 25 * ($$21 / $$12);
+        for (int $$20 = 0; $$20 < $$11; ++$$20) {
+            boolean $$21 = $$20 < $$10;
+            Recipe $$22 = $$21 ? (Recipe)$$8.get($$20) : (Recipe)$$9.get($$20 - $$10);
+            int $$23 = this.x + 4 + 25 * ($$20 % $$12);
+            int $$24 = this.y + 5 + 25 * ($$20 / $$12);
             if (this.isFurnaceMenu) {
-                this.recipeButtons.add((Object)new OverlaySmeltingRecipeButton($$24, $$25, $$23, $$22));
+                this.recipeButtons.add((Object)new OverlaySmeltingRecipeButton($$23, $$24, $$22, $$21));
                 continue;
             }
-            this.recipeButtons.add((Object)new OverlayRecipeButton($$24, $$25, $$23, $$22));
+            this.recipeButtons.add((Object)new OverlayRecipeButton($$23, $$24, $$22, $$21));
         }
         this.lastRecipeClicked = null;
     }
@@ -143,42 +143,13 @@ GuiEventListener {
         int $$4 = this.recipeButtons.size() <= 16 ? 4 : 5;
         int $$5 = Math.min((int)this.recipeButtons.size(), (int)$$4);
         int $$6 = Mth.ceil((float)this.recipeButtons.size() / (float)$$4);
-        int $$7 = 24;
-        int $$8 = 4;
-        int $$9 = 82;
-        int $$10 = 208;
-        this.nineInchSprite($$0, $$5, $$6, 24, 4, 82, 208);
+        int $$7 = 4;
+        this.blitNineSliced($$0, this.x, this.y, $$5 * 25 + 8, $$6 * 25 + 8, 4, 32, 32, 82, 208);
         RenderSystem.disableBlend();
-        for (OverlayRecipeButton $$11 : this.recipeButtons) {
-            $$11.render($$0, $$1, $$2, $$3);
+        for (OverlayRecipeButton $$8 : this.recipeButtons) {
+            $$8.render($$0, $$1, $$2, $$3);
         }
         $$0.popPose();
-    }
-
-    private void nineInchSprite(PoseStack $$0, int $$1, int $$2, int $$3, int $$4, int $$5, int $$6) {
-        this.blit($$0, this.x, this.y, $$5, $$6, $$4, $$4);
-        this.blit($$0, this.x + $$4 * 2 + $$1 * $$3, this.y, $$5 + $$3 + $$4, $$6, $$4, $$4);
-        this.blit($$0, this.x, this.y + $$4 * 2 + $$2 * $$3, $$5, $$6 + $$3 + $$4, $$4, $$4);
-        this.blit($$0, this.x + $$4 * 2 + $$1 * $$3, this.y + $$4 * 2 + $$2 * $$3, $$5 + $$3 + $$4, $$6 + $$3 + $$4, $$4, $$4);
-        for (int $$7 = 0; $$7 < $$1; ++$$7) {
-            this.blit($$0, this.x + $$4 + $$7 * $$3, this.y, $$5 + $$4, $$6, $$3, $$4);
-            this.blit($$0, this.x + $$4 + ($$7 + 1) * $$3, this.y, $$5 + $$4, $$6, $$4, $$4);
-            for (int $$8 = 0; $$8 < $$2; ++$$8) {
-                if ($$7 == 0) {
-                    this.blit($$0, this.x, this.y + $$4 + $$8 * $$3, $$5, $$6 + $$4, $$4, $$3);
-                    this.blit($$0, this.x, this.y + $$4 + ($$8 + 1) * $$3, $$5, $$6 + $$4, $$4, $$4);
-                }
-                this.blit($$0, this.x + $$4 + $$7 * $$3, this.y + $$4 + $$8 * $$3, $$5 + $$4, $$6 + $$4, $$3, $$3);
-                this.blit($$0, this.x + $$4 + ($$7 + 1) * $$3, this.y + $$4 + $$8 * $$3, $$5 + $$4, $$6 + $$4, $$4, $$3);
-                this.blit($$0, this.x + $$4 + $$7 * $$3, this.y + $$4 + ($$8 + 1) * $$3, $$5 + $$4, $$6 + $$4, $$3, $$4);
-                this.blit($$0, this.x + $$4 + ($$7 + 1) * $$3 - 1, this.y + $$4 + ($$8 + 1) * $$3 - 1, $$5 + $$4, $$6 + $$4, $$4 + 1, $$4 + 1);
-                if ($$7 != $$1 - 1) continue;
-                this.blit($$0, this.x + $$4 * 2 + $$1 * $$3, this.y + $$4 + $$8 * $$3, $$5 + $$3 + $$4, $$6 + $$4, $$4, $$3);
-                this.blit($$0, this.x + $$4 * 2 + $$1 * $$3, this.y + $$4 + ($$8 + 1) * $$3, $$5 + $$3 + $$4, $$6 + $$4, $$4, $$4);
-            }
-            this.blit($$0, this.x + $$4 + $$7 * $$3, this.y + $$4 * 2 + $$2 * $$3, $$5 + $$4, $$6 + $$3 + $$4, $$3, $$4);
-            this.blit($$0, this.x + $$4 + ($$7 + 1) * $$3, this.y + $$4 * 2 + $$2 * $$3, $$5 + $$4, $$6 + $$3 + $$4, $$4, $$4);
-        }
     }
 
     public void setVisible(boolean $$0) {
@@ -246,7 +217,7 @@ GuiEventListener {
         }
 
         @Override
-        public void renderButton(PoseStack $$0, int $$1, int $$2, float $$3) {
+        public void renderWidget(PoseStack $$0, int $$1, int $$2, float $$3) {
             int $$5;
             RenderSystem.setShaderTexture(0, RECIPE_BOOK_LOCATION);
             int $$4 = 152;

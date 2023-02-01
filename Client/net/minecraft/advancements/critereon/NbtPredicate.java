@@ -9,7 +9,6 @@
  *  com.mojang.brigadier.exceptions.CommandSyntaxException
  *  java.lang.Object
  *  javax.annotation.Nullable
- *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.advancements.critereon;
 

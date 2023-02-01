@@ -54,7 +54,7 @@ extends AbstractWidget {
     }
 
     @Override
-    public void renderButton(PoseStack $$0, int $$1, int $$2, float $$3) {
+    public void renderWidget(PoseStack $$0, int $$1, int $$2, float $$3) {
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
         RenderSystem.setShaderTexture(0, this.resourceLocation);
         RenderSystem.disableDepthTest();

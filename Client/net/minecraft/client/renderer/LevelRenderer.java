@@ -1368,6 +1368,9 @@ AutoCloseable {
         if ($$13.COLOR_MODULATOR != null) {
             $$13.COLOR_MODULATOR.set(RenderSystem.getShaderColor());
         }
+        if ($$13.GLINT_ALPHA != null) {
+            $$13.GLINT_ALPHA.set(RenderSystem.getShaderGlintAlpha());
+        }
         if ($$13.FOG_START != null) {
             $$13.FOG_START.set(RenderSystem.getShaderFogStart());
         }

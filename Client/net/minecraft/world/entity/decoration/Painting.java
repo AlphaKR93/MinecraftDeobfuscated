@@ -154,7 +154,7 @@ implements VariantHolder<Holder<PaintingVariant>> {
         }
         this.playSound(SoundEvents.PAINTING_BREAK, 1.0f, 1.0f);
         if ($$0 instanceof Player) {
-            Player $$1 = (Player)((Object)$$0);
+            Player $$1 = (Player)$$0;
             if ($$1.getAbilities().instabuild) {
                 return;
             }

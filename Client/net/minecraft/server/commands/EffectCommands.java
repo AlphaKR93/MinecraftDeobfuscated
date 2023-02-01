@@ -51,36 +51,38 @@ public class EffectCommands {
     private static final SimpleCommandExceptionType ERROR_CLEAR_SPECIFIC_FAILED = new SimpleCommandExceptionType((Message)Component.translatable("commands.effect.clear.specific.failed"));
 
     public static void register(CommandDispatcher<CommandSourceStack> $$02, CommandBuildContext $$1) {
-        $$02.register((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)Commands.literal("effect").requires($$0 -> $$0.hasPermission(2))).then(((LiteralArgumentBuilder)Commands.literal("clear").executes($$0 -> EffectCommands.clearEffects((CommandSourceStack)$$0.getSource(), (Collection<? extends Entity>)ImmutableList.of((Object)((CommandSourceStack)$$0.getSource()).getEntityOrException())))).then(((RequiredArgumentBuilder)Commands.argument("targets", EntityArgument.entities()).executes($$0 -> EffectCommands.clearEffects((CommandSourceStack)$$0.getSource(), EntityArgument.getEntities((CommandContext<CommandSourceStack>)$$0, "targets")))).then(Commands.argument("effect", ResourceArgument.resource($$1, Registries.MOB_EFFECT)).executes($$0 -> EffectCommands.clearEffect((CommandSourceStack)$$0.getSource(), EntityArgument.getEntities((CommandContext<CommandSourceStack>)$$0, "targets"), ResourceArgument.getMobEffect((CommandContext<CommandSourceStack>)$$0, "effect"))))))).then(Commands.literal("give").then(Commands.argument("targets", EntityArgument.entities()).then(((RequiredArgumentBuilder)Commands.argument("effect", ResourceArgument.resource($$1, Registries.MOB_EFFECT)).executes($$0 -> EffectCommands.giveEffect((CommandSourceStack)$$0.getSource(), EntityArgument.getEntities((CommandContext<CommandSourceStack>)$$0, "targets"), ResourceArgument.getMobEffect((CommandContext<CommandSourceStack>)$$0, "effect"), null, 0, true))).then(((RequiredArgumentBuilder)Commands.argument("seconds", IntegerArgumentType.integer((int)1, (int)1000000)).executes($$0 -> EffectCommands.giveEffect((CommandSourceStack)$$0.getSource(), EntityArgument.getEntities((CommandContext<CommandSourceStack>)$$0, "targets"), ResourceArgument.getMobEffect((CommandContext<CommandSourceStack>)$$0, "effect"), IntegerArgumentType.getInteger((CommandContext)$$0, (String)"seconds"), 0, true))).then(((RequiredArgumentBuilder)Commands.argument("amplifier", IntegerArgumentType.integer((int)0, (int)255)).executes($$0 -> EffectCommands.giveEffect((CommandSourceStack)$$0.getSource(), EntityArgument.getEntities((CommandContext<CommandSourceStack>)$$0, "targets"), ResourceArgument.getMobEffect((CommandContext<CommandSourceStack>)$$0, "effect"), IntegerArgumentType.getInteger((CommandContext)$$0, (String)"seconds"), IntegerArgumentType.getInteger((CommandContext)$$0, (String)"amplifier"), true))).then(Commands.argument("hideParticles", BoolArgumentType.bool()).executes($$0 -> EffectCommands.giveEffect((CommandSourceStack)$$0.getSource(), EntityArgument.getEntities((CommandContext<CommandSourceStack>)$$0, "targets"), ResourceArgument.getMobEffect((CommandContext<CommandSourceStack>)$$0, "effect"), IntegerArgumentType.getInteger((CommandContext)$$0, (String)"seconds"), IntegerArgumentType.getInteger((CommandContext)$$0, (String)"amplifier"), !BoolArgumentType.getBool((CommandContext)$$0, (String)"hideParticles"))))))))));
+        $$02.register((LiteralArgumentBuilder)((LiteralArgumentBuilder)((LiteralArgumentBuilder)Commands.literal("effect").requires($$0 -> $$0.hasPermission(2))).then(((LiteralArgumentBuilder)Commands.literal("clear").executes($$0 -> EffectCommands.clearEffects((CommandSourceStack)$$0.getSource(), (Collection<? extends Entity>)ImmutableList.of((Object)((CommandSourceStack)$$0.getSource()).getEntityOrException())))).then(((RequiredArgumentBuilder)Commands.argument("targets", EntityArgument.entities()).executes($$0 -> EffectCommands.clearEffects((CommandSourceStack)$$0.getSource(), EntityArgument.getEntities((CommandContext<CommandSourceStack>)$$0, "targets")))).then(Commands.argument("effect", ResourceArgument.resource($$1, Registries.MOB_EFFECT)).executes($$0 -> EffectCommands.clearEffect((CommandSourceStack)$$0.getSource(), EntityArgument.getEntities((CommandContext<CommandSourceStack>)$$0, "targets"), ResourceArgument.getMobEffect((CommandContext<CommandSourceStack>)$$0, "effect"))))))).then(Commands.literal("give").then(Commands.argument("targets", EntityArgument.entities()).then(((RequiredArgumentBuilder)((RequiredArgumentBuilder)Commands.argument("effect", ResourceArgument.resource($$1, Registries.MOB_EFFECT)).executes($$0 -> EffectCommands.giveEffect((CommandSourceStack)$$0.getSource(), EntityArgument.getEntities((CommandContext<CommandSourceStack>)$$0, "targets"), ResourceArgument.getMobEffect((CommandContext<CommandSourceStack>)$$0, "effect"), null, 0, true))).then(((RequiredArgumentBuilder)Commands.argument("seconds", IntegerArgumentType.integer((int)1, (int)1000000)).executes($$0 -> EffectCommands.giveEffect((CommandSourceStack)$$0.getSource(), EntityArgument.getEntities((CommandContext<CommandSourceStack>)$$0, "targets"), ResourceArgument.getMobEffect((CommandContext<CommandSourceStack>)$$0, "effect"), IntegerArgumentType.getInteger((CommandContext)$$0, (String)"seconds"), 0, true))).then(((RequiredArgumentBuilder)Commands.argument("amplifier", IntegerArgumentType.integer((int)0, (int)255)).executes($$0 -> EffectCommands.giveEffect((CommandSourceStack)$$0.getSource(), EntityArgument.getEntities((CommandContext<CommandSourceStack>)$$0, "targets"), ResourceArgument.getMobEffect((CommandContext<CommandSourceStack>)$$0, "effect"), IntegerArgumentType.getInteger((CommandContext)$$0, (String)"seconds"), IntegerArgumentType.getInteger((CommandContext)$$0, (String)"amplifier"), true))).then(Commands.argument("hideParticles", BoolArgumentType.bool()).executes($$0 -> EffectCommands.giveEffect((CommandSourceStack)$$0.getSource(), EntityArgument.getEntities((CommandContext<CommandSourceStack>)$$0, "targets"), ResourceArgument.getMobEffect((CommandContext<CommandSourceStack>)$$0, "effect"), IntegerArgumentType.getInteger((CommandContext)$$0, (String)"seconds"), IntegerArgumentType.getInteger((CommandContext)$$0, (String)"amplifier"), !BoolArgumentType.getBool((CommandContext)$$0, (String)"hideParticles"))))))).then(((LiteralArgumentBuilder)Commands.literal("infinite").executes($$0 -> EffectCommands.giveEffect((CommandSourceStack)$$0.getSource(), EntityArgument.getEntities((CommandContext<CommandSourceStack>)$$0, "targets"), ResourceArgument.getMobEffect((CommandContext<CommandSourceStack>)$$0, "effect"), -1, 0, true))).then(((RequiredArgumentBuilder)Commands.argument("amplifier", IntegerArgumentType.integer((int)0, (int)255)).executes($$0 -> EffectCommands.giveEffect((CommandSourceStack)$$0.getSource(), EntityArgument.getEntities((CommandContext<CommandSourceStack>)$$0, "targets"), ResourceArgument.getMobEffect((CommandContext<CommandSourceStack>)$$0, "effect"), -1, IntegerArgumentType.getInteger((CommandContext)$$0, (String)"amplifier"), true))).then(Commands.argument("hideParticles", BoolArgumentType.bool()).executes($$0 -> EffectCommands.giveEffect((CommandSourceStack)$$0.getSource(), EntityArgument.getEntities((CommandContext<CommandSourceStack>)$$0, "targets"), ResourceArgument.getMobEffect((CommandContext<CommandSourceStack>)$$0, "effect"), -1, IntegerArgumentType.getInteger((CommandContext)$$0, (String)"amplifier"), !BoolArgumentType.getBool((CommandContext)$$0, (String)"hideParticles"))))))))));
     }
 
     private static int giveEffect(CommandSourceStack $$0, Collection<? extends Entity> $$1, Holder<MobEffect> $$2, @Nullable Integer $$3, int $$4, boolean $$5) throws CommandSyntaxException {
-        int $$11;
+        int $$12;
         MobEffect $$6 = $$2.value();
         int $$7 = 0;
         if ($$3 != null) {
             if ($$6.isInstantenous()) {
                 int $$8 = $$3;
+            } else if ($$3 == -1) {
+                int $$9 = -1;
             } else {
-                int $$9 = $$3 * 20;
+                int $$10 = $$3 * 20;
             }
         } else if ($$6.isInstantenous()) {
-            boolean $$10 = true;
+            boolean $$11 = true;
         } else {
-            $$11 = 600;
+            $$12 = 600;
         }
-        for (Entity $$12 : $$1) {
-            MobEffectInstance $$13;
-            if (!($$12 instanceof LivingEntity) || !((LivingEntity)$$12).addEffect($$13 = new MobEffectInstance($$6, $$11, $$4, false, $$5), $$0.getEntity())) continue;
+        for (Entity $$13 : $$1) {
+            MobEffectInstance $$14;
+            if (!($$13 instanceof LivingEntity) || !((LivingEntity)$$13).addEffect($$14 = new MobEffectInstance($$6, $$12, $$4, false, $$5), $$0.getEntity())) continue;
             ++$$7;
         }
         if ($$7 == 0) {
             throw ERROR_GIVE_FAILED.create();
         }
         if ($$1.size() == 1) {
-            $$0.sendSuccess(Component.translatable("commands.effect.give.success.single", $$6.getDisplayName(), ((Entity)$$1.iterator().next()).getDisplayName(), $$11 / 20), true);
+            $$0.sendSuccess(Component.translatable("commands.effect.give.success.single", $$6.getDisplayName(), ((Entity)$$1.iterator().next()).getDisplayName(), $$12 / 20), true);
         } else {
-            $$0.sendSuccess(Component.translatable("commands.effect.give.success.multiple", $$6.getDisplayName(), $$1.size(), $$11 / 20), true);
+            $$0.sendSuccess(Component.translatable("commands.effect.give.success.multiple", $$6.getDisplayName(), $$1.size(), $$12 / 20), true);
         }
         return $$7;
     }

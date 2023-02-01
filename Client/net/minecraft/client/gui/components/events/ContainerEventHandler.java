@@ -6,6 +6,7 @@
  *  java.lang.Object
  *  java.lang.Override
  *  java.util.ArrayList
+ *  java.util.Collections
  *  java.util.Comparator
  *  java.util.List
  *  java.util.ListIterator
@@ -19,6 +20,7 @@ package net.minecraft.client.gui.components.events;
 
 import com.mojang.datafixers.util.Pair;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
@@ -151,13 +153,14 @@ extends GuiEventListener {
     }
 
     @Nullable
-    private ComponentPath handleTabNavigation(FocusNavigationEvent.TabNavigation $$0) {
+    private ComponentPath handleTabNavigation(FocusNavigationEvent.TabNavigation $$02) {
         Supplier $$10;
         BooleanSupplier $$9;
         int $$7;
-        boolean $$1 = $$0.forward();
+        boolean $$1 = $$02.forward();
         GuiEventListener $$2 = this.getFocused();
-        List<? extends GuiEventListener> $$3 = this.children();
+        ArrayList $$3 = new ArrayList(this.children());
+        Collections.sort((List)$$3, (Comparator)Comparator.comparingInt($$0 -> $$0.getTabOrderGroup()));
         int $$4 = $$3.indexOf((Object)$$2);
         if ($$2 != null && $$4 >= 0) {
             int $$5 = $$4 + ($$1 ? 1 : 0);
@@ -171,7 +174,7 @@ extends GuiEventListener {
         Supplier supplier = $$1 ? () -> ((ListIterator)$$8).next() : ($$10 = () -> ((ListIterator)$$8).previous());
         while ($$9.getAsBoolean()) {
             GuiEventListener $$11 = (GuiEventListener)$$10.get();
-            ComponentPath $$12 = $$11.nextFocusPath($$0);
+            ComponentPath $$12 = $$11.nextFocusPath($$02);
             if ($$12 == null) continue;
             return ComponentPath.path(this, $$12);
         }

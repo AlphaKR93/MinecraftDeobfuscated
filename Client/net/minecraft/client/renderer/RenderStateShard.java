@@ -42,6 +42,7 @@ import org.joml.Matrix4f;
 
 public abstract class RenderStateShard {
     private static final float VIEW_SCALE_Z_EPSILON = 0.99975586f;
+    public static final double MAX_ENCHANTMENT_GLINT_SPEED_MILLIS = 8.0;
     protected final String name;
     private final Runnable setupState;
     private final Runnable clearState;
@@ -237,7 +238,7 @@ public abstract class RenderStateShard {
     }
 
     private static void setupGlintTexturing(float $$0) {
-        long $$1 = Util.getMillis() * 8L;
+        long $$1 = (long)((double)Util.getMillis() * Minecraft.getInstance().options.glintSpeed().get() * 8.0);
         float $$2 = (float)($$1 % 110000L) / 110000.0f;
         float $$3 = (float)($$1 % 30000L) / 30000.0f;
         Matrix4f $$4 = new Matrix4f().translation(-$$2, $$3, 0.0f);

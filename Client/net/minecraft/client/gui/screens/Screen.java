@@ -3,7 +3,6 @@
  * 
  * Could not load the following classes:
  *  com.google.common.annotations.VisibleForTesting
- *  com.google.common.collect.ImmutableList
  *  com.google.common.collect.Lists
  *  com.google.common.collect.Sets
  *  com.mojang.logging.LogUtils
@@ -20,6 +19,8 @@
  *  java.net.URISyntaxException
  *  java.nio.file.Path
  *  java.util.Arrays
+ *  java.util.Collections
+ *  java.util.Comparator
  *  java.util.List
  *  java.util.Locale
  *  java.util.Optional
@@ -36,7 +37,6 @@
 package net.minecraft.client.gui.screens;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -53,6 +53,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -73,6 +75,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.TabOrderedElement;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -116,6 +119,7 @@ implements Renderable {
     private final List<NarratableEntry> narratables = Lists.newArrayList();
     @Nullable
     protected Minecraft minecraft;
+    private boolean initialized;
     protected ItemRenderer itemRenderer;
     public int width;
     public int height;
@@ -324,13 +328,11 @@ implements Renderable {
             }
             $$62 += $$72.getHeight();
         }
-        int $$9 = $$22 + 12;
-        int $$10 = $$32 - 12;
-        int $$11 = $$52;
-        int $$122 = $$62;
-        Vector2ic $$13 = $$42.positionTooltip(this, $$9, $$10, $$11, $$122);
-        $$9 = $$13.x();
-        $$10 = $$13.y();
+        int $$9 = $$52;
+        int $$10 = $$62;
+        Vector2ic $$11 = $$42.positionTooltip(this, $$22, $$32, $$9, $$10);
+        int $$122 = $$11.x();
+        int $$13 = $$11.y();
         $$02.pushPose();
         int $$14 = 400;
         float $$15 = this.itemRenderer.blitOffset;
@@ -340,7 +342,7 @@ implements Renderable {
         RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionColorShader));
         $$17.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         Matrix4f $$18 = $$02.last().pose();
-        TooltipRenderUtil.renderTooltipBackground(($$0, $$1, $$2, $$3, $$4, $$5, $$6, $$7, $$8) -> GuiComponent.fillGradient($$0, $$1, $$2, $$3, $$4, $$5, $$6, $$7, $$8), $$18, $$17, $$9, $$10, $$11, $$122, 400);
+        TooltipRenderUtil.renderTooltipBackground(($$0, $$1, $$2, $$3, $$4, $$5, $$6, $$7, $$8) -> GuiComponent.fillGradient($$0, $$1, $$2, $$3, $$4, $$5, $$6, $$7, $$8), $$18, $$17, $$122, $$13, $$9, $$10, 400);
         RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -348,18 +350,18 @@ implements Renderable {
         RenderSystem.disableBlend();
         MultiBufferSource.BufferSource $$19 = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
         $$02.translate(0.0f, 0.0f, 400.0f);
-        int $$20 = $$10;
+        int $$20 = $$13;
         for (int $$21 = 0; $$21 < $$12.size(); ++$$21) {
             ClientTooltipComponent $$222 = (ClientTooltipComponent)$$12.get($$21);
-            $$222.renderText(this.font, $$9, $$20, $$18, $$19);
+            $$222.renderText(this.font, $$122, $$20, $$18, $$19);
             $$20 += $$222.getHeight() + ($$21 == 0 ? 2 : 0);
         }
         $$19.endBatch();
         $$02.popPose();
-        $$20 = $$10;
+        $$20 = $$13;
         for (int $$23 = 0; $$23 < $$12.size(); ++$$23) {
             ClientTooltipComponent $$24 = (ClientTooltipComponent)$$12.get($$23);
-            $$24.renderImage(this.font, $$9, $$20, $$02, this.itemRenderer, 400);
+            $$24.renderImage(this.font, $$122, $$20, $$02, this.itemRenderer, 400);
             $$20 += $$24.getHeight() + ($$23 == 0 ? 2 : 0);
         }
         this.itemRenderer.blitOffset = $$15;
@@ -456,7 +458,12 @@ implements Renderable {
         this.font = $$0.font;
         this.width = $$1;
         this.height = $$2;
-        this.rebuildWidgets();
+        if (!this.initialized) {
+            this.init();
+        } else {
+            this.repositionElements();
+        }
+        this.initialized = true;
         this.triggerImmediateNarration(false);
         this.suppressNarration(NARRATE_SUPPRESS_AFTER_INIT_TIME);
     }
@@ -544,8 +551,14 @@ implements Renderable {
         return $$0 == 65 && Screen.hasControlDown() && !Screen.hasShiftDown() && !Screen.hasAltDown();
     }
 
+    protected void repositionElements() {
+        this.rebuildWidgets();
+    }
+
     public void resize(Minecraft $$0, int $$1, int $$2) {
-        this.init($$0, $$1, $$2);
+        this.width = $$1;
+        this.height = $$2;
+        this.repositionElements();
     }
 
     public static void wrapScreenError(Runnable $$0, String $$1, String $$2) {
@@ -642,7 +655,8 @@ implements Renderable {
     }
 
     protected void updateNarratedWidget(NarrationElementOutput $$0) {
-        ImmutableList $$1 = (ImmutableList)this.narratables.stream().filter(NarratableEntry::isActive).collect(ImmutableList.toImmutableList());
+        List $$1 = (List)this.narratables.stream().filter(NarratableEntry::isActive).collect(Collectors.toList());
+        Collections.sort((List)$$1, (Comparator)Comparator.comparingInt(TabOrderedElement::getTabOrderGroup));
         NarratableSearchResult $$2 = Screen.findNarratableWidget((List<? extends NarratableEntry>)$$1, this.lastNarratable);
         if ($$2 != null) {
             if ($$2.priority.isTerminal()) {

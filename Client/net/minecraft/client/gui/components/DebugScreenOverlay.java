@@ -37,6 +37,7 @@
  *  java.util.stream.Collectors
  *  java.util.stream.Stream
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.Entity
  *  org.joml.Matrix4f
  */
 package net.minecraft.client.gui.components;

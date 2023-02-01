@@ -58,7 +58,7 @@ extends AbstractButton {
     }
 
     @Override
-    public void renderButton(PoseStack $$0, int $$1, int $$2, float $$3) {
+    public void renderWidget(PoseStack $$0, int $$1, int $$2, float $$3) {
         Minecraft $$4 = Minecraft.getInstance();
         RenderSystem.setShaderTexture(0, TEXTURE);
         RenderSystem.enableDepthTest();

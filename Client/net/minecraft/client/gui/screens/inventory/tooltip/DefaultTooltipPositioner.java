@@ -24,7 +24,7 @@ implements ClientTooltipPositioner {
 
     @Override
     public Vector2ic positionTooltip(Screen $$0, int $$1, int $$2, int $$3, int $$4) {
-        Vector2i $$5 = new Vector2i($$1, $$2);
+        Vector2i $$5 = new Vector2i($$1, $$2).add(12, -12);
         this.positionTooltip($$0, $$5, $$3, $$4);
         return $$5;
     }

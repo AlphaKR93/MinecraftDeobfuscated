@@ -30,6 +30,7 @@
  *  java.util.function.Supplier
  *  javax.annotation.Nullable
  *  javax.imageio.ImageIO
+ *  net.minecraft.client.Minecraft
  *  org.apache.commons.codec.binary.Base64
  *  org.apache.commons.io.IOUtils
  *  org.lwjgl.BufferUtils

@@ -52,12 +52,12 @@ extends Behavior<Villager> {
     }
 
     @Override
-    protected void tick(ServerLevel $$0, Villager $$1, long $$2) {
+    protected void stop(ServerLevel $$0, Villager $$1, long $$2) {
         BehaviorUtils.setWalkAndLookTargetMemories((LivingEntity)$$1, ((GlobalPos)$$1.getBrain().getMemory(MemoryModuleType.POTENTIAL_JOB_SITE).get()).pos(), this.speedModifier, 1);
     }
 
     @Override
-    protected void tick(ServerLevel $$0, Villager $$12, long $$2) {
+    protected void stop(ServerLevel $$0, Villager $$12, long $$2) {
         Optional<GlobalPos> $$3 = $$12.getBrain().getMemory(MemoryModuleType.POTENTIAL_JOB_SITE);
         $$3.ifPresent($$1 -> {
             BlockPos $$2 = $$1.pos();

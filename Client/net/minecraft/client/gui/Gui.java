@@ -447,19 +447,20 @@ extends GuiComponent {
                 this.blit($$0, $$9, $$10, 165, 166, 24, 24);
             } else {
                 this.blit($$0, $$9, $$10, 141, 166, 24, 24);
-                if ($$7.getDuration() <= 200) {
-                    int $$12 = 10 - $$7.getDuration() / 20;
-                    $$11 = Mth.clamp((float)$$7.getDuration() / 10.0f / 5.0f * 0.5f, 0.0f, 0.5f) + Mth.cos((float)$$7.getDuration() * (float)Math.PI / 5.0f) * Mth.clamp((float)$$12 / 10.0f * 0.25f, 0.0f, 0.25f);
+                if ($$7.endsWithin(200)) {
+                    int $$12 = $$7.getDuration();
+                    int $$13 = 10 - $$12 / 20;
+                    $$11 = Mth.clamp((float)$$12 / 10.0f / 5.0f * 0.5f, 0.0f, 0.5f) + Mth.cos((float)$$12 * (float)Math.PI / 5.0f) * Mth.clamp((float)$$13 / 10.0f * 0.25f, 0.0f, 0.25f);
                 }
             }
-            TextureAtlasSprite $$13 = $$5.get($$8);
-            int $$14 = $$9;
-            int $$15 = $$10;
-            float $$16 = $$11;
+            TextureAtlasSprite $$14 = $$5.get($$8);
+            int $$15 = $$9;
+            int $$16 = $$10;
+            float $$17 = $$11;
             $$6.add(() -> {
-                RenderSystem.setShaderTexture(0, $$13.atlasLocation());
-                RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, $$16);
-                Gui.blit($$0, $$14 + 3, $$15 + 3, this.getBlitOffset(), 18, 18, $$13);
+                RenderSystem.setShaderTexture(0, $$14.atlasLocation());
+                RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, $$17);
+                Gui.blit($$0, $$15 + 3, $$16 + 3, this.getBlitOffset(), 18, 18, $$14);
                 RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             });
         }

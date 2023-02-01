@@ -10,7 +10,6 @@
  *  java.lang.Object
  *  java.lang.Override
  *  javax.annotation.Nullable
- *  net.minecraft.server.level.ServerLevel
  */
 package net.minecraft.world.entity.animal.camel;
 
@@ -82,7 +81,6 @@ Saddleable {
     private static final float SITTING_HEIGHT_DIFFERENCE = 1.43f;
     public static final EntityDataAccessor<Boolean> DASH = SynchedEntityData.defineId(Camel.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Long> LAST_POSE_CHANGE_TICK = SynchedEntityData.defineId(Camel.class, EntityDataSerializers.LONG);
-    public final AnimationState walkAnimationState = new AnimationState();
     public final AnimationState sitAnimationState = new AnimationState();
     public final AnimationState sitPoseAnimationState = new AnimationState();
     public final AnimationState sitUpAnimationState = new AnimationState();
@@ -201,11 +199,10 @@ Saddleable {
         } else {
             --this.idleAnimationTimeout;
         }
-        if (this.isCamelSitting()) {
-            this.walkAnimationState.stop();
+        if (this.isCamelVisuallySitting()) {
             this.sitUpAnimationState.stop();
             this.dashAnimationState.stop();
-            if (this.isSittingDown()) {
+            if (this.isVisuallySittingDown()) {
                 this.sitAnimationState.startIfStopped(this.tickCount);
                 this.sitPoseAnimationState.stop();
             } else {
@@ -216,9 +213,19 @@ Saddleable {
             this.sitAnimationState.stop();
             this.sitPoseAnimationState.stop();
             this.dashAnimationState.animateWhen(this.isDashing(), this.tickCount);
-            this.sitUpAnimationState.animateWhen(this.isInPoseTransition(), this.tickCount);
-            this.walkAnimationState.animateWhen((this.onGround || this.hasControllingPassenger()) && this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6, this.tickCount);
+            this.sitUpAnimationState.animateWhen(this.isInPoseTransition() && this.getPoseTime() >= 0L, this.tickCount);
         }
+    }
+
+    @Override
+    protected void updateWalkAnimation(float $$0) {
+        float $$2;
+        if (this.getPose() == Pose.STANDING && !this.dashAnimationState.isStarted()) {
+            float $$1 = Math.min((float)($$0 * 6.0f), (float)1.0f);
+        } else {
+            $$2 = 0.0f;
+        }
+        this.walkAnimation.update($$2, 0.2f);
     }
 
     @Override
@@ -416,7 +423,7 @@ Saddleable {
     @Override
     @Nullable
     public Camel getBreedOffspring(ServerLevel $$0, AgeableMob $$1) {
-        return EntityType.CAMEL.create((Level)$$0);
+        return EntityType.CAMEL.create($$0);
     }
 
     @Override
@@ -551,13 +558,17 @@ Saddleable {
         return this.entityData.get(LAST_POSE_CHANGE_TICK) < 0L;
     }
 
+    public boolean isCamelVisuallySitting() {
+        return this.getPoseTime() < 0L != this.isCamelSitting();
+    }
+
     public boolean isInPoseTransition() {
         long $$0 = this.getPoseTime();
         return $$0 < (long)(this.isCamelSitting() ? 40 : 52);
     }
 
-    private boolean isSittingDown() {
-        return this.isCamelSitting() && this.getPoseTime() < 40L;
+    private boolean isVisuallySittingDown() {
+        return this.isCamelSitting() && this.getPoseTime() < 40L && this.getPoseTime() >= 0L;
     }
 
     public void sitDown() {

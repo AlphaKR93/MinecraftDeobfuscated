@@ -27,9 +27,8 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 
 public class CamelModel<T extends Camel>
 extends HierarchicalModel<T> {
-    private static final float WALK_ANIMATION_SPEED_FACTOR = 400.0f;
-    private static final float MIN_WALK_ANIMATION_SPEED = 0.3f;
     private static final float MAX_WALK_ANIMATION_SPEED = 2.0f;
+    private static final float WALK_ANIMATION_SCALE_FACTOR = 2.5f;
     private static final String SADDLE = "saddle";
     private static final String BRIDLE = "bridle";
     private static final String REINS = "reins";
@@ -71,9 +70,7 @@ extends HierarchicalModel<T> {
         this.root().getAllParts().forEach(ModelPart::resetPose);
         this.applyHeadRotation($$0, $$4, $$5, $$3);
         this.toggleInvisibleParts($$0);
-        float $$6 = (float)((Entity)$$0).getDeltaMovement().horizontalDistanceSqr();
-        float $$7 = Mth.clamp($$6 * 400.0f, 0.3f, 2.0f);
-        this.animate(((Camel)$$0).walkAnimationState, CamelAnimation.CAMEL_WALK, $$3, $$7);
+        this.animateWalk(CamelAnimation.CAMEL_WALK, $$1, $$2, 2.0f, 2.5f);
         this.animate(((Camel)$$0).sitAnimationState, CamelAnimation.CAMEL_SIT, $$3, 1.0f);
         this.animate(((Camel)$$0).sitPoseAnimationState, CamelAnimation.CAMEL_SIT_POSE, $$3, 1.0f);
         this.animate(((Camel)$$0).sitUpAnimationState, CamelAnimation.CAMEL_STANDUP, $$3, 1.0f);

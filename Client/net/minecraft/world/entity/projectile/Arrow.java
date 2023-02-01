@@ -182,15 +182,15 @@ extends AbstractArrow {
     }
 
     @Override
-    protected void doPostHurtEffects(LivingEntity $$0) {
-        super.doPostHurtEffects($$0);
+    protected void doPostHurtEffects(LivingEntity $$02) {
+        super.doPostHurtEffects($$02);
         Entity $$1 = this.getEffectSource();
         for (MobEffectInstance $$2 : this.potion.getEffects()) {
-            $$0.addEffect(new MobEffectInstance($$2.getEffect(), Math.max((int)($$2.getDuration() / 8), (int)1), $$2.getAmplifier(), $$2.isAmbient(), $$2.isVisible()), $$1);
+            $$02.addEffect(new MobEffectInstance($$2.getEffect(), Math.max((int)$$2.mapDuration($$0 -> $$0 / 8), (int)1), $$2.getAmplifier(), $$2.isAmbient(), $$2.isVisible()), $$1);
         }
         if (!this.effects.isEmpty()) {
             for (MobEffectInstance $$3 : this.effects) {
-                $$0.addEffect($$3, $$1);
+                $$02.addEffect($$3, $$1);
             }
         }
     }

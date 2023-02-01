@@ -4,7 +4,6 @@
  * Could not load the following classes:
  *  java.lang.Object
  *  java.lang.Override
- *  net.minecraft.server.level.ServerPlayer
  */
 package net.minecraft.world.item;
 

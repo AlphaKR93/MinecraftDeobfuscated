@@ -256,6 +256,11 @@ implements RangedAttackMob {
         }
     }
 
+    @Override
+    public boolean isVisuallySwimming() {
+        return this.isSwimming();
+    }
+
     protected boolean closeToNextPos() {
         double $$2;
         BlockPos $$1;

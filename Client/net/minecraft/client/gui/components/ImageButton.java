@@ -4,28 +4,23 @@
  * Could not load the following classes:
  *  java.lang.Object
  *  java.lang.Override
- *  java.util.function.Supplier
  */
 package net.minecraft.client.gui.components;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import java.util.function.Supplier;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class ImageButton
 extends Button {
-    private final ResourceLocation resourceLocation;
-    private final int xTexStart;
-    private final int yTexStart;
-    private final int yDiffTex;
-    private final int textureWidth;
-    private final int textureHeight;
+    protected final ResourceLocation resourceLocation;
+    protected final int xTexStart;
+    protected final int yTexStart;
+    protected final int yDiffTex;
+    protected final int textureWidth;
+    protected final int textureHeight;
 
     public ImageButton(int $$0, int $$1, int $$2, int $$3, int $$4, int $$5, ResourceLocation $$6, Button.OnPress $$7) {
         this($$0, $$1, $$2, $$3, $$4, $$5, $$3, $$6, 256, 256, $$7);
@@ -50,16 +45,7 @@ extends Button {
     }
 
     @Override
-    public void renderButton(PoseStack $$0, int $$1, int $$2, float $$3) {
-        RenderSystem.setShader((Supplier<ShaderInstance>)((Supplier)GameRenderer::getPositionTexShader));
-        RenderSystem.setShaderTexture(0, this.resourceLocation);
-        int $$4 = this.yTexStart;
-        if (!this.isActive()) {
-            $$4 += this.yDiffTex * 2;
-        } else if (this.isHoveredOrFocused()) {
-            $$4 += this.yDiffTex;
-        }
-        RenderSystem.enableDepthTest();
-        ImageButton.blit($$0, this.getX(), this.getY(), this.xTexStart, $$4, this.width, this.height, this.textureWidth, this.textureHeight);
+    public void renderWidget(PoseStack $$0, int $$1, int $$2, float $$3) {
+        this.renderTexture($$0, this.resourceLocation, this.getX(), this.getY(), this.xTexStart, this.yTexStart, this.yDiffTex, this.width, this.height, this.textureWidth, this.textureHeight);
     }
 }

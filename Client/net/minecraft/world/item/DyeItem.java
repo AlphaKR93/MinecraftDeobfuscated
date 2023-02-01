@@ -6,7 +6,6 @@
  *  java.lang.Object
  *  java.lang.Override
  *  java.util.Map
- *  net.minecraft.world.entity.player.Player
  */
 package net.minecraft.world.item;
 

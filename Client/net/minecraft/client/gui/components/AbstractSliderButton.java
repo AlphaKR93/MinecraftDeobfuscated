@@ -26,7 +26,6 @@ extends AbstractWidget {
     private static final int HEIGHT = 20;
     private static final int HANDLE_HALF_WIDTH = 4;
     private static final int HANDLE_WIDTH = 8;
-    private static final int TEXTURE_WIDTH = 200;
     private static final int BACKGROUND = 0;
     private static final int BACKGROUND_FOCUSED = 1;
     private static final int HANDLE = 2;
@@ -76,8 +75,7 @@ extends AbstractWidget {
     protected void renderBg(PoseStack $$0, Minecraft $$1, int $$2, int $$3) {
         RenderSystem.setShaderTexture(0, this.getTextureLocation());
         int $$4 = this.getHandleTextureY();
-        this.blit($$0, this.getX() + (int)(this.value * (double)(this.width - 8)), this.getY(), 0, $$4, 4, 20);
-        this.blit($$0, this.getX() + (int)(this.value * (double)(this.width - 8)) + 4, this.getY(), 196, $$4, 4, 20);
+        this.blitNineSliced($$0, this.getX() + (int)(this.value * (double)(this.width - 8)), this.getY(), 8, 20, 4, 200, 20, 0, $$4);
     }
 
     @Override

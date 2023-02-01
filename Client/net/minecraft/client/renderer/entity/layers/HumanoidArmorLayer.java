@@ -33,6 +33,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.DyeableArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -65,8 +66,8 @@ extends RenderLayer<T, M> {
      */
     private void renderArmorPiece(PoseStack $$0, MultiBufferSource $$1, T $$2, EquipmentSlot $$3, int $$4, A $$5) {
         void $$8;
-        ItemStack $$62 = ((LivingEntity)$$2).getItemBySlot($$3);
-        Item item = $$62.getItem();
+        ItemStack $$6 = ((LivingEntity)$$2).getItemBySlot($$3);
+        Item item = $$6.getItem();
         if (!(item instanceof ArmorItem)) {
             return;
         }
@@ -77,9 +78,9 @@ extends RenderLayer<T, M> {
         ((HumanoidModel)this.getParentModel()).copyPropertiesTo($$5);
         this.setPartVisibility($$5, $$3);
         boolean $$9 = this.usesInnerModel($$3);
-        boolean $$10 = $$62.hasFoil();
+        boolean $$10 = $$6.hasFoil();
         if ($$8 instanceof DyeableArmorItem) {
-            int $$11 = ((DyeableArmorItem)$$8).getColor($$62);
+            int $$11 = ((DyeableArmorItem)$$8).getColor($$6);
             float $$12 = (float)($$11 >> 16 & 0xFF) / 255.0f;
             float $$13 = (float)($$11 >> 8 & 0xFF) / 255.0f;
             float $$14 = (float)($$11 & 0xFF) / 255.0f;
@@ -87,9 +88,9 @@ extends RenderLayer<T, M> {
             this.renderModel($$0, $$1, $$4, (ArmorItem)$$8, $$10, $$5, $$9, 1.0f, 1.0f, 1.0f, "overlay");
         } else {
             this.renderModel($$0, $$1, $$4, (ArmorItem)$$8, $$10, $$5, $$9, 1.0f, 1.0f, 1.0f, null);
-            if (((LivingEntity)$$2).level.enabledFeatures().contains(FeatureFlags.UPDATE_1_20)) {
-                ArmorTrim.getTrim(((LivingEntity)$$2).level.registryAccess(), $$62).ifPresent($$6 -> this.renderTrim($$0, $$1, $$4, (ArmorTrim)$$6, $$10, $$5, $$9, 1.0f, 1.0f, 1.0f));
-            }
+        }
+        if (((LivingEntity)$$2).level.enabledFeatures().contains(FeatureFlags.UPDATE_1_20)) {
+            ArmorTrim.getTrim(((LivingEntity)$$2).level.registryAccess(), $$6).ifPresent(arg_0 -> this.lambda$renderArmorPiece$0((ArmorItem)$$8, $$0, $$1, $$4, $$10, $$5, $$9, arg_0));
         }
     }
 
@@ -125,10 +126,10 @@ extends RenderLayer<T, M> {
         ((AgeableListModel)$$5).renderToBuffer($$0, $$11, $$2, OverlayTexture.NO_OVERLAY, $$7, $$8, $$9, 1.0f);
     }
 
-    private void renderTrim(PoseStack $$0, MultiBufferSource $$1, int $$2, ArmorTrim $$3, boolean $$4, A $$5, boolean $$6, float $$7, float $$8, float $$9) {
-        TextureAtlasSprite $$10 = this.armorTrimAtlas.getSprite($$6 ? $$3.innerTexture() : $$3.outerTexture());
-        VertexConsumer $$11 = $$10.wrap(ItemRenderer.getFoilBufferDirect($$1, Sheets.armorTrimsSheet(), true, $$4));
-        ((AgeableListModel)$$5).renderToBuffer($$0, $$11, $$2, OverlayTexture.NO_OVERLAY, $$7, $$8, $$9, 1.0f);
+    private void renderTrim(ArmorMaterial $$0, PoseStack $$1, MultiBufferSource $$2, int $$3, ArmorTrim $$4, boolean $$5, A $$6, boolean $$7, float $$8, float $$9, float $$10) {
+        TextureAtlasSprite $$11 = this.armorTrimAtlas.getSprite($$7 ? $$4.innerTexture($$0) : $$4.outerTexture($$0));
+        VertexConsumer $$12 = $$11.wrap(ItemRenderer.getFoilBufferDirect($$2, Sheets.armorTrimsSheet(), true, $$5));
+        ((AgeableListModel)$$6).renderToBuffer($$1, $$12, $$3, OverlayTexture.NO_OVERLAY, $$8, $$9, $$10, 1.0f);
     }
 
     private A getArmorModel(EquipmentSlot $$0) {
@@ -142,5 +143,9 @@ extends RenderLayer<T, M> {
     private ResourceLocation getArmorLocation(ArmorItem $$0, boolean $$1, @Nullable String $$2) {
         String $$3 = "textures/models/armor/" + $$0.getMaterial().getName() + "_layer_" + ($$1 ? 2 : 1) + ($$2 == null ? "" : "_" + $$2) + ".png";
         return (ResourceLocation)ARMOR_LOCATION_CACHE.computeIfAbsent((Object)$$3, ResourceLocation::new);
+    }
+
+    private /* synthetic */ void lambda$renderArmorPiece$0(ArmorItem $$0, PoseStack $$1, MultiBufferSource $$2, int $$3, boolean $$4, HumanoidModel $$5, boolean $$6, ArmorTrim $$7) {
+        this.renderTrim($$0.getMaterial(), $$1, $$2, $$3, $$7, $$4, $$5, $$6, 1.0f, 1.0f, 1.0f);
     }
 }

@@ -291,6 +291,10 @@ public class TextureMapping {
         return new TextureMapping().put(TextureSlot.LAYER0, $$0).put(TextureSlot.LAYER1, $$1);
     }
 
+    public static TextureMapping layered(ResourceLocation $$0, ResourceLocation $$1, ResourceLocation $$2) {
+        return new TextureMapping().put(TextureSlot.LAYER0, $$0).put(TextureSlot.LAYER1, $$1).put(TextureSlot.LAYER2, $$2);
+    }
+
     public static ResourceLocation getBlockTexture(Block $$0) {
         ResourceLocation $$1 = BuiltInRegistries.BLOCK.getKey($$0);
         return $$1.withPrefix("block/");

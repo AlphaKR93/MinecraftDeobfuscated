@@ -6,10 +6,12 @@
  */
 package net.minecraft.client.gui.narration;
 
+import net.minecraft.client.gui.components.TabOrderedElement;
 import net.minecraft.client.gui.narration.NarrationSupplier;
 
 public interface NarratableEntry
-extends NarrationSupplier {
+extends TabOrderedElement,
+NarrationSupplier {
     public NarrationPriority narrationPriority();
 
     default public boolean isActive() {

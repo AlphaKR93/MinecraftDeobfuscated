@@ -231,9 +231,9 @@ extends GuiComponent {
         int $$28 = 32 + n2 * 9;
         if (!this.description.isEmpty()) {
             if ($$9) {
-                this.render9Sprite($$0, $$27, $$25 + 26 - $$28, this.width, $$28, 10, 200, 26, 0, 52);
+                this.blitNineSliced($$0, $$27, $$25 + 26 - $$28, this.width, $$28, 10, 200, 26, 0, 52);
             } else {
-                this.render9Sprite($$0, $$27, $$25, this.width, $$28, 10, 200, 26, 0, 52);
+                this.blitNineSliced($$0, $$27, $$25, this.width, $$28, 10, 200, 26, 0, 52);
             }
         }
         this.blit($$0, $$27, $$25, 0, $$21.getIndex() * 26, $$11, 26);
@@ -268,30 +268,6 @@ extends GuiComponent {
             }
         }
         this.minecraft.getItemRenderer().renderAndDecorateFakeItem(this.display.getIcon(), $$1 + this.x + 8, $$2 + this.y + 5);
-    }
-
-    protected void render9Sprite(PoseStack $$0, int $$1, int $$2, int $$3, int $$4, int $$5, int $$6, int $$7, int $$8, int $$9) {
-        this.blit($$0, $$1, $$2, $$8, $$9, $$5, $$5);
-        this.renderRepeating($$0, $$1 + $$5, $$2, $$3 - $$5 - $$5, $$5, $$8 + $$5, $$9, $$6 - $$5 - $$5, $$7);
-        this.blit($$0, $$1 + $$3 - $$5, $$2, $$8 + $$6 - $$5, $$9, $$5, $$5);
-        this.blit($$0, $$1, $$2 + $$4 - $$5, $$8, $$9 + $$7 - $$5, $$5, $$5);
-        this.renderRepeating($$0, $$1 + $$5, $$2 + $$4 - $$5, $$3 - $$5 - $$5, $$5, $$8 + $$5, $$9 + $$7 - $$5, $$6 - $$5 - $$5, $$7);
-        this.blit($$0, $$1 + $$3 - $$5, $$2 + $$4 - $$5, $$8 + $$6 - $$5, $$9 + $$7 - $$5, $$5, $$5);
-        this.renderRepeating($$0, $$1, $$2 + $$5, $$5, $$4 - $$5 - $$5, $$8, $$9 + $$5, $$6, $$7 - $$5 - $$5);
-        this.renderRepeating($$0, $$1 + $$5, $$2 + $$5, $$3 - $$5 - $$5, $$4 - $$5 - $$5, $$8 + $$5, $$9 + $$5, $$6 - $$5 - $$5, $$7 - $$5 - $$5);
-        this.renderRepeating($$0, $$1 + $$3 - $$5, $$2 + $$5, $$5, $$4 - $$5 - $$5, $$8 + $$6 - $$5, $$9 + $$5, $$6, $$7 - $$5 - $$5);
-    }
-
-    protected void renderRepeating(PoseStack $$0, int $$1, int $$2, int $$3, int $$4, int $$5, int $$6, int $$7, int $$8) {
-        for (int $$9 = 0; $$9 < $$3; $$9 += $$7) {
-            int $$10 = $$1 + $$9;
-            int $$11 = Math.min((int)$$7, (int)($$3 - $$9));
-            for (int $$12 = 0; $$12 < $$4; $$12 += $$8) {
-                int $$13 = $$2 + $$12;
-                int $$14 = Math.min((int)$$8, (int)($$4 - $$12));
-                this.blit($$0, $$10, $$13, $$5, $$6, $$11, $$14);
-            }
-        }
     }
 
     public boolean isMouseOver(int $$0, int $$1, int $$2, int $$3) {

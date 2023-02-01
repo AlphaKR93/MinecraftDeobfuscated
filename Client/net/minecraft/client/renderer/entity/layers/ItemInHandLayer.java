@@ -4,7 +4,6 @@
  * Could not load the following classes:
  *  java.lang.Object
  *  java.lang.Override
- *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.client.renderer.entity.layers;
 
@@ -33,9 +32,9 @@ extends RenderLayer<T, M> {
     @Override
     public void render(PoseStack $$0, MultiBufferSource $$1, int $$2, T $$3, float $$4, float $$5, float $$6, float $$7, float $$8, float $$9) {
         ItemStack $$12;
-        boolean $$10 = $$3.getMainArm() == HumanoidArm.RIGHT;
-        ItemStack $$11 = $$10 ? $$3.getOffhandItem() : $$3.getMainHandItem();
-        ItemStack itemStack = $$12 = $$10 ? $$3.getMainHandItem() : $$3.getOffhandItem();
+        boolean $$10 = ((LivingEntity)$$3).getMainArm() == HumanoidArm.RIGHT;
+        ItemStack $$11 = $$10 ? ((LivingEntity)$$3).getOffhandItem() : ((LivingEntity)$$3).getMainHandItem();
+        ItemStack itemStack = $$12 = $$10 ? ((LivingEntity)$$3).getMainHandItem() : ((LivingEntity)$$3).getOffhandItem();
         if ($$11.isEmpty() && $$12.isEmpty()) {
             return;
         }

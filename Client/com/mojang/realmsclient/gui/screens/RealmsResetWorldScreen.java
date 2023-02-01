@@ -205,7 +205,7 @@ extends RealmsScreen {
         }
 
         @Override
-        public void renderButton(PoseStack $$0, int $$1, int $$2, float $$3) {
+        public void renderWidget(PoseStack $$0, int $$1, int $$2, float $$3) {
             RealmsResetWorldScreen.this.drawFrame($$0, this.getX(), this.getY(), this.getMessage(), this.image, this.isHoveredOrFocused(), this.isMouseOver($$1, $$2));
         }
     }

@@ -42,17 +42,17 @@ extends ItemCombinerScreen<SmithingMenu> {
     private static final Component ERROR_TOOLTIP = Component.translatable("container.upgrade.error_tooltip");
     private static final List<ResourceLocation> EMPTY_SLOT_SMITHING_TEMPLATES = List.of((Object)EMPTY_SLOT_SMITHING_TEMPLATE_ARMOR_TRIM, (Object)EMPTY_SLOT_SMITHING_TEMPLATE_NETHERITE_UPGRADE);
     private static final int TITLE_LABEL_X = 44;
-    private static final int TITLE_LABEL_Y = 22;
+    private static final int TITLE_LABEL_Y = 15;
     private static final int ERROR_ICON_WIDTH = 28;
     private static final int ERROR_ICON_HEIGHT = 21;
-    private static final int ERROR_ICON_X = 95;
-    private static final int ERROR_ICON_Y = 45;
+    private static final int ERROR_ICON_X = 65;
+    private static final int ERROR_ICON_Y = 46;
     private static final int TOOLTIP_WIDTH = 115;
     public static final int ARMOR_STAND_Y_ROT = 210;
     public static final int ARMOR_STAND_X_ROT = 25;
     public static final Quaternionf ARMOR_STAND_ANGLE = new Quaternionf().rotationXYZ(0.43633232f, 0.0f, (float)Math.PI);
     public static final int ARMOR_STAND_SCALE = 25;
-    public static final int ARMOR_STAND_OFFSET_Y = 65;
+    public static final int ARMOR_STAND_OFFSET_Y = 75;
     public static final int ARMOR_STAND_OFFSET_X = 141;
     private final CyclingSlotBackground templateIcon = new CyclingSlotBackground(0);
     private final CyclingSlotBackground baseIcon = new CyclingSlotBackground(1);
@@ -63,7 +63,7 @@ extends ItemCombinerScreen<SmithingMenu> {
     public SmithingScreen(SmithingMenu $$0, Inventory $$1, Component $$2) {
         super($$0, $$1, $$2, SMITHING_LOCATION);
         this.titleLabelX = 44;
-        this.titleLabelY = 22;
+        this.titleLabelY = 15;
     }
 
     @Override
@@ -75,6 +75,7 @@ extends ItemCombinerScreen<SmithingMenu> {
         this.armorStandPreview.setXRot(25.0f);
         this.armorStandPreview.yHeadRot = this.armorStandPreview.getYRot();
         this.armorStandPreview.yHeadRotO = this.armorStandPreview.getYRot();
+        this.updateArmorStandPreview(((SmithingMenu)this.menu).getSlot(3).getItem());
     }
 
     @Override
@@ -108,24 +109,31 @@ extends ItemCombinerScreen<SmithingMenu> {
         this.templateIcon.render(this.menu, $$0, $$1, this.leftPos, this.topPos);
         this.baseIcon.render(this.menu, $$0, $$1, this.leftPos, this.topPos);
         this.additionalIcon.render(this.menu, $$0, $$1, this.leftPos, this.topPos);
-        InventoryScreen.renderEntityInInventory(this.leftPos + 141, this.topPos + 65, 25, ARMOR_STAND_ANGLE, null, this.armorStandPreview);
+        InventoryScreen.renderEntityInInventory(this.leftPos + 141, this.topPos + 75, 25, ARMOR_STAND_ANGLE, null, this.armorStandPreview);
     }
 
     @Override
     public void slotChanged(AbstractContainerMenu $$0, int $$1, ItemStack $$2) {
-        if ($$1 == 3 && this.armorStandPreview != null) {
-            for (EquipmentSlot $$3 : EquipmentSlot.values()) {
-                this.armorStandPreview.setItemSlot($$3, ItemStack.EMPTY);
-            }
-            if (!$$2.isEmpty()) {
-                ItemStack $$4 = $$2.copy();
-                Item item = $$2.getItem();
-                if (item instanceof ArmorItem) {
-                    ArmorItem $$5 = (ArmorItem)item;
-                    this.armorStandPreview.setItemSlot($$5.getSlot(), $$4);
-                } else {
-                    this.armorStandPreview.setItemSlot(EquipmentSlot.OFFHAND, $$4);
-                }
+        if ($$1 == 3) {
+            this.updateArmorStandPreview($$2);
+        }
+    }
+
+    private void updateArmorStandPreview(ItemStack $$0) {
+        if (this.armorStandPreview == null) {
+            return;
+        }
+        for (EquipmentSlot $$1 : EquipmentSlot.values()) {
+            this.armorStandPreview.setItemSlot($$1, ItemStack.EMPTY);
+        }
+        if (!$$0.isEmpty()) {
+            ItemStack $$2 = $$0.copy();
+            Item item = $$0.getItem();
+            if (item instanceof ArmorItem) {
+                ArmorItem $$3 = (ArmorItem)item;
+                this.armorStandPreview.setItemSlot($$3.getSlot(), $$2);
+            } else {
+                this.armorStandPreview.setItemSlot(EquipmentSlot.OFFHAND, $$2);
             }
         }
     }
@@ -133,13 +141,13 @@ extends ItemCombinerScreen<SmithingMenu> {
     @Override
     protected void renderErrorIcon(PoseStack $$0, int $$1, int $$2) {
         if (this.hasRecipeError()) {
-            this.blit($$0, $$1 + 95, $$2 + 45, this.imageWidth, 0, 28, 21);
+            this.blit($$0, $$1 + 65, $$2 + 46, this.imageWidth, 0, 28, 21);
         }
     }
 
     private void renderOnboardingTooltips(PoseStack $$0, int $$1, int $$2) {
         Optional $$32 = Optional.empty();
-        if (this.hasRecipeError() && this.isHovering(95, 45, 28, 21, $$1, $$2)) {
+        if (this.hasRecipeError() && this.isHovering(65, 46, 28, 21, $$1, $$2)) {
             $$32 = Optional.of((Object)ERROR_TOOLTIP);
         }
         if (this.hoveredSlot != null) {

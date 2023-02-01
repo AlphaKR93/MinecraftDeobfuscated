@@ -23,7 +23,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.Util;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.CenteredStringWidget;
+import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.FrameLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
@@ -77,7 +77,7 @@ extends Screen {
         }
         int n = this.showPauseMenu ? 40 : 10;
         Objects.requireNonNull((Object)this.font);
-        this.addRenderableWidget(new CenteredStringWidget(0, n, this.width, 9, this.title, this.font));
+        this.addRenderableWidget(new StringWidget(0, n, this.width, 9, this.title, this.font));
     }
 
     private void createPauseMenu() {

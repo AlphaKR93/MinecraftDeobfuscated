@@ -13,6 +13,7 @@
  *  java.util.Collections
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.Entity
  *  org.slf4j.Logger
  */
 package net.minecraft.world.entity.projectile;
@@ -89,7 +90,7 @@ extends Projectile {
     private final int lureSpeed;
 
     private FishingHook(EntityType<? extends FishingHook> $$0, Level $$1, int $$2, int $$3) {
-        super((EntityType<? extends Projectile>)$$0, $$1);
+        super($$0, $$1);
         this.noCulling = true;
         this.luck = Math.max((int)0, (int)$$2);
         this.lureSpeed = Math.max((int)0, (int)$$3);
@@ -122,13 +123,11 @@ extends Projectile {
         this.xRotO = this.getXRot();
     }
 
-    @Override
     protected void defineSynchedData() {
         this.getEntityData().define(DATA_HOOKED_ENTITY, 0);
         this.getEntityData().define(DATA_BITING, false);
     }
 
-    @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> $$0) {
         if (DATA_HOOKED_ENTITY.equals($$0)) {
             int $$1 = this.getEntityData().get(DATA_HOOKED_ENTITY);
@@ -143,13 +142,11 @@ extends Projectile {
         super.onSyncedDataUpdated($$0);
     }
 
-    @Override
     public boolean shouldRenderAtSqrDistance(double $$0) {
         double $$1 = 64.0;
         return $$0 < 4096.0;
     }
 
-    @Override
     public void lerpTo(double $$0, double $$1, double $$2, float $$3, float $$4, int $$5, boolean $$6) {
     }
 
@@ -444,7 +441,6 @@ extends Projectile {
         return $$2;
     }
 
-    @Override
     public void handleEntityEvent(byte $$0) {
         if ($$0 == 31 && this.level.isClientSide && this.hookedIn instanceof Player && ((Player)this.hookedIn).isLocalPlayer()) {
             this.pullEntity(this.hookedIn);
@@ -461,18 +457,15 @@ extends Projectile {
         $$0.setDeltaMovement($$0.getDeltaMovement().add($$2));
     }
 
-    @Override
     protected Entity.MovementEmission getMovementEmission() {
         return Entity.MovementEmission.NONE;
     }
 
-    @Override
     public void remove(Entity.RemovalReason $$0) {
         this.updateOwnerInfo(null);
         super.remove($$0);
     }
 
-    @Override
     public void onClientRemoval() {
         this.updateOwnerInfo(null);
     }
@@ -501,7 +494,6 @@ extends Projectile {
         return this.hookedIn;
     }
 
-    @Override
     public boolean canChangeDimensions() {
         return false;
     }

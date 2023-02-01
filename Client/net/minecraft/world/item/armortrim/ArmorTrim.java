@@ -2,7 +2,6 @@
  * Decompiled with CFR 0.1.0 (FabricMC a830a72d).
  * 
  * Could not load the following classes:
- *  com.google.common.base.Suppliers
  *  com.mojang.datafixers.kinds.App
  *  com.mojang.datafixers.kinds.Applicative
  *  com.mojang.logging.LogUtils
@@ -11,22 +10,23 @@
  *  java.lang.Object
  *  java.lang.String
  *  java.util.List
+ *  java.util.Map
  *  java.util.Optional
- *  java.util.function.Supplier
+ *  java.util.function.Function
  *  java.util.function.UnaryOperator
  *  org.slf4j.Logger
  */
 package net.minecraft.world.item.armortrim;
 
-import com.google.common.base.Suppliers;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.datafixers.kinds.Applicative;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -40,6 +40,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.armortrim.TrimMaterial;
 import net.minecraft.world.item.armortrim.TrimPattern;
@@ -52,22 +54,30 @@ public class ArmorTrim {
     private static final Component UPGRADE_TITLE = Component.translatable(Util.makeDescriptionId("item", new ResourceLocation("smithing_template.upgrade"))).withStyle(ChatFormatting.GRAY);
     private final Holder<TrimMaterial> material;
     private final Holder<TrimPattern> pattern;
-    private final Supplier<ResourceLocation> innerTexture;
-    private final Supplier<ResourceLocation> outerTexture;
+    private final Function<ArmorMaterial, ResourceLocation> innerTexture;
+    private final Function<ArmorMaterial, ResourceLocation> outerTexture;
 
     public ArmorTrim(Holder<TrimMaterial> $$0, Holder<TrimPattern> $$1) {
         this.material = $$0;
         this.pattern = $$1;
-        this.innerTexture = Suppliers.memoize(() -> {
+        this.innerTexture = Util.memoize($$12 -> {
             ResourceLocation $$2 = ((TrimPattern)((Object)((Object)$$1.value()))).assetId();
-            String $$3 = ((TrimMaterial)((Object)((Object)$$0.value()))).assetName();
+            String $$3 = this.getColorPaletteSuffix((ArmorMaterial)$$12);
             return $$2.withPath((UnaryOperator<String>)((UnaryOperator)$$1 -> "trims/models/armor/" + $$1 + "_leggings_" + $$3));
         });
-        this.outerTexture = Suppliers.memoize(() -> {
+        this.outerTexture = Util.memoize($$12 -> {
             ResourceLocation $$2 = ((TrimPattern)((Object)((Object)$$1.value()))).assetId();
-            String $$3 = ((TrimMaterial)((Object)((Object)$$0.value()))).assetName();
+            String $$3 = this.getColorPaletteSuffix((ArmorMaterial)$$12);
             return $$2.withPath((UnaryOperator<String>)((UnaryOperator)$$1 -> "trims/models/armor/" + $$1 + "_" + $$3));
         });
+    }
+
+    private String getColorPaletteSuffix(ArmorMaterial $$0) {
+        Map<ArmorMaterials, String> $$1 = this.material.value().overrideArmorMaterials();
+        if ($$0 instanceof ArmorMaterials && $$1.containsKey((Object)$$0)) {
+            return (String)$$1.get((Object)$$0);
+        }
+        return this.material.value().assetName();
     }
 
     public boolean hasPatternAndMaterial(Holder<TrimPattern> $$0, Holder<TrimMaterial> $$1) {
@@ -82,12 +92,12 @@ public class ArmorTrim {
         return this.material;
     }
 
-    public ResourceLocation innerTexture() {
-        return (ResourceLocation)this.innerTexture.get();
+    public ResourceLocation innerTexture(ArmorMaterial $$0) {
+        return (ResourceLocation)this.innerTexture.apply((Object)$$0);
     }
 
-    public ResourceLocation outerTexture() {
-        return (ResourceLocation)this.outerTexture.get();
+    public ResourceLocation outerTexture(ArmorMaterial $$0) {
+        return (ResourceLocation)this.outerTexture.apply((Object)$$0);
     }
 
     /*

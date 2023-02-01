@@ -15,6 +15,7 @@
  *  java.util.Set
  *  java.util.function.Function
  *  java.util.function.Predicate
+ *  net.minecraft.server.level.ServerLevel
  */
 package net.minecraft.world.entity.animal.camel;
 

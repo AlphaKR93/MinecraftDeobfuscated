@@ -32,43 +32,43 @@ ArmorMaterial
         $$0.put((Enum)ArmorItem.Type.LEGGINGS, (Object)2);
         $$0.put((Enum)ArmorItem.Type.CHESTPLATE, (Object)3);
         $$0.put((Enum)ArmorItem.Type.HELMET, (Object)1);
-    }), 15, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, 0.0f, (Supplier<Ingredient>)((Supplier)() -> Ingredient.of(Items.LEATHER)), false),
+    }), 15, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, 0.0f, (Supplier<Ingredient>)((Supplier)() -> Ingredient.of(Items.LEATHER))),
     CHAIN("chainmail", 15, (EnumMap<ArmorItem.Type, Integer>)Util.make(new EnumMap(ArmorItem.Type.class), $$0 -> {
         $$0.put((Enum)ArmorItem.Type.BOOTS, (Object)1);
         $$0.put((Enum)ArmorItem.Type.LEGGINGS, (Object)4);
         $$0.put((Enum)ArmorItem.Type.CHESTPLATE, (Object)5);
         $$0.put((Enum)ArmorItem.Type.HELMET, (Object)2);
-    }), 12, SoundEvents.ARMOR_EQUIP_CHAIN, 0.0f, 0.0f, (Supplier<Ingredient>)((Supplier)() -> Ingredient.of(Items.IRON_INGOT)), true),
+    }), 12, SoundEvents.ARMOR_EQUIP_CHAIN, 0.0f, 0.0f, (Supplier<Ingredient>)((Supplier)() -> Ingredient.of(Items.IRON_INGOT))),
     IRON("iron", 15, (EnumMap<ArmorItem.Type, Integer>)Util.make(new EnumMap(ArmorItem.Type.class), $$0 -> {
         $$0.put((Enum)ArmorItem.Type.BOOTS, (Object)2);
         $$0.put((Enum)ArmorItem.Type.LEGGINGS, (Object)5);
         $$0.put((Enum)ArmorItem.Type.CHESTPLATE, (Object)6);
         $$0.put((Enum)ArmorItem.Type.HELMET, (Object)2);
-    }), 9, SoundEvents.ARMOR_EQUIP_IRON, 0.0f, 0.0f, (Supplier<Ingredient>)((Supplier)() -> Ingredient.of(Items.IRON_INGOT)), true),
+    }), 9, SoundEvents.ARMOR_EQUIP_IRON, 0.0f, 0.0f, (Supplier<Ingredient>)((Supplier)() -> Ingredient.of(Items.IRON_INGOT))),
     GOLD("gold", 7, (EnumMap<ArmorItem.Type, Integer>)Util.make(new EnumMap(ArmorItem.Type.class), $$0 -> {
         $$0.put((Enum)ArmorItem.Type.BOOTS, (Object)1);
         $$0.put((Enum)ArmorItem.Type.LEGGINGS, (Object)3);
         $$0.put((Enum)ArmorItem.Type.CHESTPLATE, (Object)5);
         $$0.put((Enum)ArmorItem.Type.HELMET, (Object)2);
-    }), 25, SoundEvents.ARMOR_EQUIP_GOLD, 0.0f, 0.0f, (Supplier<Ingredient>)((Supplier)() -> Ingredient.of(Items.GOLD_INGOT)), true),
+    }), 25, SoundEvents.ARMOR_EQUIP_GOLD, 0.0f, 0.0f, (Supplier<Ingredient>)((Supplier)() -> Ingredient.of(Items.GOLD_INGOT))),
     DIAMOND("diamond", 33, (EnumMap<ArmorItem.Type, Integer>)Util.make(new EnumMap(ArmorItem.Type.class), $$0 -> {
         $$0.put((Enum)ArmorItem.Type.BOOTS, (Object)3);
         $$0.put((Enum)ArmorItem.Type.LEGGINGS, (Object)6);
         $$0.put((Enum)ArmorItem.Type.CHESTPLATE, (Object)8);
         $$0.put((Enum)ArmorItem.Type.HELMET, (Object)3);
-    }), 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 2.0f, 0.0f, (Supplier<Ingredient>)((Supplier)() -> Ingredient.of(Items.DIAMOND)), true),
+    }), 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 2.0f, 0.0f, (Supplier<Ingredient>)((Supplier)() -> Ingredient.of(Items.DIAMOND))),
     TURTLE("turtle", 25, (EnumMap<ArmorItem.Type, Integer>)Util.make(new EnumMap(ArmorItem.Type.class), $$0 -> {
         $$0.put((Enum)ArmorItem.Type.BOOTS, (Object)2);
         $$0.put((Enum)ArmorItem.Type.LEGGINGS, (Object)5);
         $$0.put((Enum)ArmorItem.Type.CHESTPLATE, (Object)6);
         $$0.put((Enum)ArmorItem.Type.HELMET, (Object)2);
-    }), 9, SoundEvents.ARMOR_EQUIP_TURTLE, 0.0f, 0.0f, (Supplier<Ingredient>)((Supplier)() -> Ingredient.of(Items.SCUTE)), true),
+    }), 9, SoundEvents.ARMOR_EQUIP_TURTLE, 0.0f, 0.0f, (Supplier<Ingredient>)((Supplier)() -> Ingredient.of(Items.SCUTE))),
     NETHERITE("netherite", 37, (EnumMap<ArmorItem.Type, Integer>)Util.make(new EnumMap(ArmorItem.Type.class), $$0 -> {
         $$0.put((Enum)ArmorItem.Type.BOOTS, (Object)3);
         $$0.put((Enum)ArmorItem.Type.LEGGINGS, (Object)6);
         $$0.put((Enum)ArmorItem.Type.CHESTPLATE, (Object)8);
         $$0.put((Enum)ArmorItem.Type.HELMET, (Object)3);
-    }), 15, SoundEvents.ARMOR_EQUIP_NETHERITE, 3.0f, 0.1f, (Supplier<Ingredient>)((Supplier)() -> Ingredient.of(Items.NETHERITE_INGOT)), true);
+    }), 15, SoundEvents.ARMOR_EQUIP_NETHERITE, 3.0f, 0.1f, (Supplier<Ingredient>)((Supplier)() -> Ingredient.of(Items.NETHERITE_INGOT)));
 
     public static final StringRepresentable.EnumCodec<ArmorMaterials> CODEC;
     private static final EnumMap<ArmorItem.Type, Integer> HEALTH_FUNCTION_FOR_TYPE;
@@ -80,9 +80,8 @@ ArmorMaterial
     private final float toughness;
     private final float knockbackResistance;
     private final LazyLoadedValue<Ingredient> repairIngredient;
-    private final boolean canHaveTrims;
 
-    private ArmorMaterials(String $$0, int $$1, EnumMap<ArmorItem.Type, Integer> $$2, int $$3, SoundEvent $$4, float $$5, float $$6, Supplier<Ingredient> $$7, boolean $$8) {
+    private ArmorMaterials(String $$0, int $$1, EnumMap<ArmorItem.Type, Integer> $$2, int $$3, SoundEvent $$4, float $$5, float $$6, Supplier<Ingredient> $$7) {
         this.name = $$0;
         this.durabilityMultiplier = $$1;
         this.protectionFunctionForType = $$2;
@@ -91,7 +90,6 @@ ArmorMaterial
         this.toughness = $$5;
         this.knockbackResistance = $$6;
         this.repairIngredient = new LazyLoadedValue<Ingredient>($$7);
-        this.canHaveTrims = $$8;
     }
 
     @Override
@@ -132,11 +130,6 @@ ArmorMaterial
     @Override
     public float getKnockbackResistance() {
         return this.knockbackResistance;
-    }
-
-    @Override
-    public boolean canHaveTrims() {
-        return this.canHaveTrims;
     }
 
     @Override

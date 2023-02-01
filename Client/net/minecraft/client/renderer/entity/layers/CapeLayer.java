@@ -44,7 +44,7 @@ extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
         double $$11 = Mth.lerp((double)$$6, $$3.xCloakO, $$3.xCloak) - Mth.lerp((double)$$6, $$3.xo, $$3.getX());
         double $$12 = Mth.lerp((double)$$6, $$3.yCloakO, $$3.yCloak) - Mth.lerp((double)$$6, $$3.yo, $$3.getY());
         double $$13 = Mth.lerp((double)$$6, $$3.zCloakO, $$3.zCloak) - Mth.lerp((double)$$6, $$3.zo, $$3.getZ());
-        float $$14 = $$3.yBodyRotO + ($$3.yBodyRot - $$3.yBodyRotO);
+        float $$14 = Mth.rotLerp($$6, $$3.yBodyRotO, $$3.yBodyRot);
         double $$15 = Mth.sin($$14 * ((float)Math.PI / 180));
         double $$16 = -Mth.cos($$14 * ((float)Math.PI / 180));
         float $$17 = (float)$$12 * 10.0f;

@@ -4,7 +4,6 @@
  * Could not load the following classes:
  *  java.lang.Math
  *  java.lang.Object
- *  java.lang.String
  *  java.util.List
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
@@ -14,6 +13,7 @@ package net.minecraft.world.effect;
 import java.util.List;
 import java.util.function.Predicate;
 import javax.annotation.Nullable;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -26,9 +26,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 public final class MobEffectUtil {
-    public static String formatDuration(MobEffectInstance $$0, float $$1) {
+    public static Component formatDuration(MobEffectInstance $$0, float $$1) {
+        if ($$0.isInfiniteDuration()) {
+            return Component.translatable("effect.duration.infinite");
+        }
         int $$2 = Mth.floor((float)$$0.getDuration() * $$1);
-        return StringUtil.formatTickDuration($$2);
+        return Component.literal(StringUtil.formatTickDuration($$2));
     }
 
     public static boolean hasDigSpeed(LivingEntity $$0) {
@@ -53,7 +56,7 @@ public final class MobEffectUtil {
 
     public static List<ServerPlayer> addEffectToPlayersAround(ServerLevel $$0, @Nullable Entity $$1, Vec3 $$22, double $$3, MobEffectInstance $$4, int $$5) {
         MobEffect $$62 = $$4.getEffect();
-        List<ServerPlayer> $$7 = $$0.getPlayers((Predicate<? super ServerPlayer>)((Predicate)$$6 -> !(!$$6.gameMode.isSurvival() || $$1 != null && $$1.isAlliedTo((Entity)$$6) || !$$22.closerThan($$6.position(), $$3) || $$6.hasEffect($$62) && $$6.getEffect($$62).getAmplifier() >= $$4.getAmplifier() && $$6.getEffect($$62).getDuration() >= $$5)));
+        List<ServerPlayer> $$7 = $$0.getPlayers((Predicate<? super ServerPlayer>)((Predicate)$$6 -> !(!$$6.gameMode.isSurvival() || $$1 != null && $$1.isAlliedTo((Entity)$$6) || !$$22.closerThan($$6.position(), $$3) || $$6.hasEffect($$62) && $$6.getEffect($$62).getAmplifier() >= $$4.getAmplifier() && !$$6.getEffect($$62).endsWithin($$5 - 1))));
         $$7.forEach($$2 -> $$2.addEffect(new MobEffectInstance($$4), $$1));
         return $$7;
     }

@@ -138,27 +138,30 @@ implements ItemSupplier {
         }
     }
 
-    private void applySplash(List<MobEffectInstance> $$0, @Nullable Entity $$1) {
+    private void applySplash(List<MobEffectInstance> $$0, @Nullable Entity $$12) {
         AABB $$2 = this.getBoundingBox().inflate(4.0, 2.0, 4.0);
         List $$3 = this.level.getEntitiesOfClass(LivingEntity.class, $$2);
         if (!$$3.isEmpty()) {
             Entity $$4 = this.getEffectSource();
             for (LivingEntity $$5 : $$3) {
+                double $$8;
                 double $$6;
                 if (!$$5.isAffectedByPotions() || !(($$6 = this.distanceToSqr($$5)) < 16.0)) continue;
-                double $$7 = 1.0 - Math.sqrt((double)$$6) / 4.0;
-                if ($$5 == $$1) {
-                    $$7 = 1.0;
+                if ($$5 == $$12) {
+                    double $$7 = 1.0;
+                } else {
+                    $$8 = 1.0 - Math.sqrt((double)$$6) / 4.0;
                 }
-                for (MobEffectInstance $$8 : $$0) {
-                    MobEffect $$9 = $$8.getEffect();
-                    if ($$9.isInstantenous()) {
-                        $$9.applyInstantenousEffect(this, this.getOwner(), $$5, $$8.getAmplifier(), $$7);
+                for (MobEffectInstance $$9 : $$0) {
+                    MobEffect $$10 = $$9.getEffect();
+                    if ($$10.isInstantenous()) {
+                        $$10.applyInstantenousEffect(this, this.getOwner(), $$5, $$9.getAmplifier(), $$8);
                         continue;
                     }
-                    int $$10 = (int)($$7 * (double)$$8.getDuration() + 0.5);
-                    if ($$10 <= 20) continue;
-                    $$5.addEffect(new MobEffectInstance($$9, $$10, $$8.getAmplifier(), $$8.isAmbient(), $$8.isVisible()), $$4);
+                    int $$11 = $$9.mapDuration($$1 -> (int)($$8 * (double)$$1 + 0.5));
+                    MobEffectInstance $$122 = new MobEffectInstance($$10, $$11, $$9.getAmplifier(), $$9.isAmbient(), $$9.isVisible());
+                    if ($$122.endsWithin(20)) continue;
+                    $$5.addEffect($$122, $$4);
                 }
             }
         }

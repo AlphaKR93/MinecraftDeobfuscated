@@ -14,7 +14,6 @@
  *  java.lang.String
  *  java.util.List
  *  javax.annotation.Nullable
- *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world.item;
 

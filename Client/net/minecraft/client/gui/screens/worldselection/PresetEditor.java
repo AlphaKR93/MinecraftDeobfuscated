@@ -41,8 +41,8 @@ public interface PresetEditor {
         HolderLookup.RegistryLookup $$4 = $$3.lookupOrThrow(Registries.BIOME);
         HolderLookup.RegistryLookup $$5 = $$3.lookupOrThrow(Registries.STRUCTURE_SET);
         HolderLookup.RegistryLookup $$6 = $$3.lookupOrThrow(Registries.PLACED_FEATURE);
-        return new CreateFlatWorldScreen($$0, (Consumer<FlatLevelGeneratorSettings>)((Consumer)$$1 -> $$0.worldGenSettingsComponent.updateSettings(PresetEditor.flatWorldConfigurator($$1))), $$2 instanceof FlatLevelSource ? ((FlatLevelSource)$$2).settings() : FlatLevelGeneratorSettings.getDefault($$4, $$5, $$6));
-    }, (Object)Optional.of(WorldPresets.SINGLE_BIOME_SURFACE), ($$0, $$12) -> new CreateBuffetWorldScreen($$0, $$12, (Consumer<Holder<Biome>>)((Consumer)$$1 -> $$0.worldGenSettingsComponent.updateSettings(PresetEditor.fixedBiomeConfigurator($$1)))));
+        return new CreateFlatWorldScreen($$0, (Consumer<FlatLevelGeneratorSettings>)((Consumer)$$1 -> $$0.getUiState().updateDimensions(PresetEditor.flatWorldConfigurator($$1))), $$2 instanceof FlatLevelSource ? ((FlatLevelSource)$$2).settings() : FlatLevelGeneratorSettings.getDefault($$4, $$5, $$6));
+    }, (Object)Optional.of(WorldPresets.SINGLE_BIOME_SURFACE), ($$0, $$12) -> new CreateBuffetWorldScreen($$0, $$12, (Consumer<Holder<Biome>>)((Consumer)$$1 -> $$0.getUiState().updateDimensions(PresetEditor.fixedBiomeConfigurator($$1)))));
 
     public Screen createEditScreen(CreateWorldScreen var1, WorldCreationContext var2);
 

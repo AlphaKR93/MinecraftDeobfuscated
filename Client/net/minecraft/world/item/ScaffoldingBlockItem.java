@@ -5,6 +5,7 @@
  *  java.lang.Object
  *  java.lang.Override
  *  javax.annotation.Nullable
+ *  net.minecraft.server.level.ServerPlayer
  */
 package net.minecraft.world.item;
 
@@ -50,7 +51,7 @@ extends BlockItem {
                     Player $$9 = $$0.getPlayer();
                     int $$10 = $$2.getMaxBuildHeight();
                     if (!($$9 instanceof ServerPlayer) || $$8.getY() < $$10) break;
-                    ((ServerPlayer)$$9).sendSystemMessage(Component.translatable("build.tooHigh", $$10 - 1).withStyle(ChatFormatting.RED), true);
+                    ((ServerPlayer)$$9).sendSystemMessage((Component)Component.translatable("build.tooHigh", $$10 - 1).withStyle(ChatFormatting.RED), true);
                     break;
                 }
                 $$3 = $$2.getBlockState($$8);

@@ -2,57 +2,33 @@
  * Decompiled with CFR 0.1.0 (FabricMC a830a72d).
  * 
  * Could not load the following classes:
- *  com.google.gson.Gson
- *  com.google.gson.GsonBuilder
- *  com.google.gson.JsonIOException
- *  com.google.gson.stream.JsonWriter
  *  com.mojang.logging.LogUtils
- *  com.mojang.serialization.DataResult
- *  com.mojang.serialization.DataResult$PartialResult
- *  com.mojang.serialization.JsonOps
  *  it.unimi.dsi.fastutil.booleans.BooleanConsumer
  *  java.io.File
  *  java.io.IOException
- *  java.io.Writer
- *  java.lang.Exception
  *  java.lang.Object
  *  java.lang.Override
  *  java.lang.RuntimeException
  *  java.lang.String
  *  java.lang.Throwable
- *  java.nio.charset.Charset
- *  java.nio.charset.StandardCharsets
  *  java.nio.file.Files
  *  java.nio.file.LinkOption
- *  java.nio.file.OpenOption
  *  java.nio.file.Path
  *  java.util.function.Consumer
- *  java.util.function.Function
  *  org.apache.commons.io.FileUtils
  *  org.slf4j.Logger
  */
 package net.minecraft.client.gui.screens.worldselection;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonIOException;
-import com.google.gson.stream.JsonWriter;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.logging.LogUtils;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import net.minecraft.FileUtil;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -62,14 +38,10 @@ import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.screens.BackupConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.OptimizeWorldScreen;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.RegistryOps;
-import net.minecraft.server.WorldStem;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.levelgen.WorldGenSettings;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.level.storage.LevelSummary;
@@ -79,7 +51,6 @@ import org.slf4j.Logger;
 public class EditWorldScreen
 extends Screen {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final Gson WORLD_GEN_SETTINGS_GSON = new GsonBuilder().setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
     private static final Component NAME_LABEL = Component.translatable("selectWorld.enterName");
     private Button renameButton;
     private final BooleanConsumer callback;
@@ -134,32 +105,6 @@ extends Screen {
             }
             this.minecraft.setScreen(OptimizeWorldScreen.create(this.minecraft, this.callback, this.minecraft.getFixerUpper(), this.levelAccess, $$1));
         }, Component.translatable("optimizeWorld.confirm.title"), Component.translatable("optimizeWorld.confirm.description"), true))).bounds(this.width / 2 - 100, this.height / 4 + 96 + 5, 200, 20).build());
-        this.addRenderableWidget(Button.builder(Component.translatable("selectWorld.edit.export_worldgen_settings"), $$02 -> {
-            DataResult $$8;
-            try (WorldStem $$1 = this.minecraft.createWorldOpenFlows().loadWorldStem(this.levelAccess, false);){
-                RegistryAccess.Frozen $$2 = $$1.registries().compositeAccess();
-                RegistryOps $$3 = RegistryOps.create(JsonOps.INSTANCE, $$2);
-                DataResult $$4 = WorldGenSettings.encode($$3, $$1.worldData().worldGenOptions(), $$2);
-                DataResult $$5 = $$4.flatMap($$0 -> {
-                    Path $$1 = this.levelAccess.getLevelPath(LevelResource.ROOT).resolve("worldgen_settings_export.json");
-                    try (JsonWriter $$2 = WORLD_GEN_SETTINGS_GSON.newJsonWriter((Writer)Files.newBufferedWriter((Path)$$1, (Charset)StandardCharsets.UTF_8, (OpenOption[])new OpenOption[0]));){
-                        WORLD_GEN_SETTINGS_GSON.toJson($$0, $$2);
-                    }
-                    catch (JsonIOException | IOException $$3) {
-                        return DataResult.error((String)("Error writing file: " + $$3.getMessage()));
-                    }
-                    return DataResult.success((Object)$$1.toString());
-                });
-            }
-            catch (Exception $$7) {
-                LOGGER.warn("Could not parse level data", (Throwable)$$7);
-                $$8 = DataResult.error((String)("Could not parse level data: " + $$7.getMessage()));
-            }
-            MutableComponent $$9 = Component.literal((String)$$8.get().map(Function.identity(), DataResult.PartialResult::message));
-            MutableComponent $$10 = Component.translatable($$8.result().isPresent() ? "selectWorld.edit.export_worldgen_settings.success" : "selectWorld.edit.export_worldgen_settings.failure");
-            $$8.error().ifPresent($$0 -> LOGGER.error("Error exporting world settings: {}", $$0));
-            this.minecraft.getToasts().addToast(SystemToast.multiline(this.minecraft, SystemToast.SystemToastIds.WORLD_GEN_SETTINGS_TRANSFER, $$10, $$9));
-        }).bounds(this.width / 2 - 100, this.height / 4 + 120 + 5, 200, 20).build());
         this.addRenderableWidget(this.renameButton);
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, $$0 -> this.callback.accept(false)).bounds(this.width / 2 + 2, this.height / 4 + 144 + 5, 98, 20).build());
         $$2.active = this.levelAccess.getIconFile().filter($$0 -> Files.isRegularFile((Path)$$0, (LinkOption[])new LinkOption[0])).isPresent();

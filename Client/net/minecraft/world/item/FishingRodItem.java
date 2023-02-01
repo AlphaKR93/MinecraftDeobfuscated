@@ -4,6 +4,7 @@
  * Could not load the following classes:
  *  java.lang.Object
  *  java.lang.Override
+ *  net.minecraft.world.item.ItemStack
  */
 package net.minecraft.world.item;
 
@@ -12,6 +13,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.Item;
@@ -34,7 +36,7 @@ implements Vanishable {
         if ($$12.fishing != null) {
             if (!$$0.isClientSide) {
                 int $$4 = $$12.fishing.retrieve($$3);
-                $$3.hurtAndBreak($$4, $$12, $$1 -> $$1.broadcastBreakEvent($$2));
+                $$3.hurtAndBreak($$4, (LivingEntity)$$12, $$1 -> $$1.broadcastBreakEvent($$2));
             }
             $$0.playSound(null, $$12.getX(), $$12.getY(), $$12.getZ(), SoundEvents.FISHING_BOBBER_RETRIEVE, SoundSource.NEUTRAL, 1.0f, 0.4f / ($$0.getRandom().nextFloat() * 0.4f + 0.8f));
             $$12.gameEvent(GameEvent.ITEM_INTERACT_FINISH);

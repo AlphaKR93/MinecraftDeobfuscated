@@ -9,6 +9,7 @@
  *  java.util.Comparator
  *  java.util.List
  *  java.util.Set
+ *  net.minecraft.client.Minecraft
  */
 package com.mojang.realmsclient.gui;
 

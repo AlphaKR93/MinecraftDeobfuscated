@@ -149,7 +149,7 @@ extends AgeableListModel<T> {
             $$7 = -20.0f;
         }
         if ($$2 > 0.2f) {
-            $$8 += Mth.cos($$1 * 0.4f) * 0.15f * $$2;
+            $$8 += Mth.cos($$1 * 0.8f) * 0.15f * $$2;
         }
         float $$9 = ((AbstractHorse)$$0).getEatAnim($$3);
         float $$10 = ((AbstractHorse)$$0).getStandAnim($$3);

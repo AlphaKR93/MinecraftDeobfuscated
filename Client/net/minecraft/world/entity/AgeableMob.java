@@ -6,7 +6,6 @@
  *  java.lang.Object
  *  java.lang.Override
  *  javax.annotation.Nullable
- *  net.minecraft.server.level.ServerLevel
  */
 package net.minecraft.world.entity;
 
