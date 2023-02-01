@@ -22,6 +22,7 @@
  *  java.lang.Object
  *  java.lang.Runnable
  *  java.lang.String
+ *  java.lang.Throwable
  *  java.nio.file.Path
  *  java.util.HashMap
  *  java.util.Map
@@ -31,6 +32,7 @@
  *  java.util.function.BooleanSupplier
  *  java.util.function.Function
  *  javax.annotation.Nullable
+ *  net.minecraft.Util
  *  org.slf4j.Logger
  */
 package net.minecraft.world.level.chunk.storage;
@@ -122,7 +124,7 @@ implements AutoCloseable {
         this.readColumn(SectionPos.of($$0).chunk());
         $$1 = this.get($$0);
         if ($$1 == null) {
-            throw Util.pauseInIde(new IllegalStateException());
+            throw (IllegalStateException)Util.pauseInIde((Throwable)new IllegalStateException());
         }
         return $$1;
     }
@@ -134,7 +136,7 @@ implements AutoCloseable {
 
     protected R getOrCreate(long $$0) {
         if (this.outsideStoredRange($$0)) {
-            throw Util.pauseInIde(new IllegalArgumentException("sectionPos out of bounds"));
+            throw (IllegalArgumentException)Util.pauseInIde((Throwable)new IllegalArgumentException("sectionPos out of bounds"));
         }
         Optional<R> $$1 = this.getOrLoad($$0);
         if ($$1.isPresent()) {

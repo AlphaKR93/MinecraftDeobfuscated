@@ -15,6 +15,7 @@
  *  java.util.UUID
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world.entity.monster;
 
@@ -546,7 +547,7 @@ implements NeutralMob {
         public EndermanLookForPlayerGoal(EnderMan $$0, @Nullable Predicate<LivingEntity> $$12) {
             super($$0, Player.class, 10, false, false, $$12);
             this.enderman = $$0;
-            this.isAngerInducing = $$1 -> $$0.isLookingAtMe((Player)$$1) || $$0.isAngryAt((LivingEntity)$$1);
+            this.isAngerInducing = $$1 -> $$0.isLookingAtMe((Player)((Object)$$1)) || $$0.isAngryAt((LivingEntity)((Object)$$1));
             this.startAggroTargetConditions = TargetingConditions.forCombat().range(this.getFollowDistance()).selector(this.isAngerInducing);
         }
 

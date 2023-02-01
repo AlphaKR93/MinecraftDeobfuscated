@@ -43,6 +43,10 @@ public enum Difficulty implements StringRepresentable
         return Component.translatable("options.difficulty." + this.key);
     }
 
+    public Component getInfo() {
+        return Component.translatable("options.difficulty." + this.key + ".info");
+    }
+
     public static Difficulty byId(int $$0) {
         return (Difficulty)BY_ID.apply($$0);
     }

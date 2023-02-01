@@ -4,7 +4,6 @@
  * Could not load the following classes:
  *  java.lang.Object
  *  java.lang.Override
- *  net.minecraft.network.FriendlyByteBuf
  */
 package net.minecraft.network.protocol.game;
 

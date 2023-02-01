@@ -253,7 +253,7 @@ implements TraceableEntity {
                 this.victims.entrySet().removeIf($$0 -> this.tickCount >= (Integer)$$0.getValue());
                 $$24 = Lists.newArrayList();
                 for (MobEffectInstance $$25 : this.potion.getEffects()) {
-                    $$24.add((Object)new MobEffectInstance($$25.getEffect(), $$25.getDuration() / 4, $$25.getAmplifier(), $$25.isAmbient(), $$25.isVisible()));
+                    $$24.add((Object)new MobEffectInstance($$25.getEffect(), $$25.mapDuration($$0 -> $$0 / 4), $$25.getAmplifier(), $$25.isAmbient(), $$25.isVisible()));
                 }
                 $$24.addAll(this.effects);
                 if (!$$24.isEmpty()) break block21;

@@ -19,6 +19,7 @@
  *  java.util.Locale
  *  java.util.Set
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.server.commands;
 
@@ -140,7 +141,7 @@ public class TeleportCommand {
             $$1.setOnGround(true);
         }
         if ($$1 instanceof PathfinderMob) {
-            PathfinderMob $$14 = (PathfinderMob)$$1;
+            PathfinderMob $$14 = (PathfinderMob)((Object)$$1);
             $$14.getNavigation().stop();
         }
     }
@@ -165,7 +166,7 @@ public class TeleportCommand {
         public void perform(CommandSourceStack $$0, Entity $$1) {
             if (this.entity != null) {
                 if ($$1 instanceof ServerPlayer) {
-                    ((ServerPlayer)$$1).lookAt($$0.getAnchor(), this.entity, this.anchor);
+                    ((ServerPlayer)((Object)$$1)).lookAt($$0.getAnchor(), this.entity, this.anchor);
                 } else {
                     $$1.lookAt($$0.getAnchor(), this.position);
                 }

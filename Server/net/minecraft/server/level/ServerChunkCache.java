@@ -105,17 +105,27 @@ extends ChunkSource {
     @VisibleForDebug
     private NaturalSpawner.SpawnState lastSpawnState;
 
+    /*
+     * WARNING - void declaration
+     */
     public ServerChunkCache(ServerLevel $$0, LevelStorageSource.LevelStorageAccess $$1, DataFixer $$2, StructureTemplateManager $$3, Executor $$4, ChunkGenerator $$5, int $$6, int $$7, boolean $$8, ChunkProgressListener $$9, ChunkStatusUpdateListener $$10, Supplier<DimensionDataStorage> $$11) {
+        void var8_8;
+        void var9_9;
+        void var7_7;
+        void var12_12;
+        void var11_11;
+        void var10_10;
+        void var6_6;
         this.level = $$0;
         this.mainThreadProcessor = new MainThreadExecutor($$0);
         this.mainThread = Thread.currentThread();
-        File $$12 = $$1.getDimensionPath($$0.dimension()).resolve("data").toFile();
-        $$12.mkdirs();
-        this.dataStorage = new DimensionDataStorage($$12, $$2);
-        this.chunkMap = new ChunkMap($$0, $$1, $$2, $$3, $$4, this.mainThreadProcessor, this, $$5, $$9, $$10, $$11, $$6, $$8);
+        File file = $$1.getDimensionPath($$0.dimension()).resolve("data").toFile();
+        file.mkdirs();
+        this.dataStorage = new DimensionDataStorage(file, $$2);
+        this.chunkMap = new ChunkMap($$0, $$1, $$2, $$3, $$4, this.mainThreadProcessor, this, (ChunkGenerator)var6_6, (ChunkProgressListener)var10_10, (ChunkStatusUpdateListener)var11_11, (Supplier<DimensionDataStorage>)var12_12, (int)var7_7, (boolean)var9_9);
         this.lightEngine = this.chunkMap.getLightEngine();
         this.distanceManager = this.chunkMap.getDistanceManager();
-        this.distanceManager.updateSimulationDistance($$7);
+        this.distanceManager.updateSimulationDistance((int)var8_8);
         this.clearCache();
     }
 
@@ -171,35 +181,41 @@ extends ChunkSource {
         return $$9;
     }
 
+    /*
+     * Exception decompiling
+     */
     @Override
     @Nullable
     public LevelChunk getChunkNow(int $$0, int $$1) {
-        if (Thread.currentThread() != this.mainThread) {
-            return null;
-        }
-        this.level.getProfiler().incrementCounter("getChunkNow");
-        long $$2 = ChunkPos.asLong($$0, $$1);
-        for (int $$3 = 0; $$3 < 4; ++$$3) {
-            if ($$2 != this.lastChunkPos[$$3] || this.lastChunkStatus[$$3] != ChunkStatus.FULL) continue;
-            ChunkAccess $$4 = this.lastChunk[$$3];
-            return $$4 instanceof LevelChunk ? (LevelChunk)$$4 : null;
-        }
-        ChunkHolder $$5 = this.getVisibleChunkIfPresent($$2);
-        if ($$5 == null) {
-            return null;
-        }
-        Either $$6 = (Either)$$5.getFutureIfPresent(ChunkStatus.FULL).getNow(null);
-        if ($$6 == null) {
-            return null;
-        }
-        ChunkAccess $$7 = (ChunkAccess)$$6.left().orElse(null);
-        if ($$7 != null) {
-            this.storeInCache($$2, $$7, ChunkStatus.FULL);
-            if ($$7 instanceof LevelChunk) {
-                return (LevelChunk)$$7;
-            }
-        }
-        return null;
+        /*
+         * This method has failed to decompile.  When submitting a bug report, please provide this stack trace, and (if you hold appropriate legal rights) the relevant class file.
+         * 
+         * org.benf.cfr.reader.util.ConfusedCFRException: Invalid stack depths @ lbl44 : GOTO - null : trying to set 0 previously set to 1
+         *     at org.benf.cfr.reader.bytecode.analysis.opgraph.Op02WithProcessedDataAndRefs.populateStackInfo(Op02WithProcessedDataAndRefs.java:207)
+         *     at org.benf.cfr.reader.bytecode.analysis.opgraph.Op02WithProcessedDataAndRefs.populateStackInfo(Op02WithProcessedDataAndRefs.java:1559)
+         *     at org.benf.cfr.reader.bytecode.CodeAnalyser.getAnalysisInner(CodeAnalyser.java:434)
+         *     at org.benf.cfr.reader.bytecode.CodeAnalyser.getAnalysisOrWrapFail(CodeAnalyser.java:278)
+         *     at org.benf.cfr.reader.bytecode.CodeAnalyser.getAnalysis(CodeAnalyser.java:201)
+         *     at org.benf.cfr.reader.entities.attributes.AttributeCode.analyse(AttributeCode.java:94)
+         *     at org.benf.cfr.reader.entities.Method.analyse(Method.java:531)
+         *     at org.benf.cfr.reader.entities.ClassFile.analyseMid(ClassFile.java:1055)
+         *     at org.benf.cfr.reader.entities.ClassFile.analyseTop(ClassFile.java:942)
+         *     at cuchaz.enigma.source.cfr.CfrSource.ensureDecompiled(CfrSource.java:81)
+         *     at cuchaz.enigma.source.cfr.CfrSource.asString(CfrSource.java:50)
+         *     at cuchaz.enigma.EnigmaProject$JarExport.decompileClass(EnigmaProject.java:298)
+         *     at cuchaz.enigma.EnigmaProject$JarExport.lambda$decompileStream$1(EnigmaProject.java:274)
+         *     at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+         *     at java.base/java.util.AbstractList$RandomAccessSpliterator.forEachRemaining(AbstractList.java:722)
+         *     at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+         *     at java.base/java.util.stream.ForEachOps$ForEachTask.compute(ForEachOps.java:290)
+         *     at java.base/java.util.concurrent.CountedCompleter.exec(CountedCompleter.java:754)
+         *     at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+         *     at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1311)
+         *     at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1840)
+         *     at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1806)
+         *     at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:177)
+         */
+        throw new IllegalStateException("Decompilation failed");
     }
 
     private void clearCache() {

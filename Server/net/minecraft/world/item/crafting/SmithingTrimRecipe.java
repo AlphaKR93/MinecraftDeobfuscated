@@ -22,8 +22,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.armortrim.ArmorTrim;
@@ -66,9 +64,6 @@ implements SmithingRecipe {
                 if ($$5.isPresent() && ((ArmorTrim)$$5.get()).hasPatternAndMaterial((Holder)$$4.get(), (Holder)$$3.get())) {
                     return ItemStack.EMPTY;
                 }
-                if (this.isArmorMaterialIncompatible($$2, (TrimMaterial)((Object)((Holder.Reference)$$3.get()).value()))) {
-                    return ItemStack.EMPTY;
-                }
                 ItemStack $$6 = $$2.copy();
                 $$6.setCount(1);
                 ArmorTrim $$7 = new ArmorTrim((Holder)$$3.get(), (Holder)$$4.get());
@@ -90,12 +85,6 @@ implements SmithingRecipe {
             ArmorTrim.setTrim($$0, $$1, $$4);
         }
         return $$1;
-    }
-
-    private boolean isArmorMaterialIncompatible(ItemStack $$0, TrimMaterial $$1) {
-        ArmorItem $$2;
-        Item item = $$0.getItem();
-        return item instanceof ArmorItem && ($$2 = (ArmorItem)item).getMaterial() == $$1.incompatibleArmorMaterial().orElse(null);
     }
 
     @Override

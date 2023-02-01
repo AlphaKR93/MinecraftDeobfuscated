@@ -114,7 +114,7 @@ public class PiglinBruteAi {
 
     private static Optional<? extends LivingEntity> findNearestValidAttackTarget(AbstractPiglin $$0) {
         Optional<LivingEntity> $$1 = BehaviorUtils.getLivingEntityFromUUIDMemory($$0, MemoryModuleType.ANGRY_AT);
-        if ($$1.isPresent() && Sensor.isEntityAttackableIgnoringLineOfSight($$0, (LivingEntity)$$1.get())) {
+        if ($$1.isPresent() && Sensor.isEntityAttackableIgnoringLineOfSight($$0, (LivingEntity)((Object)$$1.get()))) {
             return $$1;
         }
         Optional<? extends LivingEntity> $$2 = PiglinBruteAi.getTargetIfWithinRange($$0, MemoryModuleType.NEAREST_VISIBLE_ATTACKABLE_PLAYER);

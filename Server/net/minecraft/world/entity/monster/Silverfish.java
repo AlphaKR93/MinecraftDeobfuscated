@@ -68,6 +68,7 @@ extends Monster {
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<Player>((Mob)this, Player.class, true));
     }
 
+    @Override
     public double getMyRidingOffset() {
         return 0.1;
     }
@@ -81,6 +82,7 @@ extends Monster {
         return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 8.0).add(Attributes.MOVEMENT_SPEED, 0.25).add(Attributes.ATTACK_DAMAGE, 1.0);
     }
 
+    @Override
     protected Entity.MovementEmission getMovementEmission() {
         return Entity.MovementEmission.EVENTS;
     }
@@ -100,6 +102,7 @@ extends Monster {
         return SoundEvents.SILVERFISH_DEATH;
     }
 
+    @Override
     protected void playStepSound(BlockPos $$0, BlockState $$1) {
         this.playSound(SoundEvents.SILVERFISH_STEP, 0.15f, 1.0f);
     }

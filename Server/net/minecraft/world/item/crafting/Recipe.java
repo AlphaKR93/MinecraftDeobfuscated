@@ -4,7 +4,6 @@
  * Could not load the following classes:
  *  java.lang.Object
  *  java.lang.String
- *  net.minecraft.world.level.Level
  */
 package net.minecraft.world.item.crafting;
 

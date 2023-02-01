@@ -52,7 +52,7 @@ public interface ItemSteerable {
             this.travelWithInput(new Vec3(0.0, 0.0, 1.0));
             $$0.lerpSteps = 0;
         } else {
-            $$0.calculateEntityAnimation($$0, false);
+            $$0.calculateEntityAnimation(false);
             $$0.setDeltaMovement(Vec3.ZERO);
         }
         $$0.tryCheckInsideBlocks();

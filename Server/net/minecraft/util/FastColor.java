@@ -25,8 +25,12 @@ public class FastColor {
             return $$0 >> 16 & 0xFF;
         }
 
-        public static int bgr(int $$0) {
+        public static int transparent(int $$0) {
             return $$0 & 0xFFFFFF;
+        }
+
+        public static int opaque(int $$0) {
+            return $$0 | 0xFF000000;
         }
 
         public static int color(int $$0, int $$1, int $$2, int $$3) {

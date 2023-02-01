@@ -3,7 +3,7 @@
  * 
  * Could not load the following classes:
  *  java.lang.Object
- *  net.minecraft.world.effect.MobEffect
+ *  java.lang.Override
  */
 package net.minecraft.world.effect;
 
@@ -16,10 +16,12 @@ extends MobEffect {
         super($$0, $$1);
     }
 
+    @Override
     public boolean isInstantenous() {
         return true;
     }
 
+    @Override
     public boolean isDurationEffectTick(int $$0, int $$1) {
         return $$0 >= 1;
     }

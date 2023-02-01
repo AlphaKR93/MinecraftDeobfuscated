@@ -5,7 +5,6 @@
  *  java.lang.Object
  *  java.lang.Override
  *  java.util.function.Predicate
- *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world.level;
 

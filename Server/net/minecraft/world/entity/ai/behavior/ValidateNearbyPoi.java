@@ -5,6 +5,7 @@
  *  com.mojang.datafixers.kinds.Applicative
  *  java.lang.Object
  *  java.util.function.Predicate
+ *  net.minecraft.server.level.ServerLevel
  */
 package net.minecraft.world.entity.ai.behavior;
 

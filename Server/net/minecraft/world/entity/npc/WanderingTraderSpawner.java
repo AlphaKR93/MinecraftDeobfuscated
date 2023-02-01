@@ -7,7 +7,6 @@
  *  java.util.Optional
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
- *  net.minecraft.world.level.LevelReader
  */
 package net.minecraft.world.entity.npc;
 
@@ -110,7 +109,7 @@ implements CustomSpawner {
         Optional<BlockPos> $$5 = $$4.find((Predicate<Holder<PoiType>>)((Predicate)$$0 -> $$0.is(PoiTypes.MEETING)), (Predicate<BlockPos>)((Predicate)$$0 -> true), $$2, 48, PoiManager.Occupancy.ANY);
         BlockPos $$6 = (BlockPos)$$5.orElse((Object)$$2);
         BlockPos $$7 = this.findSpawnPositionNear($$02, $$6, 48);
-        if ($$7 != null && this.hasEnoughSpace((BlockGetter)((Object)$$02), $$7)) {
+        if ($$7 != null && this.hasEnoughSpace($$02, $$7)) {
             if ($$02.getBiome($$7).is(BiomeTags.WITHOUT_WANDERING_TRADER_SPAWNS)) {
                 return false;
             }

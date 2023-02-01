@@ -410,11 +410,9 @@ Bucketable {
     }
 
     public void applySupportingEffects(Player $$0) {
-        int $$2;
         MobEffectInstance $$1 = $$0.getEffect(MobEffects.REGENERATION);
-        int n = $$2 = $$1 != null ? $$1.getDuration() : 0;
-        if ($$2 < 2400) {
-            $$2 = Math.min((int)2400, (int)(100 + $$2));
+        if ($$1 != null && $$1.endsWithin(2399)) {
+            int $$2 = Math.min((int)2400, (int)(100 + $$1.getDuration()));
             $$0.addEffect(new MobEffectInstance(MobEffects.REGENERATION, $$2, 0), this);
         }
         $$0.removeEffect(MobEffects.DIG_SLOWDOWN);

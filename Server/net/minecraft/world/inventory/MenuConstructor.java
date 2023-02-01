@@ -5,7 +5,6 @@
  *  java.lang.FunctionalInterface
  *  java.lang.Object
  *  javax.annotation.Nullable
- *  net.minecraft.world.entity.player.Player
  */
 package net.minecraft.world.inventory;
 

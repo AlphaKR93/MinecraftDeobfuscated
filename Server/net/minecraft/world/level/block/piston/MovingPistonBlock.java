@@ -7,7 +7,6 @@
  *  java.util.Collections
  *  java.util.List
  *  javax.annotation.Nullable
- *  net.minecraft.world.level.Level
  */
 package net.minecraft.world.level.block.piston;
 

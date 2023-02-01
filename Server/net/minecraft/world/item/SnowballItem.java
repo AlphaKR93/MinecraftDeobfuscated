@@ -12,6 +12,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.item.Item;
@@ -31,7 +32,7 @@ extends Item {
         if (!$$0.isClientSide) {
             Snowball $$4 = new Snowball($$0, $$1);
             $$4.setItem($$3);
-            $$4.shootFromRotation($$1, $$1.getXRot(), $$1.getYRot(), 0.0f, 1.5f, 1.0f);
+            $$4.shootFromRotation((Entity)((Object)$$1), $$1.getXRot(), $$1.getYRot(), 0.0f, 1.5f, 1.0f);
             $$0.addFreshEntity($$4);
         }
         $$1.awardStat(Stats.ITEM_USED.get(this));

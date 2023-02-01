@@ -15,6 +15,7 @@
  *  java.util.Set
  *  java.util.function.Function
  *  java.util.function.Predicate
+ *  net.minecraft.world.entity.LivingEntity
  */
 package net.minecraft.world.entity.animal.axolotl;
 

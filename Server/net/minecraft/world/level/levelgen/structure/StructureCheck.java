@@ -18,6 +18,7 @@
  *  java.util.Map
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
+ *  net.minecraft.world.level.Level
  *  org.slf4j.Logger
  */
 package net.minecraft.world.level.levelgen.structure;

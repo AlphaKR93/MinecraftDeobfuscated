@@ -7,6 +7,7 @@
  *  java.lang.String
  *  java.util.List
  *  javax.annotation.Nullable
+ *  net.minecraft.world.item.ItemStack
  */
 package net.minecraft.world.item;
 
@@ -38,6 +39,7 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -81,10 +83,10 @@ extends Item {
         }
         if ($$3 == null || !$$3.getAbilities().instabuild) {
             if ($$0.isEmpty()) {
-                return new ItemStack(Items.GLASS_BOTTLE);
+                return new ItemStack((ItemLike)Items.GLASS_BOTTLE);
             }
             if ($$3 != null) {
-                $$3.getInventory().add(new ItemStack(Items.GLASS_BOTTLE));
+                $$3.getInventory().add(new ItemStack((ItemLike)Items.GLASS_BOTTLE));
             }
         }
         $$2.gameEvent(GameEvent.DRINK);
@@ -100,7 +102,7 @@ extends Item {
         BlockState $$5 = $$1.getBlockState($$2);
         if ($$0.getClickedFace() != Direction.DOWN && $$5.is(BlockTags.CONVERTABLE_TO_MUD) && PotionUtils.getPotion($$4) == Potions.WATER) {
             $$1.playSound(null, $$2, SoundEvents.GENERIC_SPLASH, SoundSource.BLOCKS, 1.0f, 1.0f);
-            $$3.setItemInHand($$0.getHand(), ItemUtils.createFilledResult($$4, $$3, new ItemStack(Items.GLASS_BOTTLE)));
+            $$3.setItemInHand($$0.getHand(), ItemUtils.createFilledResult($$4, $$3, new ItemStack((ItemLike)Items.GLASS_BOTTLE)));
             $$3.awardStat(Stats.ITEM_USED.get($$4.getItem()));
             if (!$$1.isClientSide) {
                 ServerLevel $$6 = (ServerLevel)$$1;

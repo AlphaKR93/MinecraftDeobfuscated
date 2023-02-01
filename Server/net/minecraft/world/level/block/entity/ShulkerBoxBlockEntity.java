@@ -8,6 +8,7 @@
  *  java.util.List
  *  java.util.stream.IntStream
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world.level.block.entity;
 
@@ -170,7 +171,7 @@ implements WorldlyContainer {
             this.level.blockEvent(this.worldPosition, this.getBlockState().getBlock(), 1, this.openCount);
             if (this.openCount == 1) {
                 this.level.gameEvent($$0, GameEvent.CONTAINER_OPEN, this.worldPosition);
-                this.level.playSound(null, this.worldPosition, SoundEvents.SHULKER_BOX_OPEN, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
+                this.level.playSound((Player)null, this.worldPosition, SoundEvents.SHULKER_BOX_OPEN, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
             }
         }
     }
@@ -182,7 +183,7 @@ implements WorldlyContainer {
             this.level.blockEvent(this.worldPosition, this.getBlockState().getBlock(), 1, this.openCount);
             if (this.openCount <= 0) {
                 this.level.gameEvent($$0, GameEvent.CONTAINER_CLOSE, this.worldPosition);
-                this.level.playSound(null, this.worldPosition, SoundEvents.SHULKER_BOX_CLOSE, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
+                this.level.playSound((Player)null, this.worldPosition, SoundEvents.SHULKER_BOX_CLOSE, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
             }
         }
     }

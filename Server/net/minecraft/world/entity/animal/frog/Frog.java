@@ -4,6 +4,7 @@
  * Could not load the following classes:
  *  com.google.common.collect.ImmutableList
  *  com.mojang.serialization.Dynamic
+ *  java.lang.Math
  *  java.lang.Object
  *  java.lang.Override
  *  java.lang.String
@@ -97,8 +98,6 @@ implements VariantHolder<FrogVariant> {
     public final AnimationState jumpAnimationState = new AnimationState();
     public final AnimationState croakAnimationState = new AnimationState();
     public final AnimationState tongueAnimationState = new AnimationState();
-    public final AnimationState walkAnimationState = new AnimationState();
-    public final AnimationState swimAnimationState = new AnimationState();
     public final AnimationState swimIdleAnimationState = new AnimationState();
 
     public Frog(EntityType<? extends Animal> $$0, Level $$1) {
@@ -182,14 +181,6 @@ implements VariantHolder<FrogVariant> {
         return true;
     }
 
-    private boolean isMovingOnLand() {
-        return this.onGround && this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6 && !this.isInWaterOrBubble();
-    }
-
-    private boolean isMovingInWater() {
-        return this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6 && this.isInWaterOrBubble();
-    }
-
     @Override
     protected void customServerAiStep() {
         this.level.getProfiler().push("frogBrain");
@@ -204,21 +195,7 @@ implements VariantHolder<FrogVariant> {
     @Override
     public void tick() {
         if (this.level.isClientSide()) {
-            if (this.isMovingOnLand()) {
-                this.walkAnimationState.startIfStopped(this.tickCount);
-            } else {
-                this.walkAnimationState.stop();
-            }
-            if (this.isMovingInWater()) {
-                this.swimIdleAnimationState.stop();
-                this.swimAnimationState.startIfStopped(this.tickCount);
-            } else if (this.isInWaterOrBubble()) {
-                this.swimAnimationState.stop();
-                this.swimIdleAnimationState.startIfStopped(this.tickCount);
-            } else {
-                this.swimAnimationState.stop();
-                this.swimIdleAnimationState.stop();
-            }
+            this.swimIdleAnimationState.animateWhen(this.isInWaterOrBubble() && !this.walkAnimation.isMoving(), this.tickCount);
         }
         super.tick();
     }
@@ -244,6 +221,17 @@ implements VariantHolder<FrogVariant> {
             }
         }
         super.onSyncedDataUpdated($$0);
+    }
+
+    @Override
+    protected void updateWalkAnimation(float $$0) {
+        float $$2;
+        if (this.jumpAnimationState.isStarted()) {
+            float $$1 = 0.0f;
+        } else {
+            $$2 = Math.min((float)($$0 * 25.0f), (float)1.0f);
+        }
+        this.walkAnimation.update($$2, 0.4f);
     }
 
     @Override

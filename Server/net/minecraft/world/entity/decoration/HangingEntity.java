@@ -8,7 +8,6 @@
  *  java.lang.Override
  *  java.util.function.Predicate
  *  javax.annotation.Nullable
- *  net.minecraft.world.level.Level
  *  org.apache.commons.lang3.Validate
  *  org.slf4j.Logger
  */
@@ -115,7 +114,7 @@ extends Entity {
     }
 
     public boolean survives() {
-        if (!this.level.noCollision((Entity)this)) {
+        if (!this.level.noCollision(this)) {
             return false;
         }
         int $$0 = Math.max((int)1, (int)(this.getWidth() / 16));
@@ -128,12 +127,12 @@ extends Entity {
                 int $$7 = ($$0 - 1) / -2;
                 int $$8 = ($$1 - 1) / -2;
                 $$4.set($$2).move($$3, $$5 + $$7).move(Direction.UP, $$6 + $$8);
-                BlockState $$9 = this.level.getBlockState((BlockPos)$$4);
+                BlockState $$9 = this.level.getBlockState($$4);
                 if ($$9.getMaterial().isSolid() || DiodeBlock.isDiode($$9)) continue;
                 return false;
             }
         }
-        return this.level.getEntities((Entity)this, this.getBoundingBox(), HANGING_ENTITY).isEmpty();
+        return this.level.getEntities(this, this.getBoundingBox(), HANGING_ENTITY).isEmpty();
     }
 
     @Override
@@ -217,7 +216,7 @@ extends Entity {
     public ItemEntity spawnAtLocation(ItemStack $$0, float $$1) {
         ItemEntity $$2 = new ItemEntity(this.level, this.getX() + (double)((float)this.direction.getStepX() * 0.15f), this.getY() + (double)$$1, this.getZ() + (double)((float)this.direction.getStepZ() * 0.15f), $$0);
         $$2.setDefaultPickUpDelay();
-        this.level.addFreshEntity((Entity)$$2);
+        this.level.addFreshEntity($$2);
         return $$2;
     }
 

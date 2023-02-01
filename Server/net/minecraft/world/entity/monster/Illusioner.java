@@ -7,6 +7,7 @@
  *  java.lang.Object
  *  java.lang.Override
  *  javax.annotation.Nullable
+ *  net.minecraft.world.entity.Entity
  */
 package net.minecraft.world.entity.monster;
 
@@ -157,7 +158,6 @@ implements RangedAttackMob {
         return $$2;
     }
 
-    @Override
     public boolean isAlliedTo(Entity $$0) {
         if (super.isAlliedTo($$0)) {
             return true;

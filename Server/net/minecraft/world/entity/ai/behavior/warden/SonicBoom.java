@@ -51,7 +51,7 @@ extends Behavior<Warden> {
     }
 
     @Override
-    protected void start(ServerLevel $$0, Warden $$1, long $$2) {
+    protected void stop(ServerLevel $$0, Warden $$1, long $$2) {
         $$1.getBrain().setMemoryWithExpiry(MemoryModuleType.ATTACK_COOLING_DOWN, true, DURATION);
         $$1.getBrain().setMemoryWithExpiry(MemoryModuleType.SONIC_BOOM_SOUND_DELAY, Unit.INSTANCE, TICKS_BEFORE_PLAYING_SOUND);
         $$0.broadcastEntityEvent($$1, (byte)62);
@@ -82,7 +82,7 @@ extends Behavior<Warden> {
     }
 
     @Override
-    protected void start(ServerLevel $$0, Warden $$1, long $$2) {
+    protected void stop(ServerLevel $$0, Warden $$1, long $$2) {
         SonicBoom.setCooldown($$1, 40);
     }
 
